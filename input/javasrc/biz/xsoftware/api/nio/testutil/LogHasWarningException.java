@@ -1,0 +1,18 @@
+package biz.xsoftware.api.nio.testutil;
+
+public class LogHasWarningException extends RuntimeException {
+
+	private static final long serialVersionUID = 1L;
+	private String logMessage;
+
+	public LogHasWarningException(String message, String logMsg) {
+		super(message);
+		this.logMessage = logMsg;
+	}
+
+	public String getLogMessage() {
+		return logMessage;
+	}
+
+	
+}

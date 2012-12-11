@@ -1,0 +1,87 @@
+<design>
+
+<!--
+****************************************************************
+BEGIN CHANNELMANAGER DESIGN
+****************************************************************
+-->
+<!-- CRAP, need to get rid of this.... -->
+<package name="mocklibImpl"  package="biz.xsoftware.impl.mock" subpackages="include"/>
+
+<!-- The api should depend on nothing!!! -->
+<package name="api"    package="biz.xsoftware.api.nio" subpackages="include">
+   <depends>mocklibImpl</depends>
+</package>
+
+<package name="serviceproxy"    package="biz.xsoftware.api.serviceproxy" subpackages="include"/>
+
+
+<package name="safeApi"    package="biz.xsoftware.api.safethread" subpackages="include"/>
+
+<!-- Everything else depends on api -->
+<package name="nioutil"   package="biz.xsoftware.impl.nio.util" depends="api"/>
+<package name="libs" package="biz.xsoftware.impl.nio.libs" depends="api"/>
+
+
+<!-- notice all these depend on both api and nioutil...change this and I kill you -->
+<package name="basic" package="biz.xsoftware.impl.nio.cm.basic" subpackages="include">
+    <depends>api</depends>
+    <depends>nioutil</depends>
+</package>
+<package name="readreg"  package="biz.xsoftware.impl.nio.cm.readreg">
+    <depends>api</depends>
+	<depends>nioutil</depends>
+</package>
+<package name="securenio" package="biz.xsoftware.impl.nio.cm.secure">
+    <depends>api</depends>
+	<depends>nioutil</depends>
+</package>
+<package name="packetcm"  package="biz.xsoftware.impl.nio.cm.packet">
+    <depends>api</depends>
+	<depends>nioutil</depends>
+</package>
+<package name="exceptioncm"  package="biz.xsoftware.impl.nio.cm.exception">
+    <depends>api</depends>
+	<depends>nioutil</depends>
+</package>
+<package name="threadedcm"  package="biz.xsoftware.impl.nio.cm.threaded">
+    <depends>api</depends>
+	<depends>nioutil</depends>
+</package>
+<package name="routingcm"  package="biz.xsoftware.impl.nio.cm.routing">
+    <depends>api</depends>
+	<depends>nioutil</depends>
+</package>
+
+
+
+
+<!-- notice tests should always only depend on api.  If you have 
+     tests that don't, put them somewhere else. -->
+<package name="testnio" package="biz.xsoftware.test.nio" subpackages="include">
+    <depends>api</depends>
+</package>
+
+<package name="testServiceProxy" package="biz.xsoftware.test.nio.serviceproxy" subpackages="include">
+    <depends>serviceproxy</depends>
+</package>
+
+<package name="mainImpl" package="biz.xsoftware.impl.nio" depends="api"/>
+
+<!-- nottested is stuff we need to have tests for so move once we have tests -->
+<package name="nottested" package="biz.xsoftware.test.nio.nottested" subpackages="include" needdepends="false"/>
+
+<!--
+****************************************************************
+END CHANNELMANAGER DESIGN
+****************************************************************
+-->
+
+<package name="javax"    package="javax" subpackages="include" needdeclarations="false"/>
+<package name="mocklib"  package="biz.xsoftware.mock" subpackages="include" needdeclarations="false"/>
+<package name="junitlib" package="junit" subpackages="include" needdeclarations="false"/>
+<package name="logging" package="biz.xsoftware.logging"/>
+<!-- DO NOT MODIFY THIS ONE LAST LINE -->
+<package name="manifest" package="biz.xsoftware.manifest" subpackages="include">
+</package>
+</design>

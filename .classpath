@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="input/javasrc"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="tools/ant-junit/junit.jar"/>
+	<classpathentry kind="lib" path="input/libexclude/platform-api.jar"/>
+	<classpathentry kind="lib" path="input/libexclude/mocklib.jar"/>
+	<classpathentry kind="output" path="eclipsegen"/>
+</classpath>
