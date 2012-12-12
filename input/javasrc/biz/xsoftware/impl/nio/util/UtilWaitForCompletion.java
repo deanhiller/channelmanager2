@@ -20,12 +20,12 @@ public class UtilWaitForCompletion implements WriteCloseCallback {
 		thread = t;
 	}
 	
-	public synchronized void finished(Channel c, int id) {
+	public synchronized void finished(Channel c) {
 		isFinished = true;
 		this.notifyAll();
 	}
 
-	public synchronized void failed(Channel c, int id, Throwable e) {
+	public synchronized void failed(Channel c, Throwable e) {
 		this.e = e;
 		isFinished = true;
 		this.notifyAll();

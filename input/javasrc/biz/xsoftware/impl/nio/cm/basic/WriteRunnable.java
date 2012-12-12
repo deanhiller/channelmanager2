@@ -13,20 +13,14 @@ public class WriteRunnable implements DelayedWritesCloses {
 	private static final Logger log = Logger.getLogger(WriteRunnable.class.getName());
 	private ByteBuffer buffer;
 	private WriteCloseCallback handler;
-	private int id;
 	private BasChannelImpl channel;
 
-	public WriteRunnable(BasChannelImpl c, ByteBuffer b, WriteCloseCallback h, int id) {
+	public WriteRunnable(BasChannelImpl c, ByteBuffer b, WriteCloseCallback h) {
 		channel = c;
 		buffer = b;
 		handler = h;
-		this.id = id;
 	}
 
-	public int getId() {
-		return id;
-	}
-	
 	public boolean runDelayedAction(boolean isSelectorThread) {
 		try {
 
@@ -40,10 +34,10 @@ public class WriteRunnable implements DelayedWritesCloses {
             //telling someone that you are sending to a bad port or bad host or unreachable host
             log.log(Level.FINEST,  channel+"Client sent data to a host or port that is not listening " +
                     "to udp, or udp can't get through to that machine", e);
-            handler.failed(channel, id, e);            
+            handler.failed(channel, e);            
 		} catch(Exception e) {
 			log.log(Level.WARNING, channel+"Fire failure to client", e);
-			handler.failed(channel, id, e);
+			handler.failed(channel, e);
 			//we failed so return that the write was tried...no more data is going out
             //at least I don't think so...is it different when getting an icmp(PortUnreachableException)?
             return true; 
@@ -54,7 +48,7 @@ public class WriteRunnable implements DelayedWritesCloses {
 		if(apiLog.isLoggable(Level.FINER))
 			log.finer(channel+"WriteCloseCallback.finished called on client");
 		
-		handler.finished(channel, id);
+		handler.finished(channel);
 		return true;
 	}
 

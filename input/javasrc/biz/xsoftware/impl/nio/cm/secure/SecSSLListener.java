@@ -39,17 +39,14 @@ class SecSSLListener implements SSLListener {
 
 	public void packetEncrypted(ByteBuffer toSocket, Object passThrough) throws IOException {
 		WriteCloseCallback h;
-		int id = -2;
 		if(passThrough == null){
 			h = NullWriteCallback.singleton();
-			id = tempId--;
 		} else {
 			SecProxyWriteHandler handler = (SecProxyWriteHandler)passThrough;
-			id = handler.getId();
 			h = handler;
 		}
 		try {
-			channel.getRealChannel().write(toSocket, h, id);
+			channel.getRealChannel().write(toSocket, h);
 		} catch (InterruptedException e) {
 			throw new RuntimeException(channel+e.getMessage(), e);
 		}

@@ -73,7 +73,7 @@ public abstract class BasChannelImpl
      * @throws IOException
      * @throws InterruptedException
      */
-    private synchronized boolean tryWriteOrClose(DelayedWritesCloses action, int id) throws IOException, InterruptedException {       
+    private synchronized boolean tryWriteOrClose(DelayedWritesCloses action) throws IOException, InterruptedException {       
         
         //must see if this channel already has writers registered.  If not, we runDelayedAction to write
         //Otherwise, we continue on and register for writes down below.   
@@ -96,7 +96,7 @@ public abstract class BasChannelImpl
         if(!registered) {
             registered = true;
             if(log.isLoggable(Level.FINER))
-                log.finer(this+"registering channel for write msg id="+id+" size="+waitingWriters.size());
+                log.finer(this+"registering channel for write msg cb="+action+" size="+waitingWriters.size());
             getSelectorManager().registerSelectableChannel(this, SelectionKey.OP_WRITE, null, false);
         }                       
 
@@ -212,7 +212,7 @@ public abstract class BasChannelImpl
             int remain = b.remaining();
 
 			UtilWaitForCompletion waitWrite = new UtilWaitForCompletion(this, t);
-			write(b, waitWrite, -1);
+			write(b, waitWrite);
             //otherwise if not all was written, wait for completion as it was added to queue
             //which writes on selector thread....
 			waitWrite.waitForComplete();
@@ -226,7 +226,7 @@ public abstract class BasChannelImpl
 	}
     
     
-	public void write(ByteBuffer b, WriteCloseCallback h, int id) throws IOException, InterruptedException {
+	public void write(ByteBuffer b, WriteCloseCallback h) throws IOException, InterruptedException {
 		if(!getSelectorManager().isRunning())
 			throw new IllegalStateException(this+"ChannelManager must be running and is stopped");		
 		else if(isClosed) {
@@ -236,15 +236,15 @@ public abstract class BasChannelImpl
 			throw exc;
 		}
 		if(apiLog.isLoggable(Level.FINER))
-			apiLog.finer(this+"Basic.write called-id="+id);
+			apiLog.finer(this+"Basic.write callback="+h);
 		
         //copy the buffer here
         ByteBuffer newOne = ByteBuffer.allocate(b.remaining());
         newOne.put(b);
         newOne.flip();
-        WriteRunnable holder = new WriteRunnable(this, newOne, h, id);
+        WriteRunnable holder = new WriteRunnable(this, newOne, h);
         
-		boolean wroteNow = tryWriteOrClose(holder, id);
+		boolean wroteNow = tryWriteOrClose(holder);
         
         if(log.isLoggable(Level.FINER)) {
 	        if(!wroteNow)
@@ -278,14 +278,14 @@ public abstract class BasChannelImpl
         }
         try {
             UtilWaitForCompletion waitWrite = new UtilWaitForCompletion(this, null);
-            close(waitWrite, -1);
+            close(waitWrite);
             waitWrite.waitForComplete();
         } catch(Exception e) {
             log.log(Level.WARNING, this+"Exception closing channel", e);
         }
     }
     
-    public void close(WriteCloseCallback h, int id) {
+    public void close(WriteCloseCallback h) {
         //To prevent the following exception, in the readImpl method, we
         //check if the socket is already closed, and if it is we don't read
         //and just return -1 to indicate socket closed.
@@ -313,11 +313,11 @@ public abstract class BasChannelImpl
     			apiLog.fine(this+"Basic.close called");
     		
 	        if(!getRealChannel().isOpen())
-	            h.finished(this, id);
+	            h.finished(this);
 	        
 	        setClosed(true);
-	        CloseRunnable runnable = new CloseRunnable(this, h, id);
-	        tryWriteOrClose(runnable, id);
+	        CloseRunnable runnable = new CloseRunnable(this, h);
+	        tryWriteOrClose(runnable);
         } catch(Exception e) {
             log.log(Level.WARNING, this+"Exception closing channel", e);
         }

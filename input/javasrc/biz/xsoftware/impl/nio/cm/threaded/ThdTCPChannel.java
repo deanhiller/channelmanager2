@@ -38,8 +38,8 @@ class ThdTCPChannel extends UtilTCPChannel implements TCPChannel {
 		return realChannel.write(b);
 	}
 	
-	public void write(ByteBuffer b, WriteCloseCallback h, int id) throws IOException, InterruptedException {
-		realChannel.write(b, new ThdProxyWriteHandler(this, h, svc), id);
+	public void write(ByteBuffer b, WriteCloseCallback h) throws IOException, InterruptedException {
+		realChannel.write(b, new ThdProxyWriteHandler(this, h, svc));
 	}
 	
 	public void connect(SocketAddress addr, ConnectionCallback c) throws IOException, InterruptedException {
@@ -50,7 +50,7 @@ class ThdTCPChannel extends UtilTCPChannel implements TCPChannel {
 		realChannel.connect(addr, proxy);
 	}
 
-	public void close(WriteCloseCallback h, int id) {
-		realChannel.close(new ThdProxyWriteHandler(this, h, svc), id);
+	public void close(WriteCloseCallback h) {
+		realChannel.close(new ThdProxyWriteHandler(this, h, svc));
 	}    
 }

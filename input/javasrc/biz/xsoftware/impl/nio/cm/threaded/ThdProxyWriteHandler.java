@@ -23,11 +23,11 @@ public class ThdProxyWriteHandler implements WriteCloseCallback {
 		svc = s;
 	}
 
-	public void finished(Channel realChannel, final int id) {
+	public void finished(Channel realChannel) {
         ChannelsRunnable r = new ChannelsRunnable() {
 			public void run() {
 				try {
-					handler.finished(channel, id);
+					handler.finished(channel);
 				} catch (Exception e) {
 					log.log(Level.WARNING, channel+"Exception", e);
 				}				
@@ -39,11 +39,11 @@ public class ThdProxyWriteHandler implements WriteCloseCallback {
 		svc.execute(r);		
 	}
 
-	public void failed(Channel c, final int id, final Throwable e) {
+	public void failed(Channel c, final Throwable e) {
         ChannelsRunnable r = new ChannelsRunnable() {
 			public void run() {
 				try {
-					handler.failed(channel, id, e);
+					handler.failed(channel, e);
 				} catch (Exception e) {
 					log.log(Level.WARNING, channel+"Exception", e);
 				}				

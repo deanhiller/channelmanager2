@@ -22,10 +22,10 @@ public final class NullWriteCallback implements WriteCloseCallback {
 		return handler;
 	}
 	
-	public void finished(Channel c, int id) {
+	public void finished(Channel c) {
 	}
 
-	public void failed(Channel c, int id, Throwable e) {
+	public void failed(Channel c, Throwable e) {
     	if(e instanceof PortUnreachableException) {
     		numPortUnreachables++;
     		if(numPortUnreachables < MAX_PORT_UNREACHABLES)

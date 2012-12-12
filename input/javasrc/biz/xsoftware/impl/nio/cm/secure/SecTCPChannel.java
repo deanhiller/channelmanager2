@@ -53,11 +53,11 @@ class SecTCPChannel extends UtilTCPChannel implements TCPChannel {
 		return remain;
 	}
 	
-	public void write(ByteBuffer b, WriteCloseCallback h, int id) throws IOException {
+	public void write(ByteBuffer b, WriteCloseCallback h) throws IOException {
 		if(reader.getHandler() == null)
 			throw new NotYetConnectedException();
 		
-		SecProxyWriteHandler holder = new SecProxyWriteHandler(this, h, id);
+		SecProxyWriteHandler holder = new SecProxyWriteHandler(this, h);
 		reader.getHandler().feedPlainPacket(b, holder);	
 	}
 	
@@ -160,9 +160,9 @@ class SecTCPChannel extends UtilTCPChannel implements TCPChannel {
 		super.close();
 	}
 
-	public void close(WriteCloseCallback h, int id) {
+	public void close(WriteCloseCallback h) {
 		reader.close();
-		realChannel.close(new SecProxyWriteHandler(this, h, id), -1);
+		realChannel.close(new SecProxyWriteHandler(this, h));
 	}
 	
 	public SecReaderProxy getReaderProxy() {

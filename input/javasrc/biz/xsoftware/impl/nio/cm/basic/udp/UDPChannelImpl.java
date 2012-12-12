@@ -123,13 +123,13 @@ public class UDPChannelImpl extends BasChannelImpl implements UDPChannel {
 	}
 
 	/**
-     * @see biz.xsoftware.impl.nio.cm.basic.BasChannelImpl#write(java.nio.ByteBuffer, biz.xsoftware.api.nio.handlers.WriteCloseCallback, int)
+     * @see biz.xsoftware.impl.nio.cm.basic.BasChannelImpl#write(java.nio.ByteBuffer, biz.xsoftware.api.nio.handlers.WriteCloseCallback)
      */
     @Override
-    public void write(ByteBuffer b, WriteCloseCallback h, int id) throws IOException, InterruptedException {
+    public void write(ByteBuffer b, WriteCloseCallback h) throws IOException, InterruptedException {
         if(!isConnected)
             throw new IllegalStateException(this+"Channel is not currently connected");        
-        super.write(b, h, id);
+        super.write(b, h);
     }
 
     /**

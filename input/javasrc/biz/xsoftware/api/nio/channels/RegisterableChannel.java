@@ -5,6 +5,8 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.net.SocketException;
 
+import biz.xsoftware.api.nio.handlers.WriteCloseCallback;
+
 /**
  * This is the top of the tree where are channels come from.  Unfortunately,
  * there are conflicts in the tree.
@@ -59,15 +61,14 @@ public interface RegisterableChannel {
 	 */
 	public void bind(SocketAddress addr) throws IOException;
 	
-	public String toString();
-	
 	public boolean isBlocking();
     
 	/**
 	 * Closes and unregisters the channel if registered from the ChannelManager
 	 */
+	@Deprecated
 	public void close();
-
+    
 	public boolean isClosed();
 	
 	/**

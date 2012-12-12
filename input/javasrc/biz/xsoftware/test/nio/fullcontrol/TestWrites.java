@@ -171,7 +171,7 @@ public class TestWrites extends TestCase {
 
         mockSelect.addReturnValue("createRegistrationListener", mockRegListener);
         mockSunsChannel.addReturnValue("write", 0);        
-        client1.write(b, (WriteCloseCallback)mockWriteHandler, 1);
+        client1.write(b, (WriteCloseCallback)mockWriteHandler);
         mockSunsChannel.expect("write");
         
         mockSelect.setDefaultReturnValue("getKeyFromChannel", key);
@@ -255,14 +255,14 @@ public class TestWrites extends TestCase {
         
         mockSelect.addReturnValue("createRegistrationListener", mockRegListener);
         mockSunsChannel.addBehavior("write", new NoReadByteBuffer2(0));
-        client1.write(b, (WriteCloseCallback)mockWriteHandler, 1);
+        client1.write(b, (WriteCloseCallback)mockWriteHandler);
         mockSunsChannel.expect("write");
         
         b = ByteBuffer.allocate(50);
         int remain2 = b.remaining();
         HELPER.putString(b, expected2);
         HELPER.doneFillingBuffer(b);
-        client1.write(b, (WriteCloseCallback)mockWriteHandler, 1);
+        client1.write(b, (WriteCloseCallback)mockWriteHandler);
         
         mockSunsChannel.expect(MockObject.NONE);
         
@@ -326,7 +326,7 @@ public class TestWrites extends TestCase {
         String expected3 = "ghi";
         HELPER.putString(b3, expected3);
         HELPER.doneFillingBuffer(b3);
-        client1.write(b3, (WriteCloseCallback)mockWriteHandler, 1);        
+        client1.write(b3, (WriteCloseCallback)mockWriteHandler);        
 
         Set<SelectionKey> set = new HashSet<SelectionKey>();
         set.add(key);

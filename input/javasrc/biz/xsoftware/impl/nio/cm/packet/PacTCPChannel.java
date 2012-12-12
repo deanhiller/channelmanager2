@@ -42,9 +42,9 @@ class PacTCPChannel extends UtilTCPChannel implements TCPChannel {
 	}
 	
 	@Override
-	public void write(ByteBuffer b, WriteCloseCallback h, int id) throws IOException, InterruptedException {
+	public void write(ByteBuffer b, WriteCloseCallback h) throws IOException, InterruptedException {
 		ByteBuffer out = packetProcessor.processOutgoing(b);
-		realChannel.write(out, new UtilPassThroughWriteHandler(this, h), id);
+		realChannel.write(out, new UtilPassThroughWriteHandler(this, h));
 	}
 	
 	public void connect(SocketAddress addr, ConnectionCallback c) throws IOException, InterruptedException {

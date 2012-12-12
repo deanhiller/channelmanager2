@@ -25,11 +25,11 @@ public abstract class UtilChannel extends UtilRegisterable implements Channel {
 		return getRealChannel().write(b);
 	}
 	
-	public void write(ByteBuffer b, WriteCloseCallback h, int id) throws IOException, InterruptedException {
+	public void write(ByteBuffer b, WriteCloseCallback h) throws IOException, InterruptedException {
 		if(h == null)
-			getRealChannel().write(b, NullWriteCallback.singleton(), id);
+			getRealChannel().write(b, NullWriteCallback.singleton());
 		else
-			getRealChannel().write(b, new UtilPassThroughWriteHandler(this, h), id);
+			getRealChannel().write(b, new UtilPassThroughWriteHandler(this, h));
 	}
 	
 	public void registerForReads(DataListener listener) throws IOException, InterruptedException {
@@ -45,8 +45,8 @@ public abstract class UtilChannel extends UtilRegisterable implements Channel {
 		getRealChannel().connect(addr);
 	}
 
-	public void close(WriteCloseCallback h, int id) {
-		getRealChannel().close(new UtilPassThroughWriteHandler(this, h), id);
+	public void close(WriteCloseCallback h) {
+		getRealChannel().close(new UtilPassThroughWriteHandler(this, h));
 	}
 	
 	public InetSocketAddress getRemoteAddress() {

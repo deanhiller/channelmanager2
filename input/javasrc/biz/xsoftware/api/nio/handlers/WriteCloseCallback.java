@@ -5,8 +5,8 @@ import biz.xsoftware.api.nio.channels.Channel;
 
 public interface WriteCloseCallback {
 
-	public void finished(Channel c, int id);
+	public void finished(Channel c);
 	
-	public void failed(Channel c, int id, Throwable e);
+	public void failed(Channel c, Throwable e);
 	
 }

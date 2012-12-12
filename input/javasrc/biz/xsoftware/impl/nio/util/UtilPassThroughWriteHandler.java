@@ -15,12 +15,12 @@ public class UtilPassThroughWriteHandler implements WriteCloseCallback {
 		channel = c;
 		handler = h;
 	}
-	public void finished(Channel realChannel, int id) {
-		handler.finished(channel, id);
+	public void finished(Channel realChannel) {
+		handler.finished(channel);
 	}
 
-	public void failed(Channel realChannel, int id, Throwable e) {
-		handler.failed(channel, id, e);
+	public void failed(Channel realChannel, Throwable e) {
+		handler.failed(channel, e);
 	}
 
 }

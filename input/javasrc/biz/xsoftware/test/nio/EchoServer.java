@@ -82,14 +82,14 @@ public class EchoServer implements DataListener, ConnectionListener {
 	private int id = 0;
 	public void incomingData(Channel channel, ByteBuffer b) throws IOException {		
 		try {
-			channel.write(b, NullWriteCallback.singleton(), id++);
+			channel.write(b, NullWriteCallback.singleton());
 		} catch (InterruptedException e) {
 			log.log(Level.WARNING, "Exception occurred", e);
 		}
 	}
 
 	public void farEndClosed(Channel channel) {
-        channel.close(null, -1);
+        channel.close(null);
 	}
 
 	public void failure(Channel channel, ByteBuffer data, Exception e) {

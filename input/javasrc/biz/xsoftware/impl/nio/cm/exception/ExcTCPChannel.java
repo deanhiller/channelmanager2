@@ -36,13 +36,13 @@ class ExcTCPChannel extends UtilTCPChannel implements TCPChannel {
 		return realChannel.write(b);
 	}
 	
-	public void write(ByteBuffer b, WriteCloseCallback h, int id) throws IOException, InterruptedException {
+	public void write(ByteBuffer b, WriteCloseCallback h) throws IOException, InterruptedException {
 		WriteCloseCallback callback;
 		if(h == null) {
 			callback = NULL_WRITE_HANDLER;
 		}else
 			callback = h;
-		realChannel.write(b, new ExcProxyWriteHandler(this, callback), id);
+		realChannel.write(b, new ExcProxyWriteHandler(this, callback));
 	}
 	
 	public void connect(SocketAddress addr, ConnectionCallback c) throws IOException, InterruptedException {
@@ -53,21 +53,21 @@ class ExcTCPChannel extends UtilTCPChannel implements TCPChannel {
 		realChannel.connect(addr, proxy);
 	}
 
-	public void close(WriteCloseCallback h, int id) {
+	public void close(WriteCloseCallback h) {
 		WriteCloseCallback callback;
 		if(h == null) {
 			callback = NULL_WRITE_HANDLER;
 		}else
 			callback = h;
-		realChannel.close(new ExcProxyWriteHandler(this, callback), id);
+		realChannel.close(new ExcProxyWriteHandler(this, callback));
 	}	
 	
 	private static class NullWriteHandler implements WriteCloseCallback {
 
-		public void finished(Channel c, int id) {
+		public void finished(Channel c) {
 		}
 
-		public void failed(Channel c, int id, Throwable e) {
+		public void failed(Channel c, Throwable e) {
 			log.log(Level.WARNING, "Exception trying to write", e);
 		}
 		

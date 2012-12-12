@@ -10,12 +10,10 @@ public class CloseRunnable implements DelayedWritesCloses {
 	private static final Logger log = Logger.getLogger(CloseRunnable.class.getName());
 	private BasChannelImpl channel;
 	private WriteCloseCallback handler;
-	private int id;
     
-	public CloseRunnable(BasChannelImpl c, WriteCloseCallback h, int id) {
+	public CloseRunnable(BasChannelImpl c, WriteCloseCallback h) {
 		channel = c;
 		handler = h;
-		this.id = id;
 	}
 
 	public boolean runDelayedAction(boolean isSelectorThread) {
@@ -30,10 +28,10 @@ public class CloseRunnable implements DelayedWritesCloses {
             //The above only happens on the client thread...on selector thread, close works fine.
             channel.wakeupSelector();
             
-			handler.finished(channel, id);
+			handler.finished(channel);
 		} catch(Exception e) {
 			log.log(Level.WARNING, channel+"Exception occurred", e);
-			handler.failed(channel, id, e);
+			handler.failed(channel, e);
 		}
 		return true;
 	}

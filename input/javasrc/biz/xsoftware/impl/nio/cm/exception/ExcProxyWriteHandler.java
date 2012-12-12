@@ -19,17 +19,17 @@ public class ExcProxyWriteHandler implements WriteCloseCallback {
 		channel = c;
 	}
 
-	public void finished(Channel realChannel, int id) {
+	public void finished(Channel realChannel) {
 		try {
-			handler.finished(channel, id);
+			handler.finished(channel);
 		} catch(Exception e) {
 			log.log(Level.WARNING, channel+"Exception occurred", e);
 		}
 	}
 
-	public void failed(Channel realChannel, int id, Throwable e) {
+	public void failed(Channel realChannel, Throwable e) {
 		try {
-			handler.failed(channel, id, e);
+			handler.failed(channel, e);
 		} catch(Exception ee) {
 			log.log(Level.WARNING, channel+"Exception occurred", ee);
 		}

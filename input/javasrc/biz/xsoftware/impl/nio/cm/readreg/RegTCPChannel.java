@@ -42,8 +42,8 @@ class RegTCPChannel extends RegHelperChannel implements TCPChannel {
 		return getRealChannel().write(b);
 	}
 	
-	public void write(ByteBuffer b, WriteCloseCallback h, int id) throws IOException, InterruptedException {
-		getRealChannel().write(b, h, id);
+	public void write(ByteBuffer b, WriteCloseCallback h) throws IOException, InterruptedException {
+		getRealChannel().write(b, h);
 	}
 
 	public boolean getKeepAlive() throws SocketException {

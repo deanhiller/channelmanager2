@@ -353,7 +353,7 @@ public abstract class ZPerformanceSuper extends TestCase {
 		timer2.start();
 		for(TCPChannel client : clients) {
 			for(int i = 0; i < numWrites; i++) {
-				client.write(b, NullWriteCallback.singleton(), i);
+				client.write(b, NullWriteCallback.singleton());
 				b.rewind();
 			}
 		}
