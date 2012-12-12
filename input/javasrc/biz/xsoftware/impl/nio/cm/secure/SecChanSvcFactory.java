@@ -32,10 +32,10 @@ public class SecChanSvcFactory extends ChannelServiceFactory {
 	public ChannelService createChannelManager(Map<String, Object> map) {
 		if(map == null)
 			throw new IllegalArgumentException("map cannot be null");
-		String id = map.get(ChannelManager.KEY_ID)+"";
-		if(id == null)
+		Object theId = map.get(ChannelManager.KEY_ID);
+		if(theId == null)
 			throw new IllegalArgumentException("map must contain a value for property key=ChannelManager.KEY_ID");
-
+		String id = theId+"";
 		//create a real ChannelManager for the SecureChannelManager to use
 		ChannelService mgr = factory.createChannelManager(map);
 		return new SecChannelService(id, mgr);

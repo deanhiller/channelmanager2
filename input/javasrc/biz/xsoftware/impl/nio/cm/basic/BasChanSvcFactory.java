@@ -29,9 +29,10 @@ public class BasChanSvcFactory extends ChannelServiceFactory {
 	public ChannelService createChannelManager(Map<String, Object> map) {
 		if(map == null)
 			throw new IllegalArgumentException("map cannot be null");
-		String id = map.get(ChannelManager.KEY_ID)+"";
-		if(id == null)
+		Object theId = map.get(ChannelManager.KEY_ID);
+		if(theId == null)
 			throw new IllegalArgumentException("map must contain a value for property key=ChannelManager.KEY_ID");
+		String id = theId+"";
 		Object o = map.get(ChannelManager.KEY_BUFFER_FACTORY);
 		if(o == null || !(o instanceof BufferFactory))
 			throw new IllegalArgumentException("Key=ChannelManager.KEY_BUFFER_FACTORY must " +
