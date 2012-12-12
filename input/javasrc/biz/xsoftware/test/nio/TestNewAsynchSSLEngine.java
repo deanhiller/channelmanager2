@@ -15,12 +15,9 @@ import biz.xsoftware.api.nio.libs.AsynchSSLEngine;
 import biz.xsoftware.api.nio.libs.FactoryCreator;
 import biz.xsoftware.api.nio.libs.SSLEngineFactory;
 import biz.xsoftware.api.nio.libs.SSLListener;
-import biz.xsoftware.api.nio.testutil.CloneByteBuffer;
 import biz.xsoftware.api.nio.testutil.HandlerForTests;
 import biz.xsoftware.api.nio.testutil.MockSSLEngineFactory;
-import biz.xsoftware.mock.CalledMethod;
 import biz.xsoftware.mock.MockObject;
-import biz.xsoftware.mock.MockObjectFactory;
 
 /**
  * Normally I would not separate out one class for testing, but when this
