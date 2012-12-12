@@ -124,7 +124,7 @@ public class TestBasicUDP extends TestCase {
         writeFromServer(svrChan);
         
         try {
-            client1.write(createBuffer());        
+            client1.oldWrite(createBuffer());        
             fail("Should have thrown a NotYetConnectedException");
         } catch (IllegalStateException e) {
             //should land here
@@ -156,7 +156,7 @@ public class TestBasicUDP extends TestCase {
 		ByteBuffer b = createBuffer();
 		int expectedWrote = b.remaining();
 		log.fine("***********************************************");
-		int actualWrite = client1.write(b);
+		int actualWrite = client1.oldWrite(b);
 		assertEquals(expectedWrote, actualWrite);
 	
 		CalledMethod m = mockServer.expect(MockNIOServer.INCOMING_DATA);
@@ -176,7 +176,7 @@ public class TestBasicUDP extends TestCase {
 	}
 	
 	private void verifyTearDown() throws IOException {
-		client1.close();
+		client1.oldClose();
 		assertTrue("Status should be closed", client1.isClosed());
 	}
 	

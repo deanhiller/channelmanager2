@@ -65,7 +65,7 @@ public class DelayServer {
 	}
 	
 	public void stop() throws IOException, InterruptedException {		
-		srvrChannel.close();
+		srvrChannel.oldClose();
 		acceptor.closeAllSockets();
 		
 		serverSideChanMgr.stop();		

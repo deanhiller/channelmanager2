@@ -211,7 +211,7 @@ public abstract class ZNioFailureSuperclass extends MockTestCase {
 		helper.putString(b, "de");
 		helper.doneFillingBuffer(b);
 		int expectedWrote = b.remaining();
-		int actualWrite = client1.write(b);
+		int actualWrite = client1.oldWrite(b);
 		assertEquals(expectedWrote, actualWrite);
 		
 		CalledMethod m = mockServer.expect(MockNIOServer.INCOMING_DATA);
@@ -226,7 +226,7 @@ public abstract class ZNioFailureSuperclass extends MockTestCase {
 		assertEquals("de", result);
 		
 		b.rewind();
-		svrChan.write(b);
+		svrChan.oldWrite(b);
 		
 		m = mockHandler.expect(MockDataHandler.INCOMING_DATA);
 		actualBuf = (ByteBuffer)m.getAllParams()[1];
@@ -242,7 +242,7 @@ public abstract class ZNioFailureSuperclass extends MockTestCase {
 	}
 	
 	private void verifyTearDown() throws IOException {
-		client1.close();
+		client1.oldClose();
 		mockServer.expect(MockNIOServer.FAR_END_CLOSED);
 	}
 	

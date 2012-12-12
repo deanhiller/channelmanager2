@@ -22,7 +22,7 @@ public interface Channel extends RegisterableChannel {
      * @param b
      */
 	@Deprecated
-    public int write(ByteBuffer b) throws IOException;
+    public int oldWrite(ByteBuffer b) throws IOException;
     
     /**
      * Use these two lines of code instead
@@ -35,6 +35,7 @@ public interface Channel extends RegisterableChannel {
      * @throws IOException 
      * @throws InterruptedException 
      */
+	@Deprecated
     public void write(ByteBuffer b, OperationCallback h) throws IOException, InterruptedException;
     
     /**

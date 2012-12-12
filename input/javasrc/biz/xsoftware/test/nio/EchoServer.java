@@ -53,10 +53,10 @@ public class EchoServer implements DataListener, ConnectionListener {
 	}
 	
 	public void stop() throws IOException, InterruptedException {		
-		srvrChannel.close();
+		srvrChannel.oldClose();
 		for(int i = 0; i < sockets.size(); i++) {
 			Channel channel = sockets.get(i);
-			channel.close();
+			channel.oldClose();
 		}
 		chanMgr.stop();		
 	}

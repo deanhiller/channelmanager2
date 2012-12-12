@@ -103,7 +103,7 @@ class BasTCPServerChannel extends RegisterableChannelImpl implements TCPServerCh
 		return channel.socket().isBound();
 	}
 	
-	public void close() {
+	public void oldClose() {
 		//socket.close was resulting in following exception on polling thread.
 		//To fix this, we put mechanisms in place to look if this channel
 		//was closed or not on the call to accept method

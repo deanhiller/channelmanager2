@@ -143,7 +143,7 @@ public class TestWrites extends TestCase {
         HELPER.doneFillingBuffer(b);
         
 //        mockSunsChannel.addReturnValue("write", b.remaining());
-        client1.write(b);
+        client1.oldWrite(b);
         CalledMethod m = mockSunsChannel.expect("write");
         ByteBuffer actual = (ByteBuffer)m.getAllParams()[0];
         String msg = HELPER.readString(actual, actual.remaining());

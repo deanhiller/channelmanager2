@@ -191,7 +191,7 @@ public abstract class ZPerformanceSuper extends TestCase {
 				mockConnect.expect(methodNames);
 				
 				for(TCPChannel channel : clients) {
-					channel.close();
+					channel.oldClose();
 				}
 			}
 		} catch(Exception e) {
@@ -268,7 +268,7 @@ public abstract class ZPerformanceSuper extends TestCase {
 		timer2.start();
 		for(TCPChannel client : clients) {
 			for(int i = 0; i < numWrites; i++) {
-				client.write(b);
+				client.oldWrite(b);
 				b.rewind();
 			}
 		}

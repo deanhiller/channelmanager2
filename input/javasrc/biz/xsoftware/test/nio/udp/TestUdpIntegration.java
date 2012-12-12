@@ -313,7 +313,7 @@ public class TestUdpIntegration extends MockTestCase
         ByteBuffer b = ByteBuffer.allocate(1000);
         HELPER.putString(b, msg);
         HELPER.doneFillingBuffer(b);        
-        c.write(b);
+        c.oldWrite(b);
     }
     
     

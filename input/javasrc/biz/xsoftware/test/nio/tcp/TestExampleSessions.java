@@ -82,16 +82,16 @@ public class TestExampleSessions extends TestCase
         ByteBuffer b = ByteBuffer.allocate(100);
         HELPER.putString(b, msg);
         b.flip();
-        client.write(b);
+        client.oldWrite(b);
 
         b.rewind();
-        client.write(b);
+        client.oldWrite(b);
         
         b.rewind();
-        svrTCPChannel.write(b);
+        svrTCPChannel.oldWrite(b);
         
         b.rewind();
-        client.write(b);
+        client.oldWrite(b);
     }
     
     private InetSocketAddress startServer() throws Exception {

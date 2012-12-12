@@ -38,8 +38,8 @@ class RegTCPChannel extends RegHelperChannel implements TCPChannel {
 	}	
 	
 	@Override
-	public int write(ByteBuffer b) throws IOException {
-		return getRealChannel().write(b);
+	public int oldWrite(ByteBuffer b) throws IOException {
+		return getRealChannel().oldWrite(b);
 	}
 	
 	public void write(ByteBuffer b, OperationCallback h) throws IOException, InterruptedException {

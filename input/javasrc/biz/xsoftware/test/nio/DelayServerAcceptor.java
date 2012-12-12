@@ -63,7 +63,7 @@ public class DelayServerAcceptor implements ConnectionListener {
 	public void closeAllSockets() throws IOException {
 		for(int i = 0; i < sockets.size(); i++) {
 			Channel channel = sockets.get(i);
-			channel.close();
+			channel.oldClose();
 		}		
 	}
 	

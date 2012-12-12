@@ -106,7 +106,7 @@ public class EventServer implements ConnectionListener, DataListener {
 		@Override
 		public void run() {
 			try {
-				c.write(b);
+				c.oldWrite(b);
 				b.rewind();
 			} catch(Exception e) {
 				log.log(Level.WARNING, c+"TimerTaskException", e);

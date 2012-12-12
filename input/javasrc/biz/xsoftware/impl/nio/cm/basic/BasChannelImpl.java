@@ -191,7 +191,7 @@ public abstract class BasChannelImpl
 		return b;
 	}
 	
-	public int write(ByteBuffer b) throws IOException {
+	public int oldWrite(ByteBuffer b) throws IOException {
 		if(!getSelectorManager().isRunning())
 			throw new IllegalStateException(this+"ChannelManager must be running and is stopped");
 		else if(isClosed) {
@@ -267,7 +267,7 @@ public abstract class BasChannelImpl
     /* (non-Javadoc)
      * @see api.biz.xsoftware.nio.SocketChannel#close()
      */
-    public void close() {                
+    public void oldClose() {                
         
         Object t = getSelectorManager().getThread();
         if(t != null && Thread.currentThread().equals(t)) {

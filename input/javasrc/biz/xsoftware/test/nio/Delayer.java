@@ -43,7 +43,7 @@ public class Delayer implements DataListener {
 			public void run() {
 				try {
 					HELPER.doneFillingBuffer(newBuffer);
-					to.write(newBuffer);
+					to.oldWrite(newBuffer);
 				} catch (Exception e) {
 					log.log(Level.WARNING, "exception", e);
 				}
@@ -58,7 +58,7 @@ public class Delayer implements DataListener {
 			@Override
 			public void run() {
 				try {
-					to.close();
+					to.oldClose();
 				} catch (Exception e) {
 					log.log(Level.WARNING, "exception", e);
 				}

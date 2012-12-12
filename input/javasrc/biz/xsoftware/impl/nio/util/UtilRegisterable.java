@@ -27,8 +27,8 @@ public class UtilRegisterable implements RegisterableChannel {
 		return realChannel.toString();
 	}
 	
-	public void close() {
-		realChannel.close();
+	public void oldClose() {
+		realChannel.oldClose();
 	}
 	
 	public boolean isClosed() {

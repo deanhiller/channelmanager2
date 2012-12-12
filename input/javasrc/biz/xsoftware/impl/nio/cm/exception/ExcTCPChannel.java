@@ -32,8 +32,8 @@ class ExcTCPChannel extends UtilTCPChannel implements TCPChannel {
 	}
 
 	@Override
-	public int write(ByteBuffer b) throws IOException {
-		return realChannel.write(b);
+	public int oldWrite(ByteBuffer b) throws IOException {
+		return realChannel.oldWrite(b);
 	}
 	
 	public void write(ByteBuffer b, OperationCallback h) throws IOException, InterruptedException {

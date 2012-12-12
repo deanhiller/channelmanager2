@@ -156,7 +156,7 @@ public class XTestDelayServer extends TestCase {
 		timer2.start();
 		for(TCPChannel client : clients) {
 			for(int i = 0; i < numWrites; i++) {
-				client.write(b);
+				client.oldWrite(b);
 				b.rewind();
 			}
 		}

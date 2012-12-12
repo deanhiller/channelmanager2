@@ -73,10 +73,10 @@ public class MockNIOServer extends MockDataHandler implements ConnectionListener
 		recThread.stopThread();
 		udp.close();
 		
-		srvrChannel.close();
+		srvrChannel.oldClose();
 		for(int i = 0; i < sockets.size(); i++) {
 			Channel channel = sockets.get(i);
-			channel.close();
+			channel.oldClose();
 		}
 		//NOTE: Keep this stop here after closing the channels at sometimes
 		//there are bugs there and they will show up this way.

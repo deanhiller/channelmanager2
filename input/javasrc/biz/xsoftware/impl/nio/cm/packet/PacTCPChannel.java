@@ -34,10 +34,10 @@ class PacTCPChannel extends UtilTCPChannel implements TCPChannel {
 
 
 	@Override
-	public int write(ByteBuffer b) throws IOException {
+	public int oldWrite(ByteBuffer b) throws IOException {
 		int retVal = b.remaining();
 		ByteBuffer out = packetProcessor.processOutgoing(b);
-		realChannel.write(out);
+		realChannel.oldWrite(out);
 		return retVal;
 	}
 	

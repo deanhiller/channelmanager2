@@ -210,7 +210,7 @@ public abstract class ZNioSuperclassTest extends TestCase {
 		
 		verifyDataPassing(svrChan);
 		
-		svrChan.close();	
+		svrChan.oldClose();	
 		
 		//shutdown channel manager first
 		mockServer.stop();
@@ -240,7 +240,7 @@ public abstract class ZNioSuperclassTest extends TestCase {
 		//shutdown channel manager first....should all sockets be closed?  Right now
 		//someone has to manually close all accepted sockets...ie. client responsibility.
 		mockServer.stop();		
-		svrChan.close();
+		svrChan.oldClose();
 	
 		//notice the Channelmanager on the client side has not shut down so we should
 		//see a close event....
@@ -261,7 +261,7 @@ public abstract class ZNioSuperclassTest extends TestCase {
 		
 		client1.unregisterForReads();
 		b.rewind();
-		svrChan.write(b);
+		svrChan.oldWrite(b);
 		Thread.sleep(5000);
 		mockHandler.expect(MockObject.NONE);
 		
@@ -324,7 +324,7 @@ public abstract class ZNioSuperclassTest extends TestCase {
 		helper.doneFillingBuffer(b);
 		int expectedWrote = b.remaining();
 		log.fine("***********************************************");
-		int actualWrite = client1.write(b);
+		int actualWrite = client1.oldWrite(b);
 		assertEquals(expectedWrote, actualWrite);
 		
 		CalledMethod m = mockServer.expect(MockNIOServer.INCOMING_DATA);
@@ -337,7 +337,7 @@ public abstract class ZNioSuperclassTest extends TestCase {
 		assertEquals("de", result);
 		
 		b.rewind();
-		svrChan.write(b);
+		svrChan.oldWrite(b);
 		
 		m = mockHandler.expect(MockDataHandler.INCOMING_DATA);
 		actualBuf = (ByteBuffer)m.getAllParams()[1];
@@ -349,7 +349,7 @@ public abstract class ZNioSuperclassTest extends TestCase {
 	private void verifyTearDown() throws IOException {
         log.info("local="+client1.getLocalAddress()+" remote="+client1.getRemoteAddress());
 		log.info("CLIENT1 CLOSE");
-		client1.close();
+		client1.oldClose();
 		mockServer.expect(MockNIOServer.FAR_END_CLOSED);
 	}
 	

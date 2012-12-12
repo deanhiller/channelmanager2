@@ -43,7 +43,7 @@ class SecTCPChannel extends UtilTCPChannel implements TCPChannel {
 		this.sslFactory = sslFactory;
 	}
 
-	public int write(ByteBuffer b) throws IOException {
+	public int oldWrite(ByteBuffer b) throws IOException {
 		if(reader.getHandler() == null)
 			throw new NotYetConnectedException();
 		int remain = b.remaining();
@@ -145,7 +145,7 @@ class SecTCPChannel extends UtilTCPChannel implements TCPChannel {
 	}
 
 	@Override
-	public void close() {
+	public void oldClose() {
 		try {
 			reader.close();
 		} catch(Exception e) {
@@ -157,7 +157,7 @@ class SecTCPChannel extends UtilTCPChannel implements TCPChannel {
 			log.log(Level.WARNING, this+"Exception on closing channel", e);
 		}
 		
-		super.close();
+		super.oldClose();
 	}
 
 	public void close(OperationCallback h) {

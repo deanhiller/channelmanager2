@@ -93,9 +93,9 @@ public class DatagramChannelImpl implements DatagramChannel
     }
 
     /**
-     * @see biz.xsoftware.api.nio.channels.RegisterableChannel#close()
+     * @see biz.xsoftware.api.nio.channels.RegisterableChannel#oldClose()
      */
-    public void close() {
+    public void oldClose() {
         if(socket == null)
             return;
 

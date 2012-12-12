@@ -59,7 +59,7 @@ public class EventClient implements ConnectionCallback, DataListener {
 			ByteBuffer b = ByteBuffer.allocate(100);
 			HELPER.putString(b, hello);
 			HELPER.doneFillingBuffer(b);
-			channel.write(b);			
+			channel.oldWrite(b);			
 		} catch (InterruptedException e) {
 			log.log(Level.WARNING, channel+"Exception", e);
 		}

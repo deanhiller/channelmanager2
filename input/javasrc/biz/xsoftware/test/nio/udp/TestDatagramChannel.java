@@ -84,9 +84,9 @@ public class TestDatagramChannel extends MockTestCase
     {
         svc.stop();
         
-        client.close();
-        client2.close();
-        server.close();
+        client.oldClose();
+        client2.oldClose();
+        server.oldClose();
         
         clientHandler.expect(MockObject.NONE);
         svrHandler.expect(MockObject.NONE);

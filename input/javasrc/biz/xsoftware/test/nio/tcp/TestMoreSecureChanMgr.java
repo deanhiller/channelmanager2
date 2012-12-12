@@ -193,7 +193,7 @@ public class TestMoreSecureChanMgr extends TestCase {
 //	}
 	
 	private void verifyTearDown() throws IOException {
-		client1.close();
+		client1.oldClose();
 		String[] methodNames = new String[2];
 		methodNames[0] = "incomingData"; //close handshake packet
 		methodNames[1] = MockNIOServer.FAR_END_CLOSED;
