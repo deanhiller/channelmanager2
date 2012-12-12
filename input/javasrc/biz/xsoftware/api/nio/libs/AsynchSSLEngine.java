@@ -23,16 +23,18 @@ public interface AsynchSSLEngine {
 	void setListener(SSLListener connectProxy);
 	
 	/**
-	 * Initiates handshaking (initial or renegotiation) on this AsynchSSLEngine
+	 * Initiates handshaking (initial or renegotiation) on this AsynchSSLEngine.  sooo, this can be
+	 * called to start first handshake OR to cause a new handshake in the middle to change up the symmetrical keys
+	 * once in a while(rehandshaking every so often keeps your channel more secure)
 	 */
 	void beginHandshake() throws IOException;
 	
 	/**
      * I believe calling this method will only result in SSLListener.packetEncrypted being called
      * unlike feedEncryptedPacket method.  Just like the SSLEngine.wrap method, 
-     * this method is NOT thread safe!  It should not be called from two different threads.
+     * this method is NOT thread safe!  You can call it from different threads but it must be done in the correct order.
      * It is also NOT thread safe with beginHandshake.  It should not be called in one
-     * thread while beginHandshake is called in another(for rehanshaking purposes).
+     * thread while beginHandshake is called in another(for rehandshaking purposes).
      * 
 	 * @param b
 	 * @param passThrough Object that is passed through to SSLListener.packetEncrypted 
@@ -41,18 +43,21 @@ public interface AsynchSSLEngine {
 	void feedPlainPacket(ByteBuffer b, Object passThrough) throws IOException;
 
 	/**
-	 * Feeding an encrypted packet results in one of three possible methods on SSLListener being called
+	 * Feeding an encrypted packet results in one of four possible methods on SSLListener being called
 	 * <ol>
 	 *   <li>packetEncrypted - this is a handshake response message
 	 *   <li>packetUnencrypted - this is a message that has been unencrypted and is ready for consumption
 	 *   <li>encryptionLinkEstablished - the last handshake message was received and handshake is complete
+	 *   <li>No method is called as we are waiting for more data from the stream(ie. there was not enough for one whole SSL packet).  We cache the data for you ;)
 	 * </ol>
 	 * Like SSLEngine.unwrap, this method is not thread safe and should not be called from
 	 * multiple threads.
 	 * 
-	 * @param b
+	 * @param b The bytes
+	 * @param passthrough - This is ONLY passed through IF SSLListener is called, otherwise we discard it!!!  We tell you if we decrypted it with the return value
+	 * @return PacketAction with the result of what happened in the engine.	
 	 */
-	public void feedEncryptedPacket(ByteBuffer b) throws IOException;
+	public PacketAction feedEncryptedPacket(ByteBuffer b, Object passthrough) throws IOException;
 	
 	/**
 	 * Calling close results in SSLListener.feedEncryptedPacket being called and then waiting

@@ -89,7 +89,7 @@ public class TestNewAsynchSSLEngine2 extends TestCase {
 		CalledMethod m = clientList.expect("packetEncrypted");
 		ByteBuffer b = (ByteBuffer)m.getAllParams()[0];
 		
-		serverEngine.feedEncryptedPacket(b);
+		serverEngine.feedEncryptedPacket(b, null);
 		m = serverList.expect("runTask");
 		Runnable r = (Runnable)m.getAllParams()[0];
 
@@ -97,7 +97,7 @@ public class TestNewAsynchSSLEngine2 extends TestCase {
 		m = serverList.expect("packetEncrypted");
 		b = (ByteBuffer)m.getAllParams()[0];
 
-		clientEngine.feedEncryptedPacket(b);
+		clientEngine.feedEncryptedPacket(b, null);
 		m = clientList.expect("runTask");
 		r = (Runnable)m.getAllParams()[0];
 
@@ -110,18 +110,18 @@ public class TestNewAsynchSSLEngine2 extends TestCase {
 		
 		ByteBuffer b0 = (ByteBuffer)methods[0].getAllParams()[0];		
 
-		serverEngine.feedEncryptedPacket(b0);
+		serverEngine.feedEncryptedPacket(b0, null);
 		ByteBuffer b1 = (ByteBuffer)methods[1].getAllParams()[0];
 		m = serverList.expect("runTask");
 		r = (Runnable)m.getAllParams()[0];
 		
-		serverEngine.feedEncryptedPacket(b1);
+		serverEngine.feedEncryptedPacket(b1, null);
 		ByteBuffer b2 = (ByteBuffer)methods[2].getAllParams()[0];
 
 		//THIS IS THE DELAYED RUN TASK run after second feed of data to sslEngine...
 		r.run();
 			
-		serverEngine.feedEncryptedPacket(b2);		
+		serverEngine.feedEncryptedPacket(b2, null);		
 		String[] methodNames1 = new String[3];
 		methodNames1[0] = "packetEncrypted";
 		methodNames1[1] = "packetEncrypted";
@@ -129,9 +129,9 @@ public class TestNewAsynchSSLEngine2 extends TestCase {
 		CalledMethod[] methods1 = serverList.expect(methodNames1);
 		
 		ByteBuffer b01 = (ByteBuffer)methods1[0].getAllParams()[0];	
-		clientEngine.feedEncryptedPacket(b01);
+		clientEngine.feedEncryptedPacket(b01, null);
 		ByteBuffer b11 = (ByteBuffer)methods1[1].getAllParams()[0];
-		clientEngine.feedEncryptedPacket(b11);
+		clientEngine.feedEncryptedPacket(b11, null);
 		
 		clientList.expect("encryptedLinkEstablished");
 		log.fine("E*******************************************");
@@ -147,7 +147,7 @@ public class TestNewAsynchSSLEngine2 extends TestCase {
 		CalledMethod m = clientList.expect("packetEncrypted");
 		ByteBuffer b = (ByteBuffer)m.getAllParams()[0];
 		
-		serverEngine.feedEncryptedPacket(b);
+		serverEngine.feedEncryptedPacket(b, null);
 		m = serverList.expect("runTask");
 		Runnable r = (Runnable)m.getAllParams()[0];
 
@@ -155,7 +155,7 @@ public class TestNewAsynchSSLEngine2 extends TestCase {
 		m = serverList.expect("packetEncrypted");
 		b = (ByteBuffer)m.getAllParams()[0];
 
-		clientEngine.feedEncryptedPacket(b);
+		clientEngine.feedEncryptedPacket(b, null);
 		m = clientList.expect("runTask");
 		r = (Runnable)m.getAllParams()[0];
 
@@ -168,15 +168,15 @@ public class TestNewAsynchSSLEngine2 extends TestCase {
 		
 		ByteBuffer b0 = (ByteBuffer)methods[0].getAllParams()[0];		
 
-		serverEngine.feedEncryptedPacket(b0);
+		serverEngine.feedEncryptedPacket(b0, null);
 		ByteBuffer b1 = (ByteBuffer)methods[1].getAllParams()[0];
 		m = serverList.expect("runTask");
 		r = (Runnable)m.getAllParams()[0];
 		
-		serverEngine.feedEncryptedPacket(b1);
+		serverEngine.feedEncryptedPacket(b1, null);
 		ByteBuffer b2 = (ByteBuffer)methods[2].getAllParams()[0];		
 
-		serverEngine.feedEncryptedPacket(b2);		
+		serverEngine.feedEncryptedPacket(b2, null);		
 		String[] methodNames1 = new String[3];
 		
 		//THIS IS THE REALLY DELAYED RUN TASK run after all 3 packets are fed
@@ -189,9 +189,9 @@ public class TestNewAsynchSSLEngine2 extends TestCase {
 		CalledMethod[] methods1 = serverList.expect(methodNames1);
 		
 		ByteBuffer b01 = (ByteBuffer)methods1[0].getAllParams()[0];		
-		clientEngine.feedEncryptedPacket(b01);
+		clientEngine.feedEncryptedPacket(b01, null);
 		ByteBuffer b11 = (ByteBuffer)methods1[1].getAllParams()[0];
-		clientEngine.feedEncryptedPacket(b11);
+		clientEngine.feedEncryptedPacket(b11, null);
 		
 		clientList.expect("encryptedLinkEstablished");
 		log.fine("E*******************************************");
@@ -261,7 +261,7 @@ public class TestNewAsynchSSLEngine2 extends TestCase {
 		
 		CalledMethod m1 = clientList.expect("packetEncrypted");
 		ByteBuffer b3 = (ByteBuffer)m1.getAllParams()[0];
-		serverEngine.feedEncryptedPacket(b3);
+		serverEngine.feedEncryptedPacket(b3, null);
 		
 		m = serverList.expect("runTask");		
 		Runnable r = (Runnable)m.getAllParams()[0];
@@ -269,7 +269,7 @@ public class TestNewAsynchSSLEngine2 extends TestCase {
 		
 		m = serverList.expect("packetEncrypted");
 		b = (ByteBuffer)m.getAllParams()[0];
-		clientEngine.feedEncryptedPacket(b);
+		clientEngine.feedEncryptedPacket(b, null);
 		
 		m = clientList.expect("runTask");		
 		r = (Runnable)m.getAllParams()[0];
@@ -291,7 +291,7 @@ public class TestNewAsynchSSLEngine2 extends TestCase {
 		combined.put(b1);
 		combined.put(b2);
 		helper.doneFillingBuffer(combined);
-		serverEngine.feedEncryptedPacket(combined);		
+		serverEngine.feedEncryptedPacket(combined, null);		
 
 		m = serverList.expect("runTask");		
 		r = (Runnable)m.getAllParams()[0];
@@ -311,7 +311,7 @@ public class TestNewAsynchSSLEngine2 extends TestCase {
 		combined.put(b1);		
 		helper.doneFillingBuffer(combined);
 
-		clientEngine.feedEncryptedPacket(combined);
+		clientEngine.feedEncryptedPacket(combined, null);
 		
 		clientList.expect("encryptedLinkEstablished");		
 	}
@@ -321,7 +321,7 @@ public class TestNewAsynchSSLEngine2 extends TestCase {
 		
 		CalledMethod m = clientList.expect("packetEncrypted");
 		ByteBuffer b = (ByteBuffer)m.getAllParams()[0];
-		serverEngine.feedEncryptedPacket(b);
+		serverEngine.feedEncryptedPacket(b, null);
 		
 		m = serverList.expect("runTask");		
 		Runnable r = (Runnable)m.getAllParams()[0];
@@ -329,7 +329,7 @@ public class TestNewAsynchSSLEngine2 extends TestCase {
 		
 		m = serverList.expect("packetEncrypted");
 		b = (ByteBuffer)m.getAllParams()[0];
-		clientEngine.feedEncryptedPacket(b);
+		clientEngine.feedEncryptedPacket(b, null);
 		
 		m = clientList.expect("runTask");		
 		r = (Runnable)m.getAllParams()[0];
@@ -353,7 +353,7 @@ public class TestNewAsynchSSLEngine2 extends TestCase {
 		b1.limit(3); //we only want to put part of b1 in payload
 		combined.put(b1);
 		helper.doneFillingBuffer(combined);
-		serverEngine.feedEncryptedPacket(combined);
+		serverEngine.feedEncryptedPacket(combined, null);
 		
 		combined.clear();
 		b1.limit(lim);
@@ -361,7 +361,7 @@ public class TestNewAsynchSSLEngine2 extends TestCase {
 		combined.put(b2);
 		
 		helper.doneFillingBuffer(combined);
-		serverEngine.feedEncryptedPacket(combined);		
+		serverEngine.feedEncryptedPacket(combined, null);		
 
 		m = serverList.expect("runTask");		
 		r = (Runnable)m.getAllParams()[0];
@@ -381,7 +381,7 @@ public class TestNewAsynchSSLEngine2 extends TestCase {
 		combined.put(b1);		
 		helper.doneFillingBuffer(combined);
 
-		clientEngine.feedEncryptedPacket(combined);
+		clientEngine.feedEncryptedPacket(combined, null);
 		
 		clientList.expect("encryptedLinkEstablished");		
 	}
@@ -392,7 +392,7 @@ public class TestNewAsynchSSLEngine2 extends TestCase {
 		CalledMethod m = clientList.expect("packetEncrypted");
 		ByteBuffer b = (ByteBuffer)m.getAllParams()[0];
 		
-		serverEngine.feedEncryptedPacket(b);
+		serverEngine.feedEncryptedPacket(b, null);
 		m = serverList.expect("runTask");
 		Runnable r = (Runnable)m.getAllParams()[0];
 
@@ -400,7 +400,7 @@ public class TestNewAsynchSSLEngine2 extends TestCase {
 		m = serverList.expect("packetEncrypted");
 		b = (ByteBuffer)m.getAllParams()[0];
 
-		clientEngine.feedEncryptedPacket(b);
+		clientEngine.feedEncryptedPacket(b, null);
 		m = clientList.expect("runTask");
 		r = (Runnable)m.getAllParams()[0];
 
@@ -415,7 +415,7 @@ public class TestNewAsynchSSLEngine2 extends TestCase {
 		ByteBuffer b1 = (ByteBuffer)methods[1].getAllParams()[0];
 		ByteBuffer b2 = (ByteBuffer)methods[2].getAllParams()[0];
 		
-		serverEngine.feedEncryptedPacket(b0);
+		serverEngine.feedEncryptedPacket(b0, null);
 		m = serverList.expect("runTask");
 		r = (Runnable)m.getAllParams()[0];
 	
@@ -426,7 +426,7 @@ public class TestNewAsynchSSLEngine2 extends TestCase {
 		b1.limit(3); //we only want to put part of b1 in payload
 		combined.put(b1);
 		helper.doneFillingBuffer(combined);
-		serverEngine.feedEncryptedPacket(combined);
+		serverEngine.feedEncryptedPacket(combined, null);
 		
 		//run the task after some of the previous packet fed, then feed rest of packet
 		r.run();
@@ -437,7 +437,7 @@ public class TestNewAsynchSSLEngine2 extends TestCase {
 		combined.put(b2);
 		
 		helper.doneFillingBuffer(combined);
-		serverEngine.feedEncryptedPacket(combined);
+		serverEngine.feedEncryptedPacket(combined, null);
 		
 		String[] methodNames1 = new String[3];
 		methodNames1[0] = "packetEncrypted";
@@ -446,9 +446,9 @@ public class TestNewAsynchSSLEngine2 extends TestCase {
 		CalledMethod[] methods1 = serverList.expect(methodNames1);
 		
 		b0 = (ByteBuffer)methods1[0].getAllParams()[0];		
-		clientEngine.feedEncryptedPacket(b0);
+		clientEngine.feedEncryptedPacket(b0, null);
 		b1 = (ByteBuffer)methods1[1].getAllParams()[0];
-		clientEngine.feedEncryptedPacket(b1);
+		clientEngine.feedEncryptedPacket(b1, null);
 		
 		clientList.expect("encryptedLinkEstablished");		
 	}

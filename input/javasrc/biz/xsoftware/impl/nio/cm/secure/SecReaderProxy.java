@@ -24,7 +24,7 @@ class SecReaderProxy implements DataListener {
 
 	public void incomingData(Channel c, ByteBuffer b) throws IOException {
 		if(!isClosed) {
-			handler.feedEncryptedPacket(b);
+			handler.feedEncryptedPacket(b, null);
 		} else
 			b.position(b.limit()); //if closed, read the data so we don't get warnings
 	}

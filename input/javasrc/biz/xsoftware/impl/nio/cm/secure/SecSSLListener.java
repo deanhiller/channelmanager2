@@ -55,7 +55,7 @@ class SecSSLListener implements SSLListener {
 		}
 	}
 	
-	public void packetUnencrypted(ByteBuffer out) throws IOException {
+	public void packetUnencrypted(ByteBuffer out, Object passThrough) throws IOException {
 		client.incomingData(channel, out);
 	}
 	
@@ -85,16 +85,8 @@ class SecSSLListener implements SSLListener {
 					"to tell you this socket is closed from far end");
 	}
 
-	//TODO: should be passed into ChannelManager so it is configurable!!!
-//	private ExecutorService svc = Executors.newFixedThreadPool(1);
-	public void runTask(Runnable r, boolean isInitialHandshake) {
-		//TODO: AsynchSSLEngine needs to handle a very tough situation...letting
-		//data backup on a rehandshake while this task runs as data cannot be fed
-		//until the task is done running, or don't do a rehandshake....
-//		if(isInitialHandshake)
-//			svc.execute(r);
-//		else
-			r.run(); //run on this thread to avoid problems with incoming packets
+	public void runTask(Runnable r) {
+		r.run();
 	}
 
 	public void closed(boolean clientInitiated) {

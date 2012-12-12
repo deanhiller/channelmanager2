@@ -30,7 +30,7 @@ public class MockSslListener implements SSLListener {
 	}
 
 	@Override
-	public void packetUnencrypted(ByteBuffer out) throws IOException {
+	public void packetUnencrypted(ByteBuffer out, Object passThrough) throws IOException {
 		ByteBuffer temp = ByteBuffer.allocate(out.remaining());
 		temp.put(out);
 		temp.flip();
@@ -38,7 +38,7 @@ public class MockSslListener implements SSLListener {
 	}
 
 	@Override
-	public void runTask(Runnable r, boolean isInitialHandshake) {
+	public void runTask(Runnable r) {
 		this.runnable = r;
 	}
 

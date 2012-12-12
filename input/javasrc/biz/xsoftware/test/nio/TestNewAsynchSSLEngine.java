@@ -66,34 +66,34 @@ public class TestNewAsynchSSLEngine extends TestCase {
 		clientEngine.beginHandshake();
 		ByteBuffer b = clientList.getPacketEncrypted();
 		
-		serverEngine.feedEncryptedPacket(b);
+		serverEngine.feedEncryptedPacket(b, null);
 		Runnable r = serverList.getRunnable();
 
 		r.run();
 		b = serverList.getPacketEncrypted();
 
-		clientEngine.feedEncryptedPacket(b);
+		clientEngine.feedEncryptedPacket(b, null);
 		r = clientList.getRunnable();
 
 		r.run();
 		ByteBuffer b0 = clientList.getPacketEncrypted();
 
-		serverEngine.feedEncryptedPacket(b0);
+		serverEngine.feedEncryptedPacket(b0, null);
 		ByteBuffer b1 = clientList.getPacketEncrypted();
 		r = serverList.getRunnable();
 
 		r.run();
 				
-		serverEngine.feedEncryptedPacket(b1);
+		serverEngine.feedEncryptedPacket(b1, null);
 		ByteBuffer b2 = clientList.getPacketEncrypted();
 
-		serverEngine.feedEncryptedPacket(b2);		
+		serverEngine.feedEncryptedPacket(b2, null);		
 		Assert.assertTrue(serverList.isEncryptedLinkEstablished());
 		
 		b0 = serverList.getPacketEncrypted();
-		clientEngine.feedEncryptedPacket(b0);
+		clientEngine.feedEncryptedPacket(b0, null);
 		b1 = serverList.getPacketEncrypted();
-		clientEngine.feedEncryptedPacket(b1);
+		clientEngine.feedEncryptedPacket(b1, null);
 
 		Assert.assertTrue(clientList.isEncryptedLinkEstablished());
 
@@ -146,12 +146,12 @@ public class TestNewAsynchSSLEngine extends TestCase {
 		
 		all.position(0);
 		all.limit(3736);
-		serverEngine.feedEncryptedPacket(all);
+		serverEngine.feedEncryptedPacket(all, null);
 		Assert.assertNotNull(serverList.getPacketUnencrypted());
 
 		all.limit(8736);
 		all.position(3736);
-		serverEngine.feedEncryptedPacket(all);
+		serverEngine.feedEncryptedPacket(all, null);
 		Assert.assertNotNull(serverList.getPacketUnencrypted());
 	}
 	
@@ -170,12 +170,12 @@ public class TestNewAsynchSSLEngine extends TestCase {
 		
 		ByteBuffer b = clientList.getPacketEncrypted();
 		
-		serverEngine.feedEncryptedPacket(b);
+		serverEngine.feedEncryptedPacket(b, null);
 		
 		b = serverList.getPacketEncrypted();
 		Assert.assertTrue(serverList.isClosed());
 		
-		clientEngine.feedEncryptedPacket(b);
+		clientEngine.feedEncryptedPacket(b, null);
 		
 		Assert.assertTrue(clientList.isClosed());
 	}
@@ -187,12 +187,12 @@ public class TestNewAsynchSSLEngine extends TestCase {
 		
 		ByteBuffer b = serverList.getPacketEncrypted();
 		
-		clientEngine.feedEncryptedPacket(b);
+		clientEngine.feedEncryptedPacket(b, null);
 		
 		b = clientList.getPacketEncrypted();
 		Assert.assertTrue(clientList.isClosed());
 		
-		serverEngine.feedEncryptedPacket(b);
+		serverEngine.feedEncryptedPacket(b, null);
 
 		Assert.assertTrue(serverList.isClosed());
 	}
@@ -214,9 +214,9 @@ public class TestNewAsynchSSLEngine extends TestCase {
 		    bytesLeft = 12;
 		int lim = b.limit();
 		b.limit(bytesLeft);
-		engine.feedEncryptedPacket(b);
+		engine.feedEncryptedPacket(b, null);
 		b.limit(lim);
-		engine.feedEncryptedPacket(b);
+		engine.feedEncryptedPacket(b, null);
 	}
 	
 	/**
@@ -244,11 +244,11 @@ public class TestNewAsynchSSLEngine extends TestCase {
 		ByteBuffer b = clientList.getPacketEncrypted();
 		ByteBuffer encData = clientList.getPacketEncrypted();
 		
-		serverEngine.feedEncryptedPacket(b);
+		serverEngine.feedEncryptedPacket(b, null);
 		Runnable r = serverList.getRunnable();
 
 		try {
-			serverEngine.feedEncryptedPacket(encData);
+			serverEngine.feedEncryptedPacket(encData, null);
 			fail("Should have thrown exception since Runnable has not completed yet");
 		} catch(IllegalStateException e) {}
 		
@@ -263,7 +263,7 @@ public class TestNewAsynchSSLEngine extends TestCase {
 		b = serverList.getPacketEncrypted();
 		
 		try {
-			clientEngine.feedEncryptedPacket(data);
+			clientEngine.feedEncryptedPacket(data, null);
 			fail("Should have thrown exception");
 		} catch(SSLException e) {}
 		
@@ -271,7 +271,7 @@ public class TestNewAsynchSSLEngine extends TestCase {
 		Assert.assertTrue(clientList.isClosed());
 		
 		try {
-			serverEngine.feedEncryptedPacket(b);
+			serverEngine.feedEncryptedPacket(b, null);
 			fail("not sure why this throws exceptoin...I expected it to be able to take a close handshake message");
 		} catch(SSLException e) {}
 		
@@ -294,18 +294,18 @@ public class TestNewAsynchSSLEngine extends TestCase {
 		ByteBuffer b = clientList.getPacketEncrypted();
 		ByteBuffer encData = clientList.getPacketEncrypted();
 		
-		serverEngine.feedEncryptedPacket(b);
+		serverEngine.feedEncryptedPacket(b, null);
 		Runnable r = serverList.getRunnable();
 		r.run();
 		ByteBuffer hsMsg = serverList.getPacketEncrypted();	
 		
-		serverEngine.feedEncryptedPacket(encData);
+		serverEngine.feedEncryptedPacket(encData, null);
 		
 		b = serverList.getAssembledUnencryptedPacket();
 		String actual = helper.readString(b, b.remaining());
 		assertEquals(expected, actual);	
 		
-		clientEngine.feedEncryptedPacket(hsMsg);
+		clientEngine.feedEncryptedPacket(hsMsg, null);
 		r = clientList.getRunnable();
 		
 		r.run();
@@ -315,21 +315,21 @@ public class TestNewAsynchSSLEngine extends TestCase {
 		ByteBuffer b0 = clientList.getPacketEncrypted();		
 //		feedData(clientEngine, clientList, serverEngine, serverList);
 
-		serverEngine.feedEncryptedPacket(b0);
+		serverEngine.feedEncryptedPacket(b0, null);
 		ByteBuffer b1 = clientList.getPacketEncrypted();
 		r = serverList.getRunnable();
 
 		r.run();
 				
-		serverEngine.feedEncryptedPacket(b1);
+		serverEngine.feedEncryptedPacket(b1, null);
 		ByteBuffer b2 = clientList.getPacketEncrypted();		
 
-		serverEngine.feedEncryptedPacket(b2);		
+		serverEngine.feedEncryptedPacket(b2, null);		
 		
 		b0 = serverList.getPacketEncrypted();		
-		clientEngine.feedEncryptedPacket(b0);
+		clientEngine.feedEncryptedPacket(b0, null);
 		b1 = serverList.getPacketEncrypted();
-		clientEngine.feedEncryptedPacket(b1);
+		clientEngine.feedEncryptedPacket(b1, null);
 
 //		feedData(clientEngine, clientList, serverEngine, serverList);		
 	}
@@ -343,7 +343,7 @@ public class TestNewAsynchSSLEngine extends TestCase {
 
 		ByteBuffer encData = fromList.getPacketEncrypted();
 		
-		to.feedEncryptedPacket(encData);
+		to.feedEncryptedPacket(encData, null);
 
 		ByteBuffer b = toList.getAssembledUnencryptedPacket();
 		String actual = helper.readString(b, b.remaining());
@@ -378,18 +378,18 @@ public class TestNewAsynchSSLEngine extends TestCase {
 		
 		ByteBuffer b = clientList.getPacketEncrypted();
 		
-		serverEngine.feedEncryptedPacket(b);
+		serverEngine.feedEncryptedPacket(b, null);
 		
 		ByteBuffer hsMsg = serverList.getPacketEncrypted();
 		Assert.assertTrue(serverList.isClosed());
 		
-		clientEngine.feedEncryptedPacket(encData); 
+		clientEngine.feedEncryptedPacket(encData, null); 
 		b = clientList.getAssembledUnencryptedPacket();
 		log.info("******buffer="+b);
 		String actual = helper.readString(b, b.remaining());
 		assertEquals(expected, actual);
 		
-		clientEngine.feedEncryptedPacket(hsMsg);
+		clientEngine.feedEncryptedPacket(hsMsg, null);
 
 		Assert.assertTrue(clientList.isClosed());
 	}

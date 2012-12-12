@@ -16,6 +16,7 @@ import javax.net.ssl.SSLEngineResult.Status;
 import biz.xsoftware.api.nio.BufferHelper;
 import biz.xsoftware.api.nio.ChannelServiceFactory;
 import biz.xsoftware.api.nio.libs.AsynchSSLEngine;
+import biz.xsoftware.api.nio.libs.PacketAction;
 import biz.xsoftware.api.nio.libs.SSLListener;
 
 /**
@@ -83,8 +84,8 @@ public class AsynchSSLEngineImpl implements AsynchSSLEngine {
 	private static final class NullListener implements SSLListener {
 		public void encryptedLinkEstablished() throws IOException {	}
 		public void packetEncrypted(ByteBuffer engineToSocketData, Object passThrough) throws IOException {	}
-		public void packetUnencrypted(ByteBuffer out) {	}
-		public void runTask(Runnable r, boolean isInitialHandshake) {}
+		public void packetUnencrypted(ByteBuffer out, Object passThrough) {	}
+		public void runTask(Runnable r) {}
 		public void closed(boolean fromEncryptedPacket) {}
 	}
 	
@@ -136,8 +137,9 @@ public class AsynchSSLEngineImpl implements AsynchSSLEngine {
 	/**
 	 * This is synchronized as the socketToEngineData2 buffer is modified in this method
 	 * and modified in other methods that are called on other threads.(ie. the put is called)
+	 * 
 	 */
-	public void feedEncryptedPacket(ByteBuffer b) throws IOException {
+	public PacketAction feedEncryptedPacket(ByteBuffer b, Object passthrough) throws IOException {
 		if(isClosed) {
 			throw new IllegalStateException(id+"SSLEngine is closed");
 		} else if(runningRunnable)
@@ -153,7 +155,10 @@ public class AsynchSSLEngineImpl implements AsynchSSLEngine {
 			if(log.isLoggable(Level.FINEST))
 				log.finest(id+"[sockToEngine] pos="+socketToEngineData2.position()+" lim="+socketToEngineData2.limit());
 
-			feedEncryptedPacketImpl();
+			PacketAction result = feedEncryptedPacketImpl(passthrough);
+			if(b.hasRemaining())
+				throw new RuntimeException(this+"BUG, need to read all data from ByteBuffer");
+			return result;
 		} catch (IOException e) {
 			//try to close SSLEngine
 			try {
@@ -170,12 +175,11 @@ public class AsynchSSLEngineImpl implements AsynchSSLEngine {
 			exc.initCause(e);
 			throw exc;
 		}
-		if(b.hasRemaining())
-			throw new RuntimeException(this+"BUG, need to read all data from ByteBuffer");
 	}
 	
-	private void feedEncryptedPacketImpl() throws IOException {	
-		ByteBuffer b = socketToEngineData2;		
+	private PacketAction feedEncryptedPacketImpl(Object passthrough) throws IOException {	
+		PacketAction action = PacketAction.NOT_ENOUGH_BYTES_YET;
+		ByteBuffer b = socketToEngineData2;
 		if(log.isLoggable(Level.FINEST))
 			log.finest(id+"[sockToEngine] finished filling pos="+b.position()+" lim="+b.limit());
 		ByteBuffer out = engineToAppData;
@@ -215,7 +219,8 @@ public class AsynchSSLEngineImpl implements AsynchSSLEngine {
 				if(log.isLoggable(Level.FINE))
 					log.fine(id+"packetUnencrypted pos="+out.position()+" lim="+
 							out.limit()+" hs="+hsStatus+" status="+status);
-				sslListener.packetUnencrypted(out);
+				action = PacketAction.DECRYPTED_AND_FEDTOLISTENER;
+				sslListener.packetUnencrypted(out, passthrough);
 				if(out.hasRemaining())
 					log.warning(id+"Discarding unread data");
 				out.clear();
@@ -247,6 +252,8 @@ public class AsynchSSLEngineImpl implements AsynchSSLEngine {
 			sslListener.closed(clientInitiated);			
 		} else //TODO: add else if(!hsStatus == HandshakeStatus.NOT_HANDSHAKING)
 			continueHandShake(hsStatus);
+		
+		return action;
 	}
 
 	private void resetBuffer(Status status) {
@@ -315,7 +322,7 @@ public class AsynchSSLEngineImpl implements AsynchSSLEngine {
 	protected void scheduleRunnable(Runnable sslRun, boolean isInitialHandshake) {
 		if(log.isLoggable(Level.FINE))
 			log.fine(id+"runTask");		
-		sslListener.runTask(sslRun, isInitialHandshake);		
+		sslListener.runTask(sslRun);		
 	}
 
 	protected void runRunnable(Runnable r) {
@@ -366,7 +373,7 @@ public class AsynchSSLEngineImpl implements AsynchSSLEngine {
 			if(log.isLoggable(Level.FINER)) {
 				log.finer(id+"[Runnable][socketToEngine] refeeding myself pos="+b.position()+" lim="+b.limit());
 			}
-			feedEncryptedPacketImpl();
+			feedEncryptedPacketImpl(null);
 		} else {
 			if(log.isLoggable(Level.FINER))
 				log.finer(id+"[Runnable]continuing handshake");					
