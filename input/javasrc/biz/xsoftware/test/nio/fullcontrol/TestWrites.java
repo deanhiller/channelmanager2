@@ -15,7 +15,7 @@ import biz.xsoftware.api.nio.ChannelService;
 import biz.xsoftware.api.nio.ChannelServiceFactory;
 import biz.xsoftware.api.nio.channels.TCPChannel;
 import biz.xsoftware.api.nio.handlers.DataListener;
-import biz.xsoftware.api.nio.handlers.WriteCloseCallback;
+import biz.xsoftware.api.nio.handlers.OperationCallback;
 import biz.xsoftware.api.nio.libs.BufferFactory;
 import biz.xsoftware.api.nio.libs.FactoryCreator;
 import biz.xsoftware.api.nio.testutil.CloneByteBuffer;
@@ -80,7 +80,7 @@ public class TestWrites extends TestCase {
         mockSelect.setDefaultReturnValue("isRunning", true);
         mockSelect.setDefaultReturnValue("isWantShutdown", false);
 
-        mockWriteHandler = MockObjectFactory.createMock(WriteCloseCallback.class);
+        mockWriteHandler = MockObjectFactory.createMock(OperationCallback.class);
         mockRegListener = MockObjectFactory.createMock(ChannelRegistrationListener.class);
         MockObject mockChannels = MockObjectFactory.createMock(ChannelsFactory.class);
         MockObject mockSelectorProv = MockObjectFactory.createMock(SelectorProviderFactory.class);
@@ -171,7 +171,7 @@ public class TestWrites extends TestCase {
 
         mockSelect.addReturnValue("createRegistrationListener", mockRegListener);
         mockSunsChannel.addReturnValue("write", 0);        
-        client1.write(b, (WriteCloseCallback)mockWriteHandler);
+        client1.write(b, (OperationCallback)mockWriteHandler);
         mockSunsChannel.expect("write");
         
         mockSelect.setDefaultReturnValue("getKeyFromChannel", key);
@@ -255,14 +255,14 @@ public class TestWrites extends TestCase {
         
         mockSelect.addReturnValue("createRegistrationListener", mockRegListener);
         mockSunsChannel.addBehavior("write", new NoReadByteBuffer2(0));
-        client1.write(b, (WriteCloseCallback)mockWriteHandler);
+        client1.write(b, (OperationCallback)mockWriteHandler);
         mockSunsChannel.expect("write");
         
         b = ByteBuffer.allocate(50);
         int remain2 = b.remaining();
         HELPER.putString(b, expected2);
         HELPER.doneFillingBuffer(b);
-        client1.write(b, (WriteCloseCallback)mockWriteHandler);
+        client1.write(b, (OperationCallback)mockWriteHandler);
         
         mockSunsChannel.expect(MockObject.NONE);
         
@@ -326,7 +326,7 @@ public class TestWrites extends TestCase {
         String expected3 = "ghi";
         HELPER.putString(b3, expected3);
         HELPER.doneFillingBuffer(b3);
-        client1.write(b3, (WriteCloseCallback)mockWriteHandler);        
+        client1.write(b3, (OperationCallback)mockWriteHandler);        
 
         Set<SelectionKey> set = new HashSet<SelectionKey>();
         set.add(key);

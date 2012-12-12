@@ -4,15 +4,15 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import biz.xsoftware.api.nio.channels.Channel;
-import biz.xsoftware.api.nio.handlers.WriteCloseCallback;
+import biz.xsoftware.api.nio.handlers.OperationCallback;
 
-public class ExcProxyWriteHandler implements WriteCloseCallback {
+public class ExcProxyWriteHandler implements OperationCallback {
 
 	private static final Logger log = Logger.getLogger(ExcProxyWriteHandler.class.getName());
-	private WriteCloseCallback handler;
+	private OperationCallback handler;
 	private Channel channel;
 
-	public ExcProxyWriteHandler(Channel c, WriteCloseCallback h) {
+	public ExcProxyWriteHandler(Channel c, OperationCallback h) {
 		if(h == null)
 			throw new IllegalArgumentException("Cannot use null writehandler");
 		handler = h;

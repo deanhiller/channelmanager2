@@ -6,18 +6,18 @@ import java.util.logging.Logger;
 
 import biz.xsoftware.api.nio.channels.Channel;
 import biz.xsoftware.api.nio.channels.RegisterableChannel;
-import biz.xsoftware.api.nio.handlers.WriteCloseCallback;
+import biz.xsoftware.api.nio.handlers.OperationCallback;
 import biz.xsoftware.api.nio.libs.ChannelsRunnable;
 
-public class ThdProxyWriteHandler implements WriteCloseCallback {
+public class ThdProxyWriteHandler implements OperationCallback {
 
 	private static final Logger log = Logger.getLogger(ThdProxyWriteHandler.class.getName());
 	
 	private Channel channel;
-	private WriteCloseCallback handler;
+	private OperationCallback handler;
 	private Executor svc;
 
-	public ThdProxyWriteHandler(Channel c, WriteCloseCallback h, Executor s) {
+	public ThdProxyWriteHandler(Channel c, OperationCallback h, Executor s) {
 		channel = c;
 		handler = h;
 		svc = s;

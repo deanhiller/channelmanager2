@@ -8,7 +8,7 @@ import java.nio.ByteBuffer;
 import biz.xsoftware.api.nio.channels.Channel;
 import biz.xsoftware.api.nio.handlers.DataListener;
 import biz.xsoftware.api.nio.handlers.NullWriteCallback;
-import biz.xsoftware.api.nio.handlers.WriteCloseCallback;
+import biz.xsoftware.api.nio.handlers.OperationCallback;
 import biz.xsoftware.api.nio.libs.ChannelSession;
 
 public abstract class UtilChannel extends UtilRegisterable implements Channel {
@@ -25,7 +25,7 @@ public abstract class UtilChannel extends UtilRegisterable implements Channel {
 		return getRealChannel().write(b);
 	}
 	
-	public void write(ByteBuffer b, WriteCloseCallback h) throws IOException, InterruptedException {
+	public void write(ByteBuffer b, OperationCallback h) throws IOException, InterruptedException {
 		if(h == null)
 			getRealChannel().write(b, NullWriteCallback.singleton());
 		else
@@ -45,7 +45,7 @@ public abstract class UtilChannel extends UtilRegisterable implements Channel {
 		getRealChannel().connect(addr);
 	}
 
-	public void close(WriteCloseCallback h) {
+	public void close(OperationCallback h) {
 		getRealChannel().close(new UtilPassThroughWriteHandler(this, h));
 	}
 	

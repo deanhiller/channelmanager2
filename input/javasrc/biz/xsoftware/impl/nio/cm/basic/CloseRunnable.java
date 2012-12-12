@@ -3,15 +3,15 @@ package biz.xsoftware.impl.nio.cm.basic;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import biz.xsoftware.api.nio.handlers.WriteCloseCallback;
+import biz.xsoftware.api.nio.handlers.OperationCallback;
 
 public class CloseRunnable implements DelayedWritesCloses {
 
 	private static final Logger log = Logger.getLogger(CloseRunnable.class.getName());
 	private BasChannelImpl channel;
-	private WriteCloseCallback handler;
+	private OperationCallback handler;
     
-	public CloseRunnable(BasChannelImpl c, WriteCloseCallback h) {
+	public CloseRunnable(BasChannelImpl c, OperationCallback h) {
 		channel = c;
 		handler = h;
 	}

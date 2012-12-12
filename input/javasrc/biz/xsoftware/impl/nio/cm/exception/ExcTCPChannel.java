@@ -10,14 +10,14 @@ import biz.xsoftware.api.nio.channels.Channel;
 import biz.xsoftware.api.nio.channels.TCPChannel;
 import biz.xsoftware.api.nio.handlers.ConnectionCallback;
 import biz.xsoftware.api.nio.handlers.DataListener;
-import biz.xsoftware.api.nio.handlers.WriteCloseCallback;
+import biz.xsoftware.api.nio.handlers.OperationCallback;
 import biz.xsoftware.impl.nio.util.UtilTCPChannel;
 
 class ExcTCPChannel extends UtilTCPChannel implements TCPChannel {
 
 	private static final Logger log = Logger.getLogger(ExcTCPChannel.class.getName());
 //	private BufferHelper helper = ChannelManagerFactory.bufferHelper(null);
-	private static final WriteCloseCallback NULL_WRITE_HANDLER = new NullWriteHandler();
+	private static final OperationCallback NULL_WRITE_HANDLER = new NullWriteHandler();
 	
 	private TCPChannel realChannel;
 	
@@ -36,8 +36,8 @@ class ExcTCPChannel extends UtilTCPChannel implements TCPChannel {
 		return realChannel.write(b);
 	}
 	
-	public void write(ByteBuffer b, WriteCloseCallback h) throws IOException, InterruptedException {
-		WriteCloseCallback callback;
+	public void write(ByteBuffer b, OperationCallback h) throws IOException, InterruptedException {
+		OperationCallback callback;
 		if(h == null) {
 			callback = NULL_WRITE_HANDLER;
 		}else
@@ -53,8 +53,8 @@ class ExcTCPChannel extends UtilTCPChannel implements TCPChannel {
 		realChannel.connect(addr, proxy);
 	}
 
-	public void close(WriteCloseCallback h) {
-		WriteCloseCallback callback;
+	public void close(OperationCallback h) {
+		OperationCallback callback;
 		if(h == null) {
 			callback = NULL_WRITE_HANDLER;
 		}else
@@ -62,7 +62,7 @@ class ExcTCPChannel extends UtilTCPChannel implements TCPChannel {
 		realChannel.close(new ExcProxyWriteHandler(this, callback));
 	}	
 	
-	private static class NullWriteHandler implements WriteCloseCallback {
+	private static class NullWriteHandler implements OperationCallback {
 
 		public void finished(Channel c) {
 		}

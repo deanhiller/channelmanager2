@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 
 import biz.xsoftware.api.nio.channels.Channel;
 import biz.xsoftware.api.nio.handlers.DataListener;
-import biz.xsoftware.api.nio.handlers.WriteCloseCallback;
+import biz.xsoftware.api.nio.handlers.OperationCallback;
 import biz.xsoftware.api.nio.libs.BufferFactory;
 import biz.xsoftware.api.nio.libs.ChannelSession;
 import biz.xsoftware.api.nio.libs.FactoryCreator;
@@ -226,7 +226,7 @@ public abstract class BasChannelImpl
 	}
     
     
-	public void write(ByteBuffer b, WriteCloseCallback h) throws IOException, InterruptedException {
+	public void write(ByteBuffer b, OperationCallback h) throws IOException, InterruptedException {
 		if(!getSelectorManager().isRunning())
 			throw new IllegalStateException(this+"ChannelManager must be running and is stopped");		
 		else if(isClosed) {
@@ -285,7 +285,7 @@ public abstract class BasChannelImpl
         }
     }
     
-    public void close(WriteCloseCallback h) {
+    public void close(OperationCallback h) {
         //To prevent the following exception, in the readImpl method, we
         //check if the socket is already closed, and if it is we don't read
         //and just return -1 to indicate socket closed.

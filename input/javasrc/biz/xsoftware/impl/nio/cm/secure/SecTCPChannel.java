@@ -11,7 +11,7 @@ import java.util.logging.Logger;
 import biz.xsoftware.api.nio.channels.TCPChannel;
 import biz.xsoftware.api.nio.handlers.ConnectionCallback;
 import biz.xsoftware.api.nio.handlers.DataListener;
-import biz.xsoftware.api.nio.handlers.WriteCloseCallback;
+import biz.xsoftware.api.nio.handlers.OperationCallback;
 import biz.xsoftware.api.nio.libs.ChannelSession;
 import biz.xsoftware.api.nio.libs.SSLEngineFactory;
 import biz.xsoftware.impl.nio.util.UtilTCPChannel;
@@ -53,7 +53,7 @@ class SecTCPChannel extends UtilTCPChannel implements TCPChannel {
 		return remain;
 	}
 	
-	public void write(ByteBuffer b, WriteCloseCallback h) throws IOException {
+	public void write(ByteBuffer b, OperationCallback h) throws IOException {
 		if(reader.getHandler() == null)
 			throw new NotYetConnectedException();
 		
@@ -160,7 +160,7 @@ class SecTCPChannel extends UtilTCPChannel implements TCPChannel {
 		super.close();
 	}
 
-	public void close(WriteCloseCallback h) {
+	public void close(OperationCallback h) {
 		reader.close();
 		realChannel.close(new SecProxyWriteHandler(this, h));
 	}

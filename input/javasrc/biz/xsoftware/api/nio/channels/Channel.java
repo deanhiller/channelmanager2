@@ -6,7 +6,7 @@ import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 
 import biz.xsoftware.api.nio.handlers.DataListener;
-import biz.xsoftware.api.nio.handlers.WriteCloseCallback;
+import biz.xsoftware.api.nio.handlers.OperationCallback;
 import biz.xsoftware.api.nio.libs.ChannelSession;
 
 /**
@@ -35,7 +35,7 @@ public interface Channel extends RegisterableChannel {
      * @throws IOException 
      * @throws InterruptedException 
      */
-    public void write(ByteBuffer b, WriteCloseCallback h) throws IOException, InterruptedException;
+    public void write(ByteBuffer b, OperationCallback h) throws IOException, InterruptedException;
     
     /**
      * This is synchronous/blocking for TCP and therefore not too scalable.  Use at
@@ -53,7 +53,8 @@ public interface Channel extends RegisterableChannel {
      * 
      * @param cb The callback that is notified of the completion or failure of the write.
      */
-    public void close(WriteCloseCallback cb);
+    @Deprecated
+    public void close(OperationCallback cb);
     
     /**
      * Gets the remote address the channel is communicating with.

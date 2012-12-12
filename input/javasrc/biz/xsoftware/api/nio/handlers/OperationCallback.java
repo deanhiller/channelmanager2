@@ -3,7 +3,7 @@ package biz.xsoftware.api.nio.handlers;
 
 import biz.xsoftware.api.nio.channels.Channel;
 
-public interface WriteCloseCallback {
+public interface OperationCallback {
 
 	public void finished(Channel c);
 	

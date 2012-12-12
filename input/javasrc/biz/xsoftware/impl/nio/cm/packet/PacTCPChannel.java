@@ -7,7 +7,7 @@ import java.nio.ByteBuffer;
 import biz.xsoftware.api.nio.channels.TCPChannel;
 import biz.xsoftware.api.nio.handlers.ConnectionCallback;
 import biz.xsoftware.api.nio.handlers.DataListener;
-import biz.xsoftware.api.nio.handlers.WriteCloseCallback;
+import biz.xsoftware.api.nio.handlers.OperationCallback;
 import biz.xsoftware.api.nio.libs.PacketProcessor;
 import biz.xsoftware.impl.nio.util.UtilPassThroughWriteHandler;
 import biz.xsoftware.impl.nio.util.UtilTCPChannel;
@@ -42,7 +42,7 @@ class PacTCPChannel extends UtilTCPChannel implements TCPChannel {
 	}
 	
 	@Override
-	public void write(ByteBuffer b, WriteCloseCallback h) throws IOException, InterruptedException {
+	public void write(ByteBuffer b, OperationCallback h) throws IOException, InterruptedException {
 		ByteBuffer out = packetProcessor.processOutgoing(b);
 		realChannel.write(out, new UtilPassThroughWriteHandler(this, h));
 	}

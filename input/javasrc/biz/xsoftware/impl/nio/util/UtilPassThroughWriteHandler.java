@@ -2,14 +2,14 @@ package biz.xsoftware.impl.nio.util;
 
 
 import biz.xsoftware.api.nio.channels.Channel;
-import biz.xsoftware.api.nio.handlers.WriteCloseCallback;
+import biz.xsoftware.api.nio.handlers.OperationCallback;
 
-public class UtilPassThroughWriteHandler implements WriteCloseCallback {
+public class UtilPassThroughWriteHandler implements OperationCallback {
 
 	private Channel channel;
-	private WriteCloseCallback handler;
+	private OperationCallback handler;
 
-	public UtilPassThroughWriteHandler(Channel c, WriteCloseCallback h) {
+	public UtilPassThroughWriteHandler(Channel c, OperationCallback h) {
 		if(c == null || h == null)
 			throw new IllegalArgumentException(c+"Niether c nor h parameters can be null");
 		channel = c;

@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 
 import biz.xsoftware.api.nio.channels.TCPChannel;
 import biz.xsoftware.api.nio.handlers.ConnectionCallback;
-import biz.xsoftware.api.nio.handlers.WriteCloseCallback;
+import biz.xsoftware.api.nio.handlers.OperationCallback;
 
 class RegTCPChannel extends RegHelperChannel implements TCPChannel {
 
@@ -42,7 +42,7 @@ class RegTCPChannel extends RegHelperChannel implements TCPChannel {
 		return getRealChannel().write(b);
 	}
 	
-	public void write(ByteBuffer b, WriteCloseCallback h) throws IOException, InterruptedException {
+	public void write(ByteBuffer b, OperationCallback h) throws IOException, InterruptedException {
 		getRealChannel().write(b, h);
 	}
 

@@ -14,7 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import biz.xsoftware.api.nio.channels.UDPChannel;
-import biz.xsoftware.api.nio.handlers.WriteCloseCallback;
+import biz.xsoftware.api.nio.handlers.OperationCallback;
 import biz.xsoftware.api.nio.libs.BufferFactory;
 import biz.xsoftware.impl.nio.cm.basic.BasChannelImpl;
 import biz.xsoftware.impl.nio.cm.basic.IdObject;
@@ -123,10 +123,10 @@ public class UDPChannelImpl extends BasChannelImpl implements UDPChannel {
 	}
 
 	/**
-     * @see biz.xsoftware.impl.nio.cm.basic.BasChannelImpl#write(java.nio.ByteBuffer, biz.xsoftware.api.nio.handlers.WriteCloseCallback)
+     * @see biz.xsoftware.impl.nio.cm.basic.BasChannelImpl#write(java.nio.ByteBuffer, biz.xsoftware.api.nio.handlers.OperationCallback)
      */
     @Override
-    public void write(ByteBuffer b, WriteCloseCallback h) throws IOException, InterruptedException {
+    public void write(ByteBuffer b, OperationCallback h) throws IOException, InterruptedException {
         if(!isConnected)
             throw new IllegalStateException(this+"Channel is not currently connected");        
         super.write(b, h);

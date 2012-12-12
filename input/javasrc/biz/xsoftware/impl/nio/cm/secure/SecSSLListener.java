@@ -8,7 +8,7 @@ import biz.xsoftware.api.nio.channels.Channel;
 import biz.xsoftware.api.nio.handlers.ConnectionListener;
 import biz.xsoftware.api.nio.handlers.DataListener;
 import biz.xsoftware.api.nio.handlers.NullWriteCallback;
-import biz.xsoftware.api.nio.handlers.WriteCloseCallback;
+import biz.xsoftware.api.nio.handlers.OperationCallback;
 import biz.xsoftware.api.nio.libs.SSLListener;
 
 class SecSSLListener implements SSLListener {
@@ -38,7 +38,7 @@ class SecSSLListener implements SSLListener {
 
 
 	public void packetEncrypted(ByteBuffer toSocket, Object passThrough) throws IOException {
-		WriteCloseCallback h;
+		OperationCallback h;
 		if(passThrough == null){
 			h = NullWriteCallback.singleton();
 		} else {

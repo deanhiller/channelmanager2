@@ -5,17 +5,17 @@ import java.nio.ByteBuffer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import biz.xsoftware.api.nio.handlers.WriteCloseCallback;
+import biz.xsoftware.api.nio.handlers.OperationCallback;
 
 public class WriteRunnable implements DelayedWritesCloses {
 
-	private static final Logger apiLog = Logger.getLogger(WriteCloseCallback.class.getName());
+	private static final Logger apiLog = Logger.getLogger(OperationCallback.class.getName());
 	private static final Logger log = Logger.getLogger(WriteRunnable.class.getName());
 	private ByteBuffer buffer;
-	private WriteCloseCallback handler;
+	private OperationCallback handler;
 	private BasChannelImpl channel;
 
-	public WriteRunnable(BasChannelImpl c, ByteBuffer b, WriteCloseCallback h) {
+	public WriteRunnable(BasChannelImpl c, ByteBuffer b, OperationCallback h) {
 		channel = c;
 		buffer = b;
 		handler = h;

@@ -1,14 +1,14 @@
 package biz.xsoftware.impl.nio.cm.secure;
 
 import biz.xsoftware.api.nio.channels.Channel;
-import biz.xsoftware.api.nio.handlers.WriteCloseCallback;
+import biz.xsoftware.api.nio.handlers.OperationCallback;
 
-public class SecProxyWriteHandler implements WriteCloseCallback {
+public class SecProxyWriteHandler implements OperationCallback {
 
-	private WriteCloseCallback handler;
+	private OperationCallback handler;
 	private Channel channel;
 
-	public SecProxyWriteHandler(Channel c, WriteCloseCallback h) {
+	public SecProxyWriteHandler(Channel c, OperationCallback h) {
 		channel = c;
 		handler = h;
 	}

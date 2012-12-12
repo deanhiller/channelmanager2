@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 
 import biz.xsoftware.api.nio.channels.Channel;
 
-public final class NullWriteCallback implements WriteCloseCallback {
+public final class NullWriteCallback implements OperationCallback {
 
 	public static final Logger log = Logger.getLogger(NullWriteCallback.class
 			.getName());

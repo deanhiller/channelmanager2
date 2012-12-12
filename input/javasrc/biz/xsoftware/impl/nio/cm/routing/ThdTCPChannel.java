@@ -7,7 +7,7 @@ import java.nio.ByteBuffer;
 import biz.xsoftware.api.nio.channels.TCPChannel;
 import biz.xsoftware.api.nio.handlers.ConnectionCallback;
 import biz.xsoftware.api.nio.handlers.DataListener;
-import biz.xsoftware.api.nio.handlers.WriteCloseCallback;
+import biz.xsoftware.api.nio.handlers.OperationCallback;
 import biz.xsoftware.api.nio.libs.BufferFactory;
 import biz.xsoftware.impl.nio.util.UtilTCPChannel;
 
@@ -37,7 +37,7 @@ class ThdTCPChannel extends UtilTCPChannel implements TCPChannel {
 		return realChannel.write(b);
 	}
 	
-	public void write(ByteBuffer b, WriteCloseCallback h) throws IOException, InterruptedException {
+	public void write(ByteBuffer b, OperationCallback h) throws IOException, InterruptedException {
 		realChannel.write(b, new ThdProxyWriteHandler(this, h, svc));
 	}
 	
@@ -49,7 +49,7 @@ class ThdTCPChannel extends UtilTCPChannel implements TCPChannel {
 		realChannel.connect(addr, proxy);
 	}
 
-	public void close(WriteCloseCallback h) {
+	public void close(OperationCallback h) {
 		realChannel.close(new ThdProxyWriteHandler(this, h, svc));
 	}    
 }

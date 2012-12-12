@@ -6,9 +6,9 @@ package biz.xsoftware.impl.nio.util;
 import java.io.IOException;
 
 import biz.xsoftware.api.nio.channels.Channel;
-import biz.xsoftware.api.nio.handlers.WriteCloseCallback;
+import biz.xsoftware.api.nio.handlers.OperationCallback;
 
-public class UtilWaitForCompletion implements WriteCloseCallback {
+public class UtilWaitForCompletion implements OperationCallback {
 
 	private Throwable e;
 	private boolean isFinished = false;
