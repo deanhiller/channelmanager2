@@ -108,7 +108,7 @@ public abstract class ZNioFailureSuperclass extends MockTestCase {
 		mockConnect.addThrowException("connected", e);
 		
 		client1.bind(loopBackAnyPort);		
-		client1.connect(svrAddr, (ConnectionCallback)mockConnect);
+		client1.oldConnect(svrAddr, (ConnectionCallback)mockConnect);
 		client1.registerForReads((DataListener)mockHandler);
 		
 		mockConnect.expect("connected");
@@ -135,7 +135,7 @@ public abstract class ZNioFailureSuperclass extends MockTestCase {
 		mockHandler.addBehavior("incomingData", new ThrowAndClone());
 		log.info("class name"+client1.getClass());
 		client1.bind(loopBackAnyPort);		
-		client1.connect(svrAddr, (ConnectionCallback)mockConnect);
+		client1.oldConnect(svrAddr, (ConnectionCallback)mockConnect);
 		client1.registerForReads((DataListener)mockHandler);
 		
 		mockConnect.expect("connected");
@@ -167,7 +167,7 @@ public abstract class ZNioFailureSuperclass extends MockTestCase {
 		mockServer.addThrowException("farEndClosed", e);
 		
 		client1.bind(loopBackAnyPort);		
-		client1.connect(svrAddr, (ConnectionCallback)mockConnect);
+		client1.oldConnect(svrAddr, (ConnectionCallback)mockConnect);
 		client1.registerForReads((DataListener)mockHandler);
 		
 		mockConnect.expect("connected");
@@ -196,7 +196,7 @@ public abstract class ZNioFailureSuperclass extends MockTestCase {
 		mockServer.addThrowException("connected", e);
 		
 		client1.bind(loopBackAnyPort);
-		client1.connect(svrAddr, (ConnectionCallback)mockConnect);
+		client1.oldConnect(svrAddr, (ConnectionCallback)mockConnect);
 		client1.registerForReads((DataListener)mockHandler);
 		
 		mockConnect.expect("connected");

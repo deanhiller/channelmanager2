@@ -11,6 +11,6 @@ public interface UDPChannel extends Channel {
      * @throws IOException 
      * 
      */
-    public void disconnect() throws IOException;
+    public void oldDisconnect() throws IOException;
 
 }

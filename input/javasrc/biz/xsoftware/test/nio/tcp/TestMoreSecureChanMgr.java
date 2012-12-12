@@ -146,7 +146,7 @@ public class TestMoreSecureChanMgr extends TestCase {
 		assertEquals("should be instance of correct channel type", client1.getClass(), c);
 		
 		client1.bind(loopBackAnyPort);		
-		client1.connect(svrAddr, (ConnectionCallback)mockConnect);
+		client1.oldConnect(svrAddr, (ConnectionCallback)mockConnect);
 		client1.registerForReads((DataListener)mockHandler);
 		
 		String[] s = new String[2];

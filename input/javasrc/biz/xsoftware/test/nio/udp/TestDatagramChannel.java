@@ -116,12 +116,12 @@ public class TestDatagramChannel extends MockTestCase
         ByteBuffer b = ByteBuffer.allocate(100);
         HELPER.putString(b, payload);
         HELPER.doneFillingBuffer(b);
-        client.write(serverAddr, b);
+        client.oldWrite(serverAddr, b);
         
         verifyPacket(clientAddr, localHost, payload);
           
         b.rewind();
-        client2.write(serverAddr, b);
+        client2.oldWrite(serverAddr, b);
         
         verifyPacket(client2Addr, localHost, payload);
     }

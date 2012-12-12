@@ -129,13 +129,13 @@ class BasTCPChannel extends BasChannelImpl implements TCPChannel {
 	/* (non-Javadoc)
 	 * @see api.biz.xsoftware.nio.TCPChannel#connect(java.net.SocketAddress)
 	 */
-	public void connect(SocketAddress addr) throws IOException {
+	public void oldConnect(SocketAddress addr) throws IOException {
 		if(isBlocking()) {
 			channel.connect(addr);
 		} else {
 			try {
 				UtilWaitForConnect connect = new UtilWaitForConnect();				
-				connect(addr, connect);
+				oldConnect(addr, connect);
 				connect.waitForConnect();
 			} catch(InterruptedException e) {
 				throw new RuntimeException(e);
@@ -143,7 +143,7 @@ class BasTCPChannel extends BasChannelImpl implements TCPChannel {
 		}
 	}
 
-	public void connect(SocketAddress addr, ConnectionCallback c) throws IOException, InterruptedException {
+	public void oldConnect(SocketAddress addr, ConnectionCallback c) throws IOException, InterruptedException {
 		if(c == null)
 			throw new IllegalArgumentException(this+"ConnectCallback cannot be null");
 

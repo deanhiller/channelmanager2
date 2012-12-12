@@ -53,7 +53,7 @@ class SecTCPChannel extends UtilTCPChannel implements TCPChannel {
 		return remain;
 	}
 	
-	public void write(ByteBuffer b, OperationCallback h) throws IOException {
+	public void oldWrite(ByteBuffer b, OperationCallback h) throws IOException {
 		if(reader.getHandler() == null)
 			throw new NotYetConnectedException();
 		
@@ -94,7 +94,7 @@ class SecTCPChannel extends UtilTCPChannel implements TCPChannel {
 		
 	}
 	
-	public synchronized void connect(SocketAddress addr, ConnectionCallback c) throws IOException, InterruptedException {
+	public synchronized void oldConnect(SocketAddress addr, ConnectionCallback c) throws IOException, InterruptedException {
 		if(c == null)
 			throw new IllegalArgumentException(realChannel+"ConnectCallback cannot be null");
 		else if(sslFactory == null)
@@ -102,7 +102,7 @@ class SecTCPChannel extends UtilTCPChannel implements TCPChannel {
 		isConnecting = true;
 		
 		SecProxyConnectCb connectCb = new SecProxyConnectCb(this, sslFactory, c);
-		realChannel.connect(addr, connectCb);
+		realChannel.oldConnect(addr, connectCb);
 	}
 	
 	public synchronized void resetRegisterForReadState() throws IOException, InterruptedException {
@@ -118,13 +118,13 @@ class SecTCPChannel extends UtilTCPChannel implements TCPChannel {
 		}
 	}
 
-	public void connect(SocketAddress addr) throws IOException {
+	public void oldConnect(SocketAddress addr) throws IOException {
 		if(isBlocking()) {
-			realChannel.connect(addr);
+			realChannel.oldConnect(addr);
 		} else {
 			try {
 				UtilWaitForConnect connect = new UtilWaitForConnect();				
-				connect(addr, connect);
+				oldConnect(addr, connect);
 				connect.waitForConnect();
 			} catch(InterruptedException e) {
 				throw new RuntimeException(this+"Exception", e);
@@ -160,9 +160,9 @@ class SecTCPChannel extends UtilTCPChannel implements TCPChannel {
 		super.oldClose();
 	}
 
-	public void close(OperationCallback h) {
+	public void oldClose(OperationCallback h) {
 		reader.close();
-		realChannel.close(new SecProxyWriteHandler(this, h));
+		realChannel.oldClose(new SecProxyWriteHandler(this, h));
 	}
 	
 	public SecReaderProxy getReaderProxy() {

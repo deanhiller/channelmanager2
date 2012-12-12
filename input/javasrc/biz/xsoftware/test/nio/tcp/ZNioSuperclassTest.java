@@ -136,7 +136,7 @@ public abstract class ZNioSuperclassTest extends TestCase {
 		
 		client1.bind(loopBackAnyPort);		
 		client1.registerForReads((DataListener)mockHandler);
-		client1.connect(svrAddr, (ConnectionCallback)mockConnect);
+		client1.oldConnect(svrAddr, (ConnectionCallback)mockConnect);
 		mockConnect.expect("connected");
 		
 		boolean isConnected = client1.isConnected();
@@ -157,7 +157,7 @@ public abstract class ZNioSuperclassTest extends TestCase {
 //        assertEquals("should be instance of secure channel", c, client1.getClass());
     
         //no bind, just do connect to test port is not zero
-        client1.connect(svrAddr, (ConnectionCallback)mockConnect);
+        client1.oldConnect(svrAddr, (ConnectionCallback)mockConnect);
         mockConnect.expect("connected");
         
         mockServer.expect(MockNIOServer.CONNECTED);
@@ -176,7 +176,7 @@ public abstract class ZNioSuperclassTest extends TestCase {
 		assertEquals("should be instance of secure channel", c, client1.getClass());
 	
 		//no bind, just do connect to test port is not zero
-		client1.connect(svrAddr, (ConnectionCallback)mockConnect);
+		client1.oldConnect(svrAddr, (ConnectionCallback)mockConnect);
 		mockConnect.expect("connected");
 		
 		boolean isConnected = client1.isConnected();
@@ -200,7 +200,7 @@ public abstract class ZNioSuperclassTest extends TestCase {
 	public void testCloseSvrSocketBeforeChannelMgrShutdown() throws Exception {
 		Class c = Class.forName(getChannelImplName());
 		client1.bind(loopBackAnyPort);
-		client1.connect(svrAddr);
+		client1.oldConnect(svrAddr);
 
 		boolean isConnected = client1.isConnected();
 		assertTrue("Client should be connected", isConnected);
@@ -230,7 +230,7 @@ public abstract class ZNioSuperclassTest extends TestCase {
 		Class c = Class.forName(getChannelImplName());
 		
 		client1.bind(loopBackAnyPort);
-		client1.connect(svrAddr);
+		client1.oldConnect(svrAddr);
 		TCPChannel svrChan = ZNioFailureSuperclass.expectServerChannel(mockServer, c);
 		
 		client1.registerForReads((DataListener)mockHandler);
@@ -251,7 +251,7 @@ public abstract class ZNioSuperclassTest extends TestCase {
 		Class c = Class.forName(getChannelImplName());
 		
 		client1.bind(loopBackAnyPort);
-		client1.connect(svrAddr);
+		client1.oldConnect(svrAddr);
 
 		TCPChannel svrChan = ZNioFailureSuperclass.expectServerChannel(mockServer, c);
 		client1.registerForReads((DataListener)mockHandler);
@@ -311,7 +311,7 @@ public abstract class ZNioSuperclassTest extends TestCase {
 	}
 	
 	public void testBindThroughConnect() throws Exception {
-		client1.connect(svrAddr);		
+		client1.oldConnect(svrAddr);		
 		int port = client1.getLocalAddress().getPort();
 		assertTrue("port is zero, this is bad", port != 0);
 		mockServer.expect("connected");

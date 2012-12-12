@@ -69,7 +69,7 @@ public class TestExample extends TestCase
         client.bind(new InetSocketAddress(0));        
         
         //we will just go with synchronous connect today...(could have used the asynch one though)
-        client.connect(svrAddr);
+        client.oldConnect(svrAddr);
         client.registerForReads(new MyDataListener("client"));
         
         //because this is not a real example and the server and client are both here, we

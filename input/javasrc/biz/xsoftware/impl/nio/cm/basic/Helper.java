@@ -251,7 +251,7 @@ final class Helper {
 		if(bytes < 0) {
 			if(apiLog.isLoggable(Level.FINE))
 				apiLog.fine(channel+"far end closed, cancel key, close socket");
-	        channel.close(NullWriteCallback.singleton());
+	        channel.oldClose(NullWriteCallback.singleton());
 			in.farEndClosed(channel);
 		} else if(bytes > 0) {
 			if(apiLog.isLoggable(Level.FINER))

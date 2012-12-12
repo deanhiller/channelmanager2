@@ -147,9 +147,9 @@ public class DatagramChannelImpl implements DatagramChannel
 
     /**
      * @throws IOException 
-     * @see biz.xsoftware.api.nio.channels.DatagramChannel#write(java.net.SocketAddress, java.nio.ByteBuffer)
+     * @see biz.xsoftware.api.nio.channels.DatagramChannel#oldWrite(java.net.SocketAddress, java.nio.ByteBuffer)
      */
-    public void write(SocketAddress addr, ByteBuffer b) throws IOException {
+    public void oldWrite(SocketAddress addr, ByteBuffer b) throws IOException {
         if(socket == null)
             throw new IllegalStateException(id+"Must bind socket before any operations can be called");
         DatagramPacket packet = new DatagramPacket(b.array(), b.position(), b.limit()-b.position(), addr);

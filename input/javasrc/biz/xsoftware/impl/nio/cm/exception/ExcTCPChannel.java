@@ -36,30 +36,30 @@ class ExcTCPChannel extends UtilTCPChannel implements TCPChannel {
 		return realChannel.oldWrite(b);
 	}
 	
-	public void write(ByteBuffer b, OperationCallback h) throws IOException, InterruptedException {
+	public void oldWrite(ByteBuffer b, OperationCallback h) throws IOException, InterruptedException {
 		OperationCallback callback;
 		if(h == null) {
 			callback = NULL_WRITE_HANDLER;
 		}else
 			callback = h;
-		realChannel.write(b, new ExcProxyWriteHandler(this, callback));
+		realChannel.oldWrite(b, new ExcProxyWriteHandler(this, callback));
 	}
 	
-	public void connect(SocketAddress addr, ConnectionCallback c) throws IOException, InterruptedException {
+	public void oldConnect(SocketAddress addr, ConnectionCallback c) throws IOException, InterruptedException {
 		if(c == null)
 			throw new IllegalArgumentException("ConnectCallback cannot be null");
 		
 		ExcProxyConnectCb proxy = new ExcProxyConnectCb(this, c);
-		realChannel.connect(addr, proxy);
+		realChannel.oldConnect(addr, proxy);
 	}
 
-	public void close(OperationCallback h) {
+	public void oldClose(OperationCallback h) {
 		OperationCallback callback;
 		if(h == null) {
 			callback = NULL_WRITE_HANDLER;
 		}else
 			callback = h;
-		realChannel.close(new ExcProxyWriteHandler(this, callback));
+		realChannel.oldClose(new ExcProxyWriteHandler(this, callback));
 	}	
 	
 	private static class NullWriteHandler implements OperationCallback {

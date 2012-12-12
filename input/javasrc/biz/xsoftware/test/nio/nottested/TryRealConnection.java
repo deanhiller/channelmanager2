@@ -75,7 +75,7 @@ public class TryRealConnection extends TestCase {
 //		InetAddress host = InetAddress.getByName("shell.sourceforge.net");
 		InetAddress host = InetAddress.getByName("www.xsoftware.biz");
 		InetSocketAddress addr = new InetSocketAddress(host, 22);
-		channel.connect(addr, (ConnectionCallback)mockConnect);
+		channel.oldConnect(addr, (ConnectionCallback)mockConnect);
 
 		mockConnect.expect("connected");
 		

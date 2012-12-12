@@ -39,7 +39,7 @@ public class UDPChannelImpl extends BasChannelImpl implements UDPChannel {
         channel.socket().bind(addr);
 	}
 
-	public synchronized void connect(SocketAddress addr) throws IOException {
+	public synchronized void oldConnect(SocketAddress addr) throws IOException {
 		if(apiLog.isLoggable(Level.FINE))
 			apiLog.fine(this+"Basic.connect called-addr="+addr);
 		
@@ -47,7 +47,7 @@ public class UDPChannelImpl extends BasChannelImpl implements UDPChannel {
         isConnected = true;
 	}
     
-    public synchronized void disconnect() throws IOException {
+    public synchronized void oldDisconnect() throws IOException {
 		if(apiLog.isLoggable(Level.FINE))
 			apiLog.fine(this+"Basic.disconnect called");
 		
@@ -123,13 +123,13 @@ public class UDPChannelImpl extends BasChannelImpl implements UDPChannel {
 	}
 
 	/**
-     * @see biz.xsoftware.impl.nio.cm.basic.BasChannelImpl#write(java.nio.ByteBuffer, biz.xsoftware.api.nio.handlers.OperationCallback)
+     * @see biz.xsoftware.impl.nio.cm.basic.BasChannelImpl#oldWrite(java.nio.ByteBuffer, biz.xsoftware.api.nio.handlers.OperationCallback)
      */
     @Override
-    public void write(ByteBuffer b, OperationCallback h) throws IOException, InterruptedException {
+    public void oldWrite(ByteBuffer b, OperationCallback h) throws IOException, InterruptedException {
         if(!isConnected)
             throw new IllegalStateException(this+"Channel is not currently connected");        
-        super.write(b, h);
+        super.oldWrite(b, h);
     }
 
     /**

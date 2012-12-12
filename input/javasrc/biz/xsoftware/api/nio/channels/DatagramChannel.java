@@ -17,5 +17,5 @@ public interface DatagramChannel extends RegisterableChannel
     
     public ChannelSession getSession();    
     
-    public void write(SocketAddress addr, ByteBuffer b) throws IOException;
+    public void oldWrite(SocketAddress addr, ByteBuffer b) throws IOException;
 }

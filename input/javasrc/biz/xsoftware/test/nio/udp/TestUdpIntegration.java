@@ -174,7 +174,7 @@ public class TestUdpIntegration extends MockTestCase
     public void xxxtestDisconnect() throws IOException, InterruptedException {
         InetSocketAddress svrAddr = runBasic();
         
-        client.disconnect();
+        client.oldDisconnect();
         
         String msg = "hello";
         //NOTE: write packet from server to client.  Ideally, nothing will be fired to client
@@ -186,7 +186,7 @@ public class TestUdpIntegration extends MockTestCase
         clientHandler.expect(MockObject.NONE);
         
         System.out.println("addr="+svrAddr);
-        client.connect(svrAddr);
+        client.oldConnect(svrAddr);
         
         String msg2 = "abxdefg";
         writePacket(server, msg2);
@@ -223,8 +223,8 @@ public class TestUdpIntegration extends MockTestCase
         assertTrue(clientAddr.getPort() > 0);
         assertTrue(svrAddr.getPort() > 0);        
         
-        client.connect(svrAddr);
-        server.connect(clientAddr);
+        client.oldConnect(svrAddr);
+        server.oldConnect(clientAddr);
         
         client.registerForReads((DataListener)clientHandler);
         server.registerForReads((DataListener)svrHandler);
@@ -271,7 +271,7 @@ public class TestUdpIntegration extends MockTestCase
         InetSocketAddress clientAddr = setupPortUnreachable(svrAddr);
             
         server.bind(svrAddr);
-        server.connect(clientAddr);        
+        server.oldConnect(clientAddr);        
         server.registerForReads((DataListener)svrHandler);
 
         sendReceivePacket();
@@ -290,7 +290,7 @@ public class TestUdpIntegration extends MockTestCase
         
         InetSocketAddress clientAddr = client.getLocalAddress();
         
-        client.connect(svrAddr);
+        client.oldConnect(svrAddr);
         client.registerForReads((DataListener)clientHandler);
         
         String msg = "aaaaa";

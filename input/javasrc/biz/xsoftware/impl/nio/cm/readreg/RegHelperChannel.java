@@ -44,11 +44,11 @@ public class RegHelperChannel extends UtilChannel implements Channel {
 	}
 
 	@Override
-	public synchronized void connect(SocketAddress addr) throws IOException {
+	public synchronized void oldConnect(SocketAddress addr) throws IOException {
 		if(apiLog.isLoggable(Level.FINE))
 			apiLog.fine(this+"RegRead.connect called-addr="+addr);
 		
-		super.connect(addr);
+		super.oldConnect(addr);
 		if(cachedListener != null) {
 			try {
 				getRealChannel().registerForReads(cachedListener);

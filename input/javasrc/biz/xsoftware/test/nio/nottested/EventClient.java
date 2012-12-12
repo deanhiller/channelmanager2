@@ -46,7 +46,7 @@ public class EventClient implements ConnectionCallback, DataListener {
 		InetSocketAddress sockAddr = new InetSocketAddress(addr, 801);
 
 		log.info("Connecting to server="+sockAddr);
-		channel.connect(sockAddr, this);
+		channel.oldConnect(sockAddr, this);
 	}
 
 	public void connected(TCPChannel channel) throws IOException {

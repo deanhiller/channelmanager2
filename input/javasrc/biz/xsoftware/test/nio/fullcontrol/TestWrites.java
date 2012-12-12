@@ -127,7 +127,7 @@ public class TestWrites extends TestCase {
     }
     
     public void testBasicWrite() throws Exception {       
-        client1.connect(null);
+        client1.oldConnect(null);
         mockSunsChannel.expect("connect");
         
         runBasic();
@@ -161,7 +161,7 @@ public class TestWrites extends TestCase {
         
         mockSunsChannel.setDefaultBehavior("write", new NoReadByteBuffer2(0));
         
-        client1.connect(null);
+        client1.oldConnect(null);
         mockSunsChannel.expect("connect");
         
         ByteBuffer b = ByteBuffer.allocate(1000);        
@@ -171,7 +171,7 @@ public class TestWrites extends TestCase {
 
         mockSelect.addReturnValue("createRegistrationListener", mockRegListener);
         mockSunsChannel.addReturnValue("write", 0);        
-        client1.write(b, (OperationCallback)mockWriteHandler);
+        client1.oldWrite(b, (OperationCallback)mockWriteHandler);
         mockSunsChannel.expect("write");
         
         mockSelect.setDefaultReturnValue("getKeyFromChannel", key);
@@ -245,7 +245,7 @@ public class TestWrites extends TestCase {
     }
 
     public int fireSelector(MyKey key, String expected, String expected2, boolean isSpecial) throws Exception {
-        client1.connect(null);
+        client1.oldConnect(null);
         mockSunsChannel.expect("connect");
         
         ByteBuffer b = ByteBuffer.allocate(1000);        
@@ -255,14 +255,14 @@ public class TestWrites extends TestCase {
         
         mockSelect.addReturnValue("createRegistrationListener", mockRegListener);
         mockSunsChannel.addBehavior("write", new NoReadByteBuffer2(0));
-        client1.write(b, (OperationCallback)mockWriteHandler);
+        client1.oldWrite(b, (OperationCallback)mockWriteHandler);
         mockSunsChannel.expect("write");
         
         b = ByteBuffer.allocate(50);
         int remain2 = b.remaining();
         HELPER.putString(b, expected2);
         HELPER.doneFillingBuffer(b);
-        client1.write(b, (OperationCallback)mockWriteHandler);
+        client1.oldWrite(b, (OperationCallback)mockWriteHandler);
         
         mockSunsChannel.expect(MockObject.NONE);
         
@@ -326,7 +326,7 @@ public class TestWrites extends TestCase {
         String expected3 = "ghi";
         HELPER.putString(b3, expected3);
         HELPER.doneFillingBuffer(b3);
-        client1.write(b3, (OperationCallback)mockWriteHandler);        
+        client1.oldWrite(b3, (OperationCallback)mockWriteHandler);        
 
         Set<SelectionKey> set = new HashSet<SelectionKey>();
         set.add(key);

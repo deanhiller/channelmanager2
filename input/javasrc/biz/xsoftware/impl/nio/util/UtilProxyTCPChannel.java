@@ -23,8 +23,8 @@ public class UtilProxyTCPChannel extends UtilTCPChannel implements TCPChannel {
 		getRealChannel().registerForReads(new UtilReaderProxy(this, listener));
 	}
 
-	public void connect(SocketAddress addr, ConnectionCallback c)
+	public void oldConnect(SocketAddress addr, ConnectionCallback c)
 			throws IOException, InterruptedException {
-		getRealChannel().connect(addr, new UtilProxyConnectCb(this, c));
+		getRealChannel().oldConnect(addr, new UtilProxyConnectCb(this, c));
 	}
 }

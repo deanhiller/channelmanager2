@@ -39,7 +39,7 @@ public class DelayServerAcceptor implements ConnectionListener {
         currentChannel.setName("<not known yet>");
 		InetSocketAddress addr = new InetSocketAddress(delaySvrAddr, 0);
 		currentChannel.bind(addr);
-		currentChannel.connect(realSvr);
+		currentChannel.oldConnect(realSvr);
 		if(log.isLoggable(Level.FINE))
 			log.fine(channel+"connected to real server");
 		

@@ -46,7 +46,7 @@ class SecSSLListener implements SSLListener {
 			h = handler;
 		}
 		try {
-			channel.getRealChannel().write(toSocket, h);
+			channel.getRealChannel().oldWrite(toSocket, h);
 		} catch (InterruptedException e) {
 			throw new RuntimeException(channel+e.getMessage(), e);
 		}

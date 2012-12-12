@@ -144,7 +144,7 @@ public abstract class ZPerformanceSuper extends TestCase {
 		timer.start();
 		timer2.start();
 		for(int i = 0; i < size; i++) {
-			clients[i].connect(svrAddr, (ConnectionCallback)mockConnect);
+			clients[i].oldConnect(svrAddr, (ConnectionCallback)mockConnect);
 		}
 		long result2 = timer2.stop();
 		
@@ -185,7 +185,7 @@ public abstract class ZPerformanceSuper extends TestCase {
 				}
 			
 				for(int i = 0; i < size; i++) {
-					clients[i].connect(svrAddr, (ConnectionCallback)mockConnect);
+					clients[i].oldConnect(svrAddr, (ConnectionCallback)mockConnect);
 				}
 			
 				mockConnect.expect(methodNames);
@@ -243,7 +243,7 @@ public abstract class ZPerformanceSuper extends TestCase {
 		TCPChannel[] clients = new TCPChannel[size];	
 		for(int i = 0; i < size; i++) {
 			clients[i] = chanMgr.createTCPChannel("Client["+i+"]", getClientFactoryHolder());
-			clients[i].connect(svrAddr, (ConnectionCallback)mockConnect);
+			clients[i].oldConnect(svrAddr, (ConnectionCallback)mockConnect);
 		}
 		mockConnect.expect(methodNames);
 		log.info("done getting all connections");
@@ -324,7 +324,7 @@ public abstract class ZPerformanceSuper extends TestCase {
 		TCPChannel[] clients = new TCPChannel[size];	
 		for(int i = 0; i < size; i++) {
 			clients[i] = chanMgr.createTCPChannel("Client["+i+"]", getClientFactoryHolder());
-			clients[i].connect(svrAddr, (ConnectionCallback)mockConnect);
+			clients[i].oldConnect(svrAddr, (ConnectionCallback)mockConnect);
 		}
 		mockConnect.expect(methodNames);
 		log.info("done getting all connections");
@@ -353,7 +353,7 @@ public abstract class ZPerformanceSuper extends TestCase {
 		timer2.start();
 		for(TCPChannel client : clients) {
 			for(int i = 0; i < numWrites; i++) {
-				client.write(b, NullWriteCallback.singleton());
+				client.oldWrite(b, NullWriteCallback.singleton());
 				b.rewind();
 			}
 		}

@@ -24,14 +24,14 @@ class RegTCPChannel extends RegHelperChannel implements TCPChannel {
 		realChannel = channel;
 	}
 	
-	public synchronized void connect(SocketAddress addr, ConnectionCallback c) throws IOException, InterruptedException {
+	public synchronized void oldConnect(SocketAddress addr, ConnectionCallback c) throws IOException, InterruptedException {
 		if(apiLog.isLoggable(Level.FINE))
 			apiLog.fine(this+"RegRead.connect called-addr="+addr);
 		
 		//Can I register for reads after initiating connect or should I register
 		//for reads in a ConnectionCallback proxy??  For now, I register
 		//after initiating the connect
-		realChannel.connect(addr, c);
+		realChannel.oldConnect(addr, c);
 		if(cachedListener != null) {
 			getRealChannel().registerForReads(cachedListener);
 		}
@@ -42,8 +42,8 @@ class RegTCPChannel extends RegHelperChannel implements TCPChannel {
 		return getRealChannel().oldWrite(b);
 	}
 	
-	public void write(ByteBuffer b, OperationCallback h) throws IOException, InterruptedException {
-		getRealChannel().write(b, h);
+	public void oldWrite(ByteBuffer b, OperationCallback h) throws IOException, InterruptedException {
+		getRealChannel().oldWrite(b, h);
 	}
 
 	public boolean getKeepAlive() throws SocketException {

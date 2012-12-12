@@ -36,7 +36,7 @@ public interface Channel extends RegisterableChannel {
      * @throws InterruptedException 
      */
 	@Deprecated
-    public void write(ByteBuffer b, OperationCallback h) throws IOException, InterruptedException;
+    public void oldWrite(ByteBuffer b, OperationCallback h) throws IOException, InterruptedException;
     
     /**
      * This is synchronous/blocking for TCP and therefore not too scalable.  Use at
@@ -46,7 +46,7 @@ public interface Channel extends RegisterableChannel {
      * @param addr
      */
     @Deprecated
-    public void connect(SocketAddress addr) throws IOException; 
+    public void oldConnect(SocketAddress addr) throws IOException; 
 
     /**
      * Asynchronous close where the WriteCloseHandler will be notified once
@@ -55,7 +55,7 @@ public interface Channel extends RegisterableChannel {
      * @param cb The callback that is notified of the completion or failure of the write.
      */
     @Deprecated
-    public void close(OperationCallback cb);
+    public void oldClose(OperationCallback cb);
     
     /**
      * Gets the remote address the channel is communicating with.

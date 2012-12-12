@@ -42,16 +42,16 @@ class PacTCPChannel extends UtilTCPChannel implements TCPChannel {
 	}
 	
 	@Override
-	public void write(ByteBuffer b, OperationCallback h) throws IOException, InterruptedException {
+	public void oldWrite(ByteBuffer b, OperationCallback h) throws IOException, InterruptedException {
 		ByteBuffer out = packetProcessor.processOutgoing(b);
-		realChannel.write(out, new UtilPassThroughWriteHandler(this, h));
+		realChannel.oldWrite(out, new UtilPassThroughWriteHandler(this, h));
 	}
 	
-	public void connect(SocketAddress addr, ConnectionCallback c) throws IOException, InterruptedException {
+	public void oldConnect(SocketAddress addr, ConnectionCallback c) throws IOException, InterruptedException {
 		if(c == null)
 			throw new IllegalArgumentException("ConnectCallback cannot be null");
 		
 		PacProxyConnectCb proxy = new PacProxyConnectCb(this, c);
-		realChannel.connect(addr, proxy);
+		realChannel.oldConnect(addr, proxy);
 	}	
 }

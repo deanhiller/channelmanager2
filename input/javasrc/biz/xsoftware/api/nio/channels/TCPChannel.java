@@ -24,7 +24,7 @@ public interface TCPChannel extends Channel {
      * @throws IOException
      * @throws InterruptedException
      */
-	public void connect(SocketAddress remoteAddr, ConnectionCallback cb) throws IOException, InterruptedException;
+	public void oldConnect(SocketAddress remoteAddr, ConnectionCallback cb) throws IOException, InterruptedException;
 	
 	public boolean getKeepAlive() throws SocketException;
 	public void setKeepAlive(boolean b) throws SocketException;

@@ -37,19 +37,19 @@ class ThdTCPChannel extends UtilTCPChannel implements TCPChannel {
 		return realChannel.oldWrite(b);
 	}
 	
-	public void write(ByteBuffer b, OperationCallback h) throws IOException, InterruptedException {
-		realChannel.write(b, new ThdProxyWriteHandler(this, h, svc));
+	public void oldWrite(ByteBuffer b, OperationCallback h) throws IOException, InterruptedException {
+		realChannel.oldWrite(b, new ThdProxyWriteHandler(this, h, svc));
 	}
 	
-	public void connect(SocketAddress addr, ConnectionCallback c) throws IOException, InterruptedException {
+	public void oldConnect(SocketAddress addr, ConnectionCallback c) throws IOException, InterruptedException {
 		if(c == null)
 			throw new IllegalArgumentException("ConnectCallback cannot be null");
 		
 		ThdProxyConnectCb proxy = new ThdProxyConnectCb(this, c, svc);
-		realChannel.connect(addr, proxy);
+		realChannel.oldConnect(addr, proxy);
 	}
 
-	public void close(OperationCallback h) {
-		realChannel.close(new ThdProxyWriteHandler(this, h, svc));
+	public void oldClose(OperationCallback h) {
+		realChannel.oldClose(new ThdProxyWriteHandler(this, h, svc));
 	}    
 }

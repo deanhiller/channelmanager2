@@ -212,7 +212,7 @@ public abstract class BasChannelImpl
             int remain = b.remaining();
 
 			UtilWaitForCompletion waitWrite = new UtilWaitForCompletion(this, t);
-			write(b, waitWrite);
+			oldWrite(b, waitWrite);
             //otherwise if not all was written, wait for completion as it was added to queue
             //which writes on selector thread....
 			waitWrite.waitForComplete();
@@ -226,7 +226,7 @@ public abstract class BasChannelImpl
 	}
     
     
-	public void write(ByteBuffer b, OperationCallback h) throws IOException, InterruptedException {
+	public void oldWrite(ByteBuffer b, OperationCallback h) throws IOException, InterruptedException {
 		if(!getSelectorManager().isRunning())
 			throw new IllegalStateException(this+"ChannelManager must be running and is stopped");		
 		else if(isClosed) {
@@ -278,14 +278,14 @@ public abstract class BasChannelImpl
         }
         try {
             UtilWaitForCompletion waitWrite = new UtilWaitForCompletion(this, null);
-            close(waitWrite);
+            oldClose(waitWrite);
             waitWrite.waitForComplete();
         } catch(Exception e) {
             log.log(Level.WARNING, this+"Exception closing channel", e);
         }
     }
     
-    public void close(OperationCallback h) {
+    public void oldClose(OperationCallback h) {
         //To prevent the following exception, in the readImpl method, we
         //check if the socket is already closed, and if it is we don't read
         //and just return -1 to indicate socket closed.

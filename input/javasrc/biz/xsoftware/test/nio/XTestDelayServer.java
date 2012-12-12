@@ -132,7 +132,7 @@ public class XTestDelayServer extends TestCase {
 			clients[i] = chanMgr.createTCPChannel("Client["+i+"]", factoryHolder);			
 			log.fine("starting connect");
 			Thread.sleep(100);
-			clients[i].connect(delaySvrAddr, (ConnectionCallback)mockConnect);
+			clients[i].oldConnect(delaySvrAddr, (ConnectionCallback)mockConnect);
 		}
 		mockConnect.expect(methodNames);
 		log.info("done getting all connections");

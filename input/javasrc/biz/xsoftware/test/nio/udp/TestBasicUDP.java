@@ -93,7 +93,7 @@ public class TestBasicUDP extends TestCase {
 		assertEquals("should be instance of secure channel", c, client1.getClass());
 			
 		//no bind, just do connect to test port is not zero
-		client1.connect(remoteAddr);
+		client1.oldConnect(remoteAddr);
 		assertTrue("should be bound", client1.isBound());
 		
 		boolean isConnected = client1.isConnected();
@@ -113,13 +113,13 @@ public class TestBasicUDP extends TestCase {
 
     public void testUDPWithDisconnectConnect() throws Exception
     {
-        client1.connect(remoteAddr);
+        client1.oldConnect(remoteAddr);
         DatagramChannel svrChan = mockServer.getUDPServerChannel();
         client1.registerForReads((DataListener)mockHandler);
         verifyDataPassing(svrChan);
         
         //now disconnect, have server send some udp packets which should be rejected
-        client1.disconnect();
+        client1.oldDisconnect();
         
         writeFromServer(svrChan);
         
