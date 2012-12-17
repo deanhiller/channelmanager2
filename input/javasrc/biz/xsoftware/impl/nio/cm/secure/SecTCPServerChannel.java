@@ -18,6 +18,10 @@ class SecTCPServerChannel extends UtilRegisterable implements TCPServerChannel {
 		this.sslFactory = sslFactory;
 	}
 		
+	public void oldClose() {
+		realChannel.oldClose();
+	}
+	
 	public void registerServerSocketChannel(ConnectionListener listener) throws IOException, InterruptedException {
 		SecProxyConnectCb proxyList = new SecProxyConnectCb(this, sslFactory, listener);
 		realChannel.registerServerSocketChannel(proxyList);

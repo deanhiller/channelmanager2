@@ -19,6 +19,10 @@ class RegTCPServerChannel extends UtilRegisterable implements TCPServerChannel {
 		return realChannel;
 	}
 	
+	public void oldClose() {
+		realChannel.oldClose();
+	}
+	
 	public void registerServerSocketChannel(ConnectionListener cb) throws IOException, InterruptedException {
 		RegProxyAcceptCb proxy = new RegProxyAcceptCb(this, cb);
 		realChannel.registerServerSocketChannel(proxy);

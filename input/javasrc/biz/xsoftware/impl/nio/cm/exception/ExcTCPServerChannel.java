@@ -19,6 +19,10 @@ class ExcTCPServerChannel extends UtilRegisterable implements TCPServerChannel {
 		return realChannel;
 	}
 	
+	public void oldClose() {
+		realChannel.oldClose();
+	}
+	
 	public void registerServerSocketChannel(ConnectionListener cb) throws IOException, InterruptedException {
 		ExcProxyAcceptCb proxy = new ExcProxyAcceptCb(this, cb);
 		realChannel.registerServerSocketChannel(proxy);

@@ -174,7 +174,7 @@ public class TestUdpIntegration extends MockTestCase
     public void xxxtestDisconnect() throws IOException, InterruptedException {
         InetSocketAddress svrAddr = runBasic();
         
-        client.oldDisconnect();
+        client.disconnect();
         
         String msg = "hello";
         //NOTE: write packet from server to client.  Ideally, nothing will be fired to client

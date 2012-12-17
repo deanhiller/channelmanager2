@@ -18,4 +18,10 @@ public interface DatagramChannel extends RegisterableChannel
     public ChannelSession getSession();    
     
     public void oldWrite(SocketAddress addr, ByteBuffer b) throws IOException;
+    
+	/**
+	 * Closes and unregisters the channel if registered from the ChannelManager
+	 */
+	@Deprecated
+	public void oldClose();
 }

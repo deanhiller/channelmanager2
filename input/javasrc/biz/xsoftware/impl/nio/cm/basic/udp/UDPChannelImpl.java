@@ -67,7 +67,7 @@ public class UDPChannelImpl extends BasChannelImpl implements UDPChannel {
         isConnected = true;
 	}
     
-    public synchronized void oldDisconnect() throws IOException {
+    public synchronized void disconnect() throws IOException {
 		if(apiLog.isLoggable(Level.FINE))
 			apiLog.fine(this+"Basic.disconnect called");
 		

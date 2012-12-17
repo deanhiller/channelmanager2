@@ -17,6 +17,10 @@ public abstract class UtilTCPChannel extends UtilChannel {
 		return (TCPChannel) super.getRealChannel();
 	}
 
+	public void oldClose() {
+		getRealChannel().oldClose();
+	}
+	
 	public boolean getKeepAlive() throws SocketException {
 		return getRealChannel().getKeepAlive();
 	}

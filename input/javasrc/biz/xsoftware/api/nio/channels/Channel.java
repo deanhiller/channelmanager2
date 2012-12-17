@@ -14,54 +14,12 @@ import biz.xsoftware.api.nio.libs.ChannelSession;
  * @author Dean Hiller
  */
 public interface Channel extends RegisterableChannel {
-    /**
-     * Use these two lines of code instead
-     * 
-     * FutureListener future = channel.write(b);
-     * future.wait();
-     * 
-     * @param b
-     */
-	@Deprecated
-    public int oldWrite(ByteBuffer b) throws IOException;
-    
-    /**
-     * Use these two lines of code instead
-     * FutureListener future = channel.write(b);
-     * future.setSingleCallback(h); //callback called immediate if write happened between this line and the last line!!
-     * or the callback is called later after the write occurs.
-     * 
-     * @param b
-     * @param h
-     * @throws IOException 
-     * @throws InterruptedException 
-     */
-	@Deprecated
-    public void oldWrite(ByteBuffer b, OperationCallback h) throws IOException, InterruptedException;
-    
-    /**
-     * This is synchronous/blocking for TCP and therefore not too scalable.  Use at
-     * your own risk.  We advise using the TCPChannel.connect method instead.
-     * For UDP, it is not blocking.
-     * 
-     * @param addr
-     */
-    @Deprecated
-    public void oldConnect(SocketAddress addr) throws IOException; 
+
 
 	public FutureOperation connect(SocketAddress addr) throws IOException, InterruptedException;
 	public FutureOperation write(ByteBuffer b) throws IOException, InterruptedException;
 	public FutureOperation close();
 	
-    /**
-     * Asynchronous close where the WriteCloseHandler will be notified once
-     * the close is completed.
-     * 
-     * @param cb The callback that is notified of the completion or failure of the write.
-     */
-    @Deprecated
-    public void oldClose(OperationCallback cb);
-    
     /**
      * Gets the remote address the channel is communicating with.
      * 
@@ -98,4 +56,54 @@ public interface Channel extends RegisterableChannel {
      * @return client's Session object
      */
     public ChannelSession getSession();
+    
+    /**
+     * Use these two lines of code instead
+     * 
+     * FutureListener future = channel.write(b);
+     * future.wait();
+     * 
+     * @param b
+     */
+	@Deprecated
+    public int oldWrite(ByteBuffer b) throws IOException;
+    
+    /**
+     * Use these two lines of code instead
+     * FutureListener future = channel.write(b);
+     * future.setSingleCallback(h); //callback called immediate if write happened between this line and the last line!!
+     * or the callback is called later after the write occurs.
+     * 
+     * @param b
+     * @param h
+     * @throws IOException 
+     * @throws InterruptedException 
+     */
+	@Deprecated
+    public void oldWrite(ByteBuffer b, OperationCallback h) throws IOException, InterruptedException;
+    
+    /**
+     * This is synchronous/blocking for TCP and therefore not too scalable.  Use at
+     * your own risk.  We advise using the TCPChannel.connect method instead.
+     * For UDP, it is not blocking.
+     * 
+     * @param addr
+     */
+    @Deprecated
+    public void oldConnect(SocketAddress addr) throws IOException; 
+    
+    /**
+     * Asynchronous close where the WriteCloseHandler will be notified once
+     * the close is completed.
+     * 
+     * @param cb The callback that is notified of the completion or failure of the write.
+     */
+    @Deprecated
+    public void oldClose(OperationCallback cb);
+    
+	/**
+	 * Closes and unregisters the channel if registered from the ChannelManager
+	 */
+	@Deprecated
+	public void oldClose();
 }

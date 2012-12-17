@@ -24,6 +24,10 @@ class ThdTCPServerChannel extends UtilRegisterable implements TCPServerChannel {
 		return realChannel;
 	}
 	
+	public void oldClose() {
+		realChannel.oldClose();
+	}
+	
 	public void registerServerSocketChannel(ConnectionListener cb) throws IOException, InterruptedException {
 		ThdProxyAcceptCb proxy = new ThdProxyAcceptCb(this, cb, svc, bufFactory);
 		realChannel.registerServerSocketChannel(proxy);

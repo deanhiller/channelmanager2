@@ -16,7 +16,7 @@ public class RegUDPChannel extends RegHelperChannel implements UDPChannel {
 		this.realChannel = realChannel;
 	}
 
-	public synchronized void oldDisconnect() throws IOException {
+	public synchronized void disconnect() throws IOException {
 		if(apiLog.isLoggable(Level.FINE))
 			apiLog.fine(this+"RegRead.registerForReads called");
 		
@@ -28,6 +28,6 @@ public class RegUDPChannel extends RegHelperChannel implements UDPChannel {
 			}
 			isRegistered = false;
 		}
-		realChannel.oldDisconnect();
+		realChannel.disconnect();
 	}
 }

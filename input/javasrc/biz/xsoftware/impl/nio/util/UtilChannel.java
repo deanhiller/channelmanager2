@@ -58,6 +58,9 @@ public abstract class UtilChannel extends UtilRegisterable implements Channel {
 	public void oldClose(OperationCallback h) {
 		getRealChannel().oldClose(new UtilPassThroughWriteHandler(this, h));
 	}
+	public void oldClose() {
+		getRealChannel().oldClose();
+	}
 
 	public FutureOperation close() {
 		return getRealChannel().close();

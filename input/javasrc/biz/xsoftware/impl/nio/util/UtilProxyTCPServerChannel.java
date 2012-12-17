@@ -20,5 +20,8 @@ public class UtilProxyTCPServerChannel extends UtilRegisterable implements TCPSe
 			throws IOException, InterruptedException {
 		getRealChannel().registerServerSocketChannel(new UtilProxyAcceptCb(this, cb));
 	}
+	public void oldClose() {
+		getRealChannel().oldClose();
+	}
 
 }

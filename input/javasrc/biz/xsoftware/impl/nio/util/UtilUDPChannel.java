@@ -14,10 +14,15 @@ public class UtilUDPChannel extends UtilChannel implements UDPChannel {
 	}
 
     /**
-     * @see biz.xsoftware.api.nio.channels.UDPChannel#oldDisconnect()
+     * @see biz.xsoftware.api.nio.channels.UDPChannel#disconnect()
      */
-    public void oldDisconnect() throws IOException
+    public void disconnect() throws IOException
     {
-        realChannel.oldDisconnect();
+        realChannel.disconnect();
     }
+
+	@Override
+	public void oldClose() {
+		realChannel.oldClose();
+	}
 }

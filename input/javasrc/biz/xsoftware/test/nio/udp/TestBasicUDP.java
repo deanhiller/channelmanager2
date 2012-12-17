@@ -119,7 +119,7 @@ public class TestBasicUDP extends TestCase {
         verifyDataPassing(svrChan);
         
         //now disconnect, have server send some udp packets which should be rejected
-        client1.oldDisconnect();
+        client1.disconnect();
         
         writeFromServer(svrChan);
         

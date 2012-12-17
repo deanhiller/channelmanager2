@@ -58,13 +58,7 @@ public interface RegisterableChannel {
 	public void bind(SocketAddress addr) throws IOException;
 	
 	public boolean isBlocking();
-    
-	/**
-	 * Closes and unregisters the channel if registered from the ChannelManager
-	 */
-	@Deprecated
-	public void oldClose();
-    
+	
 	public boolean isClosed();
 	
 	/**
