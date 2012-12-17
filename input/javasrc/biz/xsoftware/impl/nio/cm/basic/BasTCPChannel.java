@@ -10,9 +10,9 @@ import java.nio.channels.SelectableChannel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import biz.xsoftware.api.nio.channels.FutureOperation;
 import biz.xsoftware.api.nio.channels.TCPChannel;
 import biz.xsoftware.api.nio.handlers.ConnectionCallback;
+import biz.xsoftware.api.nio.handlers.FutureOperation;
 import biz.xsoftware.api.nio.libs.BufferFactory;
 import biz.xsoftware.api.nio.testutil.chanapi.ChannelsFactory;
 import biz.xsoftware.api.nio.testutil.chanapi.SocketChannel;

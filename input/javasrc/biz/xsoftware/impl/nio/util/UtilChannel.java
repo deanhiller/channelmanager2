@@ -6,8 +6,8 @@ import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 
 import biz.xsoftware.api.nio.channels.Channel;
-import biz.xsoftware.api.nio.channels.FutureOperation;
 import biz.xsoftware.api.nio.handlers.DataListener;
+import biz.xsoftware.api.nio.handlers.FutureOperation;
 import biz.xsoftware.api.nio.handlers.NullWriteCallback;
 import biz.xsoftware.api.nio.handlers.OperationCallback;
 import biz.xsoftware.api.nio.libs.ChannelSession;

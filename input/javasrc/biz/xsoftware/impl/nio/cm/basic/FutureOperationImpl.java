@@ -4,11 +4,10 @@ import java.io.IOException;
 
 import biz.xsoftware.api.nio.channels.Channel;
 import biz.xsoftware.api.nio.channels.RegisterableChannel;
-import biz.xsoftware.api.nio.handlers.ConnectionCallback;
 import biz.xsoftware.api.nio.handlers.FutureOperation;
 import biz.xsoftware.api.nio.handlers.OperationCallback;
 
-public class FutureConnectImpl implements FutureOperation, ConnectionCallback {
+public class FutureOperationImpl implements FutureOperation, OperationCallback {
 
 	private RegisterableChannel channel;
 	private Throwable e;

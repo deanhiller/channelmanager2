@@ -16,8 +16,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import biz.xsoftware.api.nio.channels.Channel;
-import biz.xsoftware.api.nio.channels.FutureOperation;
 import biz.xsoftware.api.nio.handlers.DataListener;
+import biz.xsoftware.api.nio.handlers.FutureOperation;
 import biz.xsoftware.api.nio.handlers.OperationCallback;
 import biz.xsoftware.api.nio.libs.BufferFactory;
 import biz.xsoftware.api.nio.libs.ChannelSession;
@@ -236,7 +236,7 @@ public abstract class BasChannelImpl
 			exc.initCause(ioe);
 			throw exc;
 		}
-		FutureConnectImpl impl = new FutureConnectImpl();
+		FutureOperationImpl impl = new FutureOperationImpl();
 		
 		if(apiLog.isLoggable(Level.FINER))
 			apiLog.finer(this+"Basic.write");

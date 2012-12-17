@@ -13,8 +13,8 @@ import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import biz.xsoftware.api.nio.channels.FutureOperation;
 import biz.xsoftware.api.nio.channels.UDPChannel;
+import biz.xsoftware.api.nio.handlers.FutureOperation;
 import biz.xsoftware.api.nio.handlers.OperationCallback;
 import biz.xsoftware.api.nio.libs.BufferFactory;
 import biz.xsoftware.impl.nio.cm.basic.BasChannelImpl;
