@@ -28,12 +28,13 @@ public class BufferPool {
 		//size of the buffer
 		ByteBuffer b = ByteBuffer.allocate(1000);
 		DataChunkImpl impl = new DataChunkImpl(b);
+		impl.clear();
 		impl.setListener(l);
 		impl.setId(id);
 		return impl;
 	}
 
-	public void releaseChunk(DataChunk chunk) {
+	public synchronized void releaseChunk(DataChunk chunk) {
 		if(freePackets.size() > 300)
 			return; //we discard more than 300 buffers as we don't want to take up too much memory
 

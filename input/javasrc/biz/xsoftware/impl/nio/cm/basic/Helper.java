@@ -266,7 +266,10 @@ final class Helper {
 			
 			if(apiLog.isLoggable(Level.FINER))
 				apiLog.finer(channel+"READ bytes="+bytes);
-			in.incomingData(channel, chunk);			
+			in.incomingData(channel, chunk);
+			if(b.hasRemaining()) {
+				log.log(Level.WARNING, id+"Discarding unread data("+b.remaining()+") from class="+in.getClass().getName());
+			}
 		}
     }
 

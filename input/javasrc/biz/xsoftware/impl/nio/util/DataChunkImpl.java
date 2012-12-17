@@ -29,13 +29,13 @@ public class DataChunkImpl implements DataChunk {
 		if(listener != null) {
 			listener.processed(this);
 			listener = null;
-			if(data.hasRemaining()) {
-				log.log(Level.WARNING, id+"Discarding unread data("+data.remaining()+") from class", new RuntimeException().fillInStackTrace());
-			}
-			data.clear();
 		}
 	}
 
+	public void clear() {
+		data.clear();
+	}
+	
 	public void setListener(ProcessedListener l) {
 		this.listener = l;
 	}
