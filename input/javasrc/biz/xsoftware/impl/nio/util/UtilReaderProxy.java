@@ -21,13 +21,13 @@ public class UtilReaderProxy implements DataListener {
 	}
 
 	public void incomingData(Channel realChannel, DataChunk chunk) throws IOException {
-		ByteBuffer b = chunk.getData();
+		//ByteBuffer b = chunk.getData();
 		handler.incomingData(channel, chunk);
         
-        if(b.remaining() > 0) {
-            log.warning("Discarding unread data("+b.remaining()+") from class="+handler.getClass().getName());
-            b.position(b.limit());
-        }
+//        if(b.remaining() > 0) {
+//            log.warning("Discarding unread data("+b.remaining()+") from class="+handler.getClass().getName());
+//            b.position(b.limit());
+//        }
 	}
 
 	public void farEndClosed(Channel realChannel) {

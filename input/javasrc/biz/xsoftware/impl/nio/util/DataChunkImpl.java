@@ -9,14 +9,15 @@ import biz.xsoftware.api.nio.handlers.DataChunk;
 public class DataChunkImpl implements DataChunk {
 
 	private static final Logger log = Logger.getLogger(DataChunkImpl.class.getName());
-	
 	private ByteBuffer data;
 	private ProcessedListener listener = null;
-
+	private BufferListener bufferListener;
 	private Object id;
-	
-	public DataChunkImpl(ByteBuffer newBuffer) {
+
+	public DataChunkImpl(Object id, ByteBuffer newBuffer, BufferListener l) {
 		this.data = newBuffer;
+		this.bufferListener = l;
+		this.id = id;
 	}
 
 	@Override
@@ -32,16 +33,17 @@ public class DataChunkImpl implements DataChunk {
 		}
 	}
 
-	public void clear() {
-		data.clear();
-	}
-	
 	public void setListener(ProcessedListener l) {
 		this.listener = l;
 	}
 
-	public void setId(Object id) {
-		this.id = id;
+	public void releaseBuffer() {
+		if(data != null) {
+			if(data.hasRemaining()) {
+				log.log(Level.WARNING, id+"Discarding unread data("+data.remaining()+")", new RuntimeException().fillInStackTrace());
+			}
+			bufferListener.releaseBuffer(data);
+			data = null;
+		}
 	}
-
 }

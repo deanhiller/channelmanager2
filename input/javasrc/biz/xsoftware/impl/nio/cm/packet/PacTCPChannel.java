@@ -3,6 +3,7 @@ package biz.xsoftware.impl.nio.cm.packet;
 import java.io.IOException;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
+import java.util.logging.Logger;
 
 import biz.xsoftware.api.nio.channels.TCPChannel;
 import biz.xsoftware.api.nio.handlers.ConnectionCallback;
@@ -14,7 +15,7 @@ import biz.xsoftware.impl.nio.util.UtilTCPChannel;
 
 class PacTCPChannel extends UtilTCPChannel implements TCPChannel {
 
-//	private static final Logger log = Logger.getLogger(TCPChannelImpl.class.getName());
+	private static final Logger log = Logger.getLogger(PacTCPChannel.class.getName());
 //	private BufferHelper helper = ChannelManagerFactory.bufferHelper(null);
 	
 	private TCPChannel realChannel;
@@ -37,6 +38,7 @@ class PacTCPChannel extends UtilTCPChannel implements TCPChannel {
 	public int oldWrite(ByteBuffer b) throws IOException {
 		int retVal = b.remaining();
 		ByteBuffer out = packetProcessor.processOutgoing(b);
+		log.info("outgoing="+out);
 		realChannel.oldWrite(out);
 		return retVal;
 	}
@@ -44,6 +46,7 @@ class PacTCPChannel extends UtilTCPChannel implements TCPChannel {
 	@Override
 	public void oldWrite(ByteBuffer b, OperationCallback h) throws IOException, InterruptedException {
 		ByteBuffer out = packetProcessor.processOutgoing(b);
+		log.info("outgoing2="+out);
 		realChannel.oldWrite(out, new UtilPassThroughWriteHandler(this, h));
 	}
 	

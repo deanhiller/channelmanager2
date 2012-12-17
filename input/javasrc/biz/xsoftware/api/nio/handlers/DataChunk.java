@@ -19,4 +19,14 @@ public interface DataChunk {
 	 * 
 	 */
 	public void setProcessed();
+
+	/**
+	 * Calling this allows lower levers to recycle the buffers.  If you don't call it, it will just be garbage
+	 * collected.  If you do call it, it may or may not be added back to a buffer pool to be re-used.  It depends
+	 * on how the layers are setup.  This also
+	 * @param c
+	 * @param handler
+	 */
+	public void releaseBuffer();
+
 }

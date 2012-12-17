@@ -35,6 +35,8 @@ class SecReaderProxy implements DataListener {
 			b.position(b.limit()); //if closed, read the data so we don't get warnings
 			chunk.setProcessed();
 		}
+		
+		chunk.releaseBuffer();
 	}
 	
 	public void farEndClosed(Channel c) {

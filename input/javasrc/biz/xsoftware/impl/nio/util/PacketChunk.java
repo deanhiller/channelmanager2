@@ -7,11 +7,11 @@ import biz.xsoftware.api.nio.handlers.DataChunk;
 public class PacketChunk implements DataChunk {
 
 	private ByteBuffer data;
-	private DataChunk c;
+	private DataChunk chunk;
 
-	public PacketChunk(ByteBuffer out, DataChunk c) {
-		this.data = out;
-		this.c = c;
+	public PacketChunk(ByteBuffer b, DataChunk chunk) {
+		this.data = b;
+		this.chunk = chunk;
 	}
 
 	@Override
@@ -21,6 +21,11 @@ public class PacketChunk implements DataChunk {
 
 	@Override
 	public void setProcessed() {
-		c.setProcessed();
+		chunk.setProcessed();
 	}
+
+	@Override
+	public void releaseBuffer() {
+	}
+
 }

@@ -267,9 +267,6 @@ final class Helper {
 			if(apiLog.isLoggable(Level.FINER))
 				apiLog.finer(channel+"READ bytes="+bytes);
 			in.incomingData(channel, chunk);
-			if(b.hasRemaining()) {
-				log.log(Level.WARNING, id+"Discarding unread data("+b.remaining()+") from class="+in.getClass().getName());
-			}
 		}
     }
 
@@ -307,8 +304,11 @@ final class Helper {
 			} catch (InterruptedException e) {
 				throw new RuntimeException(e);
 			}
-			
-			pool.releaseChunk(chunk);
+		}
+
+		@Override
+		public void releaseBuffer(ByteBuffer data) {
+			pool.releaseBuffer(data);
 		}
     }
     
