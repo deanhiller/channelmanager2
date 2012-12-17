@@ -358,6 +358,48 @@ public abstract class BasChannelImpl
         }
     }
     
+    @Override
+    public FutureOperation close() {
+        //To prevent the following exception, in the readImpl method, we
+        //check if the socket is already closed, and if it is we don't read
+        //and just return -1 to indicate socket closed.
+        //
+        //This is very complicated.  It must be done after all the writes that have already
+        //been called before the close was called.  Basically, the close may need be 
+        //queued if there are writes on the queue.
+        //unless you like to see the following
+        //exception..........
+        //Feb 19, 2006 6:06:03 AM biz.xsoftware.test.nio.tcp.ZNioSuperclassTest verifyTearDown
+        //INFO: CLIENT1 CLOSE
+        //Feb 19, 2006 6:06:03 AM biz.xsoftware.impl.nio.cm.basic.Helper read
+        //INFO: [[client]] Exception
+        //java.nio.channels.ClosedChannelException
+        //  at sun.nio.ch.SocketChannelImpl.ensureReadOpen(SocketChannelImpl.java:112)
+        //  at sun.nio.ch.SocketChannelImpl.read(SocketChannelImpl.java:139)
+        //  at biz.xsoftware.impl.nio.cm.basic.TCPChannelImpl.readImpl(TCPChannelImpl.java:162)
+        //  at biz.xsoftware.impl.nio.cm.basic.Helper.read(Helper.java:143)
+        //  at biz.xsoftware.impl.nio.cm.basic.Helper.processKey(Helper.java:92)
+        //  at biz.xsoftware.impl.nio.cm.basic.Helper.processKeys(Helper.java:47)
+        //  at biz.xsoftware.impl.nio.cm.basic.SelectorManager2.runLoop(SelectorManager2.java:305)
+        //  at biz.xsoftware.impl.nio.cm.basic.SelectorManager2$PollingThread.run(SelectorManager2.java:267)
+    	FutureOperationImpl future = new FutureOperationImpl();
+    	try {
+    		if(apiLog.isLoggable(Level.FINE))
+    			apiLog.fine(this+"Basic.close called");
+    		
+	        if(!getRealChannel().isOpen())
+	            future.finished(this);
+	        
+	        setClosed(true);
+	        CloseRunnable runnable = new CloseRunnable(this, future);
+	        tryWriteOrClose(runnable);
+        } catch(Exception e) {
+            log.log(Level.WARNING, this+"Exception closing channel", e);
+            future.failed(this, e);
+        }
+    	return future;
+    }
+    
     protected abstract void closeImpl() throws IOException;
 
     public ChannelSession getSession() {
