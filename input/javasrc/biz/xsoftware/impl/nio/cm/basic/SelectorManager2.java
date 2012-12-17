@@ -194,7 +194,7 @@ public class SelectorManager2 implements SelectorListener {
 
 		listenerList.add(ChannelRegistrationListener.class, regRequest);
 
-		regRequest.waitForFinish();
+		regRequest.waitForFinish(false);
 	}
 	
 	private void waitForRegister(final RegisterableChannelImpl s, final int validOps, final Object listener, boolean needWait) 
@@ -224,8 +224,7 @@ public class SelectorManager2 implements SelectorListener {
 		
 		listenerList.add(ChannelRegistrationListener.class, regRequest);
 		
-        if(needWait)
-            regRequest.waitForFinish();
+		regRequest.waitForFinish(needWait);
 	}
     
     public void selectorFired()

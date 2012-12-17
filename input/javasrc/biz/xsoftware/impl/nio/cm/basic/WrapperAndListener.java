@@ -45,8 +45,10 @@ public class WrapperAndListener {
 			connectCallback = (ConnectionListener)l;
 			break;
 		case SelectionKey.OP_READ:
-			if(dataHandler != null)
-				throw new RuntimeException(channel+"DataListener is already set, cannot be set again");
+			if(dataHandler != null) {
+				if(!dataHandler.equals(l)) //we only throw if it is NOT the exact same listener
+					throw new RuntimeException(channel+"DataListener is already set, cannot be set again");
+			}
 			dataHandler = (DataListener)l;
 			break;
 		case SelectionKey.OP_WRITE:

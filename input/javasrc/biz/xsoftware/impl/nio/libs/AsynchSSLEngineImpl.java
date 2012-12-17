@@ -156,8 +156,7 @@ public class AsynchSSLEngineImpl implements AsynchSSLEngine {
 				log.finest(id+"[sockToEngine] pos="+socketToEngineData2.position()+" lim="+socketToEngineData2.limit());
 
 			PacketAction result = feedEncryptedPacketImpl(passthrough);
-			if(b.hasRemaining())
-				throw new RuntimeException(this+"BUG, need to read all data from ByteBuffer");
+
 			return result;
 		} catch (IOException e) {
 			//try to close SSLEngine

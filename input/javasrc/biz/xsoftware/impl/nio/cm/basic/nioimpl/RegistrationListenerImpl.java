@@ -44,7 +44,7 @@ class RegistrationListenerImpl implements ChannelRegistrationListener {
 		}
 	}
 
-	public void waitForFinish() throws InterruptedException, ClosedChannelException {
+	public void waitForFinish(boolean waitForWakeup) throws InterruptedException, ClosedChannelException {
 
 		synchronized(this) {
 
@@ -53,7 +53,8 @@ class RegistrationListenerImpl implements ChannelRegistrationListener {
 					log.fine(id+"call wakeup on selector to register for="+r);
 				s.wakeUpSelector();
 				//selector.wakeup();
-				this.wait();
+				if(waitForWakeup)
+					this.wait();
 			}
 		}
 		if(exc != null) {

@@ -1,16 +1,19 @@
 package biz.xsoftware.impl.nio.util;
 
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import biz.xsoftware.api.nio.handlers.DataChunk;
-import biz.xsoftware.api.nio.handlers.ProcessedListener;
 
 public class DataChunkImpl implements DataChunk {
 
+	private static final Logger log = Logger.getLogger(DataChunkImpl.class.getName());
+	
 	private ByteBuffer data;
-	private List<ProcessedListener> listeners = new ArrayList<ProcessedListener>();
+	private ProcessedListener listener = null;
+
+	private Object id;
 	
 	public DataChunkImpl(ByteBuffer newBuffer) {
 		this.data = newBuffer;
@@ -23,20 +26,22 @@ public class DataChunkImpl implements DataChunk {
 
 	@Override
 	public void setProcessed() {
-		for(ProcessedListener l : listeners) {
-			l.processed(this);
+		if(listener != null) {
+			listener.processed(this);
+			listener = null;
+			if(data.hasRemaining()) {
+				log.log(Level.WARNING, id+"Discarding unread data("+data.remaining()+") from class", new RuntimeException().fillInStackTrace());
+			}
+			data.clear();
 		}
 	}
 
-	public void addProcessedListener(ProcessedListener l) {
-		listeners.add(l);
-	}
-	public void removeProcessedListener(ProcessedListener l) {
-		listeners.remove(l);
+	public void setListener(ProcessedListener l) {
+		this.listener = l;
 	}
 
-	public void clearChunk() {
-		listeners.clear();
-		data.clear();
+	public void setId(Object id) {
+		this.id = id;
 	}
+
 }

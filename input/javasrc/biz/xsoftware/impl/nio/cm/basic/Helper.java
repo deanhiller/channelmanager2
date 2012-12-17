@@ -12,12 +12,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import biz.xsoftware.api.nio.handlers.ConnectionListener;
-import biz.xsoftware.api.nio.handlers.DataChunk;
 import biz.xsoftware.api.nio.handlers.DataListener;
 import biz.xsoftware.api.nio.handlers.NullWriteCallback;
-import biz.xsoftware.api.nio.handlers.ProcessedListener;
 import biz.xsoftware.api.nio.testutil.nioapi.Select;
 import biz.xsoftware.impl.nio.util.DataChunkImpl;
+import biz.xsoftware.impl.nio.util.ProcessedListener;
 
 final class Helper {
 
@@ -156,7 +155,8 @@ final class Helper {
 		DataListener in = struct.getDataHandler();
 		BasChannelImpl channel = (BasChannelImpl)struct.getChannel();
 		
-		DataChunkImpl chunk = pool.nextBuffer();
+		ProcessedListenerImpl l = new ProcessedListenerImpl(channel, in, mgr, pool);
+		DataChunkImpl chunk = pool.nextBuffer(id, l);
 		ByteBuffer b = chunk.getData();
 		
 		try {
@@ -263,14 +263,10 @@ final class Helper {
 		} else if(bytes > 0) {
 			//let's DEregister for read until this packet is processed and re-register when they set the chunk to processed(true)
 			unregisterChannelForReads(mgr, channel);
-			chunk.addProcessedListener(new ProcessedListenerImpl(channel, in, mgr));
 			
 			if(apiLog.isLoggable(Level.FINER))
 				apiLog.finer(channel+"READ bytes="+bytes);
-			in.incomingData(channel, chunk);
-			if(b.hasRemaining()) {
-				log.warning(id+"Discarding unread data("+b.remaining()+") from class="+in.getClass());
-			}			
+			in.incomingData(channel, chunk);			
 		}
     }
 
@@ -290,15 +286,17 @@ final class Helper {
 		private SelectorManager2 mgr;
 		private BasChannelImpl channel;
 		private DataListener in;
+		private BufferPool pool;
 
-		public ProcessedListenerImpl(BasChannelImpl channel, DataListener in, SelectorManager2 mgr) {
+		public ProcessedListenerImpl(BasChannelImpl channel, DataListener in, SelectorManager2 mgr, BufferPool pool) {
 			this.mgr = mgr;
 			this.channel = channel;
 			this.in = in;
+			this.pool = pool;
 		}
 
 		@Override
-		public void processed(DataChunk chunk) {
+		public void processed(DataChunkImpl chunk) {
 			try {
 				mgr.registerSelectableChannel(channel, SelectionKey.OP_READ, in, false);
 			} catch (IOException e) {
@@ -306,6 +304,8 @@ final class Helper {
 			} catch (InterruptedException e) {
 				throw new RuntimeException(e);
 			}
+			
+			pool.releaseChunk(chunk);
 		}
     }
     

@@ -68,5 +68,5 @@ public interface ChannelRegistrationListener extends EventListener {
 //	INTERFACES/CLASSES
 //--------------------------------------------------------------------
 
-    public void waitForFinish() throws InterruptedException, ClosedChannelException;
+    public void waitForFinish(boolean waitForWakeup) throws InterruptedException, ClosedChannelException;
 }

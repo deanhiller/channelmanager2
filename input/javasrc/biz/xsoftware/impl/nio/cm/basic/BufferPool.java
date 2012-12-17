@@ -6,20 +6,20 @@ import java.util.Iterator;
 import java.util.Set;
 
 import biz.xsoftware.api.nio.handlers.DataChunk;
-import biz.xsoftware.api.nio.handlers.ProcessedListener;
 import biz.xsoftware.impl.nio.util.DataChunkImpl;
+import biz.xsoftware.impl.nio.util.ProcessedListener;
 
-public class BufferPool implements ProcessedListener {
+public class BufferPool {
 
 	public Set<DataChunkImpl> freePackets = new HashSet<DataChunkImpl>();
 	
-	public synchronized DataChunkImpl nextBuffer() {
+	public synchronized DataChunkImpl nextBuffer(Object id, ProcessedListener l) {
 		Iterator<DataChunkImpl> iter = freePackets.iterator();
 		if(iter.hasNext()) {
 			DataChunkImpl first = iter.next();
+			first.setListener(l);
+			first.setId(id);
 			iter.remove();
-			first.clearChunk();
-			first.addProcessedListener(this);
 			return first;
 		}
 		
@@ -28,15 +28,16 @@ public class BufferPool implements ProcessedListener {
 		//size of the buffer
 		ByteBuffer b = ByteBuffer.allocate(1000);
 		DataChunkImpl impl = new DataChunkImpl(b);
+		impl.setListener(l);
+		impl.setId(id);
 		return impl;
 	}
 
-	@Override
-	public synchronized void processed(DataChunk chunk) {
+	public void releaseChunk(DataChunk chunk) {
 		if(freePackets.size() > 300)
 			return; //we discard more than 300 buffers as we don't want to take up too much memory
-		
-		freePackets.add((DataChunkImpl) chunk);
-	}
 
+		DataChunkImpl c = (DataChunkImpl) chunk;
+		freePackets.add(c);
+	}
 }
