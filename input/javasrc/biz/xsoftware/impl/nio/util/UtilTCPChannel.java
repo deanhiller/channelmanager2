@@ -24,4 +24,5 @@ public abstract class UtilTCPChannel extends UtilChannel {
 	public void setKeepAlive(boolean b) throws SocketException {
 		getRealChannel().setKeepAlive(b);
 	}  	
+	
 }

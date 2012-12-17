@@ -106,13 +106,13 @@ public abstract class ZNioSuperclassTest extends TestCase {
 //	
 //		String msg = "some exception message";
 //		IOException e = new IOException(msg);
-//		mockConnect.addThrowException("connected", e);
+//		mockConnect.addThrowException("finished", e);
 //		
 //		client1.bind(loopBackAnyPort);		
 //		client1.registerForReads((DataHandler)mockHandler);
 //		client1.connect(svrAddr, (ConnectCallback)mockConnect);
 //
-//		mockConnect.expect("connected");
+//		mockConnect.expect("finished");
 //		TCPChannel svrChan = (TCPChannel)mockServer.expect(MockNIOServer.CONNECTED).getAllParams()[0];
 //		assertEquals("should be instance of correct channel type", c, svrChan.getClass());
 //
@@ -137,7 +137,7 @@ public abstract class ZNioSuperclassTest extends TestCase {
 		client1.bind(loopBackAnyPort);		
 		client1.registerForReads((DataListener)mockHandler);
 		client1.oldConnect(svrAddr, (ConnectionCallback)mockConnect);
-		mockConnect.expect("connected");
+		mockConnect.expect("finished");
 		
 		boolean isConnected = client1.isConnected();
 		assertTrue("Client should be connected", isConnected);
@@ -158,7 +158,7 @@ public abstract class ZNioSuperclassTest extends TestCase {
     
         //no bind, just do connect to test port is not zero
         client1.oldConnect(svrAddr, (ConnectionCallback)mockConnect);
-        mockConnect.expect("connected");
+        mockConnect.expect("finished");
         
         mockServer.expect(MockNIOServer.CONNECTED);
 
@@ -177,7 +177,7 @@ public abstract class ZNioSuperclassTest extends TestCase {
 	
 		//no bind, just do connect to test port is not zero
 		client1.oldConnect(svrAddr, (ConnectionCallback)mockConnect);
-		mockConnect.expect("connected");
+		mockConnect.expect("finished");
 		
 		boolean isConnected = client1.isConnected();
 		assertTrue("Client should be connected", isConnected);
@@ -314,7 +314,7 @@ public abstract class ZNioSuperclassTest extends TestCase {
 		client1.oldConnect(svrAddr);		
 		int port = client1.getLocalAddress().getPort();
 		assertTrue("port is zero, this is bad", port != 0);
-		mockServer.expect("connected");
+		mockServer.expect("finished");
 		//verifyTearDown();
 	}
 	

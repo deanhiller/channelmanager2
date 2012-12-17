@@ -6,6 +6,7 @@ import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 
 import biz.xsoftware.api.nio.channels.Channel;
+import biz.xsoftware.api.nio.channels.FutureOperation;
 import biz.xsoftware.api.nio.handlers.DataListener;
 import biz.xsoftware.api.nio.handlers.NullWriteCallback;
 import biz.xsoftware.api.nio.handlers.OperationCallback;
@@ -19,6 +20,10 @@ public abstract class UtilChannel extends UtilRegisterable implements Channel {
 
 	protected Channel getRealChannel() {
 		return (Channel)super.getRealChannel();
+	}
+	
+	public FutureOperation write(ByteBuffer b) throws IOException, InterruptedException {
+		return getRealChannel().write(b);
 	}
 	
 	public int oldWrite(ByteBuffer b) throws IOException {
@@ -41,6 +46,11 @@ public abstract class UtilChannel extends UtilRegisterable implements Channel {
 		getRealChannel().unregisterForReads();
 	}
 
+	@Override
+	public FutureOperation connect(SocketAddress addr) throws IOException, InterruptedException {
+		return getRealChannel().connect(addr);
+	}
+	
 	public void oldConnect(SocketAddress addr) throws IOException {    
 		getRealChannel().oldConnect(addr);
 	}

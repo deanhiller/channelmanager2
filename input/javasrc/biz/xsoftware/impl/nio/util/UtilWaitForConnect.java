@@ -5,8 +5,8 @@ package biz.xsoftware.impl.nio.util;
 
 import java.io.IOException;
 
+import biz.xsoftware.api.nio.channels.Channel;
 import biz.xsoftware.api.nio.channels.RegisterableChannel;
-import biz.xsoftware.api.nio.channels.TCPChannel;
 import biz.xsoftware.api.nio.handlers.ConnectionCallback;
 
 public class UtilWaitForConnect implements ConnectionCallback {
@@ -14,12 +14,12 @@ public class UtilWaitForConnect implements ConnectionCallback {
 	private Throwable e;
 	private boolean isFinished = false;
 	
-	public synchronized void connected(TCPChannel channels) {
+	public synchronized void finished(Channel channels) throws IOException {
 		isFinished = true;
 		this.notifyAll();
 	}
 
-	public synchronized void connectFailed(RegisterableChannel channel, Throwable e) {
+	public synchronized void failed(RegisterableChannel channel, Throwable e) {
 		this.e = e;
 		isFinished = true;
 		this.notifyAll();

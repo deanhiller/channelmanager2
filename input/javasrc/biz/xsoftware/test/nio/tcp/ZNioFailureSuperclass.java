@@ -105,13 +105,13 @@ public abstract class ZNioFailureSuperclass extends MockTestCase {
 		log.info("class name"+client1.getClass().getName());
 		String msg = "some exception message";
 		IOException e = new IOException(msg);
-		mockConnect.addThrowException("connected", e);
+		mockConnect.addThrowException("finished", e);
 		
 		client1.bind(loopBackAnyPort);		
 		client1.oldConnect(svrAddr, (ConnectionCallback)mockConnect);
 		client1.registerForReads((DataListener)mockHandler);
 		
-		mockConnect.expect("connected");
+		mockConnect.expect("finished");
 		TCPChannel svrChan = expectServerChannel(mockServer, c);
 
 		verifyDataPassing(svrChan);
@@ -138,7 +138,7 @@ public abstract class ZNioFailureSuperclass extends MockTestCase {
 		client1.oldConnect(svrAddr, (ConnectionCallback)mockConnect);
 		client1.registerForReads((DataListener)mockHandler);
 		
-		mockConnect.expect("connected");
+		mockConnect.expect("finished");
 		TCPChannel svrChan = expectServerChannel(mockServer, c);
 
 		verifyDataPassing(svrChan);
@@ -170,7 +170,7 @@ public abstract class ZNioFailureSuperclass extends MockTestCase {
 		client1.oldConnect(svrAddr, (ConnectionCallback)mockConnect);
 		client1.registerForReads((DataListener)mockHandler);
 		
-		mockConnect.expect("connected");
+		mockConnect.expect("finished");
 		TCPChannel svrChan = expectServerChannel(mockServer, c);
 
 		verifyDataPassing(svrChan);
@@ -193,13 +193,13 @@ public abstract class ZNioFailureSuperclass extends MockTestCase {
 	
 		String msg = "some exception message";
 		IOException e = new IOException(msg);
-		mockServer.addThrowException("connected", e);
+		mockServer.addThrowException("finished", e);
 		
 		client1.bind(loopBackAnyPort);
 		client1.oldConnect(svrAddr, (ConnectionCallback)mockConnect);
 		client1.registerForReads((DataListener)mockHandler);
 		
-		mockConnect.expect("connected");
+		mockConnect.expect("finished");
 		TCPChannel svrChan = expectServerChannel(mockServer, c);
 
 		verifyDataPassing(svrChan);

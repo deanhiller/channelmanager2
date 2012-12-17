@@ -49,7 +49,7 @@ public class EventClient implements ConnectionCallback, DataListener {
 		channel.oldConnect(sockAddr, this);
 	}
 
-	public void connected(TCPChannel channel) throws IOException {
+	public void finished(Channel channel) throws IOException {
 		try {
 			log.info(channel+"Connected now="+channel.getRemoteAddress());
 			channel.registerForReads(this);
@@ -65,7 +65,7 @@ public class EventClient implements ConnectionCallback, DataListener {
 		}
 	}
 
-	public void connectFailed(RegisterableChannel channel, Throwable e) {
+	public void failed(RegisterableChannel channel, Throwable e) {
 		log.log(Level.WARNING, channel+"Exception", e);
 	}
 

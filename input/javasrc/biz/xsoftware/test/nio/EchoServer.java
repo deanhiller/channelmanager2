@@ -23,8 +23,8 @@ import biz.xsoftware.api.nio.testutil.MockNIOServer;
 public class EchoServer implements DataListener, ConnectionListener {
 
 
-	public static final String CONNECTED = "connected";
-	public static final String CONN_FAILED = "connectFailed";
+	public static final String CONNECTED = "finished";
+	public static final String CONN_FAILED = "failed";
 	
 	private static final Logger log = Logger.getLogger(MockNIOServer.class.getName());
 	private ChannelService chanMgr;
@@ -61,17 +61,17 @@ public class EchoServer implements DataListener, ConnectionListener {
 		chanMgr.stop();		
 	}
 
-	public void connected(TCPChannel channel) throws IOException {
+	public void finished(Channel channel) throws IOException {
 		try {
 			log.fine(channel+"mockserver accepted connection");
-			sockets.add(channel);
+			sockets.add((TCPChannel) channel);
 			channel.registerForReads(this);
 		} catch (InterruptedException e) {
 			log.log(Level.WARNING, "exception", e);
 		}		
 	}
 
-	public void connectFailed(RegisterableChannel channel, Throwable e) {
+	public void failed(RegisterableChannel channel, Throwable e) {
 		log.log(Level.WARNING, "exception", e);
 	}
 	

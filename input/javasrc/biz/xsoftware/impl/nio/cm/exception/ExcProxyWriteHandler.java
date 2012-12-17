@@ -1,9 +1,11 @@
 package biz.xsoftware.impl.nio.cm.exception;
 
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import biz.xsoftware.api.nio.channels.Channel;
+import biz.xsoftware.api.nio.channels.RegisterableChannel;
 import biz.xsoftware.api.nio.handlers.OperationCallback;
 
 public class ExcProxyWriteHandler implements OperationCallback {
@@ -19,7 +21,7 @@ public class ExcProxyWriteHandler implements OperationCallback {
 		channel = c;
 	}
 
-	public void finished(Channel realChannel) {
+	public void finished(Channel realChannel) throws IOException {
 		try {
 			handler.finished(channel);
 		} catch(Exception e) {
@@ -27,7 +29,7 @@ public class ExcProxyWriteHandler implements OperationCallback {
 		}
 	}
 
-	public void failed(Channel realChannel, Throwable e) {
+	public void failed(RegisterableChannel realChannel, Throwable e) {
 		try {
 			handler.failed(channel, e);
 		} catch(Exception ee) {

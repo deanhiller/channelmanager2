@@ -32,7 +32,7 @@ public class DelayServerAcceptor implements ConnectionListener {
 		this.delaySvrAddr = delaySvrAddr;
 	}
 		
-	public void connected(TCPChannel channel) throws IOException {
+	public void finished(Channel channel) throws IOException {
 		if(log.isLoggable(Level.FINE))
 			log.fine(channel+"about to accept");
 		currentChannel = clientSideChanMgr.createTCPChannel("xxx", null);
@@ -45,18 +45,18 @@ public class DelayServerAcceptor implements ConnectionListener {
 		
 		if(log.isLoggable(Level.FINE))
 			log.fine(channel+":"+currentChannel+"connected all links");
-		sockets.add(channel);
+		sockets.add((TCPChannel) channel);
 		sockets.add(currentChannel);
 
 		try {
-			currentChannel.registerForReads(new Delayer(channel));
+			currentChannel.registerForReads(new Delayer((TCPChannel) channel));
 			channel.registerForReads(new Delayer(currentChannel));
 		} catch (InterruptedException e) {
 			throw new RuntimeException(e);
 		}			
 	}
 
-	public void connectFailed(RegisterableChannel channel, Throwable e) {
+	public void failed(RegisterableChannel channel, Throwable e) {
 		log.log(Level.WARNING, "exception", e);
 	}
 

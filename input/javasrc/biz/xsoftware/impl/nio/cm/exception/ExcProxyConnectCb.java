@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import biz.xsoftware.api.nio.channels.Channel;
 import biz.xsoftware.api.nio.channels.RegisterableChannel;
 import biz.xsoftware.api.nio.channels.TCPChannel;
 import biz.xsoftware.api.nio.handlers.ConnectionCallback;
@@ -21,17 +22,17 @@ class ExcProxyConnectCb implements ConnectionCallback {
 		this.cb = cb;
 	}
 	
-	public void connected(TCPChannel channel) throws IOException {
+	public void finished(Channel channel) throws IOException {
 		try {
-			cb.connected(proxyChannel);
+			cb.finished(proxyChannel);
 		} catch(Exception e) {
 			log.log(Level.WARNING, channel+"Exception", e);
 		}
 	}
 
-	public void connectFailed(RegisterableChannel channel, Throwable e) {
+	public void failed(RegisterableChannel channel, Throwable e) {
 		try {
-			cb.connectFailed(proxyChannel, e);
+			cb.failed(proxyChannel, e);
 		} catch(Exception ee) {
 			log.log(Level.WARNING, channel+"Exception", ee);
 		}

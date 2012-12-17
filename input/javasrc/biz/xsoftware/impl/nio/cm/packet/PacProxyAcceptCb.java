@@ -1,7 +1,9 @@
 package biz.xsoftware.impl.nio.cm.packet;
 
+
 import java.io.IOException;
 
+import biz.xsoftware.api.nio.channels.Channel;
 import biz.xsoftware.api.nio.channels.RegisterableChannel;
 import biz.xsoftware.api.nio.channels.TCPChannel;
 import biz.xsoftware.api.nio.channels.TCPServerChannel;
@@ -21,13 +23,13 @@ class PacProxyAcceptCb implements ConnectionListener {
 		this.factory = proc;
 	}
 	
-	public void connected(TCPChannel channel) throws IOException {
+	public void finished(Channel channel) throws IOException {
 		PacketProcessor processor = factory.createPacketProcessor(channel);
-		TCPChannel newChannel = new PacTCPChannel(channel, processor);
-		cb.connected(newChannel);		
+		TCPChannel newChannel = new PacTCPChannel((TCPChannel) channel, processor);
+		cb.finished(newChannel);		
 	}
 
-	public void connectFailed(RegisterableChannel channel, Throwable e) {
-		cb.connectFailed(svrChannel, e);
+	public void failed(RegisterableChannel channel, Throwable e) {
+		cb.failed(svrChannel, e);
 	}
 }

@@ -5,6 +5,7 @@ import java.util.concurrent.Executor;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import biz.xsoftware.api.nio.channels.Channel;
 import biz.xsoftware.api.nio.channels.RegisterableChannel;
 import biz.xsoftware.api.nio.channels.TCPChannel;
 import biz.xsoftware.api.nio.handlers.ConnectionCallback;
@@ -25,11 +26,11 @@ class ThdProxyConnectCb implements ConnectionCallback {
 		this.svc = svc;
 	}
 	
-	public void connected(TCPChannel realChannel) throws IOException {
+	public void finished(Channel realChannel) throws IOException {
         ChannelsRunnable r = new ChannelsRunnable() {
 			public void run() {
 				try {
-					cb.connected(channel);
+					cb.finished(channel);
 				} catch (Exception e) {
 					log.log(Level.WARNING, channel+"Exception", e);
 				}				
@@ -41,11 +42,11 @@ class ThdProxyConnectCb implements ConnectionCallback {
 		svc.execute(r);
 	}
 
-	public void connectFailed(RegisterableChannel realChannel, final Throwable e) {
+	public void failed(RegisterableChannel realChannel, final Throwable e) {
         ChannelsRunnable r = new ChannelsRunnable() {
 			public void run() {
 				try {
-					cb.connectFailed(channel, e);
+					cb.failed(channel, e);
 				} catch (Exception e) {
 					log.log(Level.WARNING, channel+"Exception", e);
 				}				

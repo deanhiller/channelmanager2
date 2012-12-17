@@ -137,10 +137,10 @@ final class Helper {
 		
 		try {
 			channel.finishConnect();
-			callback.connected(channel);
+			callback.finished(channel);
 		} catch(Exception e) {
             log.log(Level.WARNING, id+""+key.attachment()+"Could not open connection", e);
-			callback.connectFailed(channel, e);
+			callback.failed(channel, e);
 		}
 	}
 

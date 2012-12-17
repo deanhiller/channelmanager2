@@ -6,6 +6,7 @@ package biz.xsoftware.impl.nio.util;
 import java.io.IOException;
 
 import biz.xsoftware.api.nio.channels.Channel;
+import biz.xsoftware.api.nio.channels.RegisterableChannel;
 import biz.xsoftware.api.nio.handlers.OperationCallback;
 
 public class UtilWaitForCompletion implements OperationCallback {
@@ -20,12 +21,12 @@ public class UtilWaitForCompletion implements OperationCallback {
 		thread = t;
 	}
 	
-	public synchronized void finished(Channel c) {
+	public synchronized void finished(Channel c) throws IOException {
 		isFinished = true;
 		this.notifyAll();
 	}
 
-	public synchronized void failed(Channel c, Throwable e) {
+	public synchronized void failed(RegisterableChannel c, Throwable e) {
 		this.e = e;
 		isFinished = true;
 		this.notifyAll();

@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 
 import javax.net.ssl.SSLEngine;
 
+import biz.xsoftware.api.nio.channels.Channel;
 import biz.xsoftware.api.nio.channels.RegisterableChannel;
 import biz.xsoftware.api.nio.channels.TCPChannel;
 import biz.xsoftware.api.nio.handlers.ConnectionCallback;
@@ -37,7 +38,7 @@ class SecProxyConnectCb implements ConnectionCallback {
 		this.sslFactory = factory;
 		this.cb = cb;
 	}
-	public void connected(TCPChannel realChannel) throws IOException {
+	public void finished(Channel realChannel) throws IOException {
 		if(log.isLoggable(Level.FINE))
 			log.fine(realChannel+" Tcp connected, running handshake before fire connect");
 		SecTCPChannel secureChannel = channel;
@@ -45,7 +46,7 @@ class SecProxyConnectCb implements ConnectionCallback {
 		try {
 			if(svrChannel != null) {
 				sslEngine = sslFactory.createEngineForServerSocket();			
-				secureChannel = new SecTCPChannel(realChannel);
+				secureChannel = new SecTCPChannel((TCPChannel) realChannel);
 			} else
 				sslEngine = sslFactory.createEngineForSocket();
 		} catch (GeneralSecurityException e) {
@@ -82,11 +83,11 @@ class SecProxyConnectCb implements ConnectionCallback {
 		handler.beginHandshake();
 	}
 
-	public void connectFailed(RegisterableChannel channel, Throwable e) {
+	public void failed(RegisterableChannel channel, Throwable e) {
 		if(channel != null)
-			cb.connectFailed(channel, e);
+			cb.failed(channel, e);
 		else
-			cb.connectFailed(svrChannel, e);
+			cb.failed(svrChannel, e);
 	}
 
 }

@@ -48,6 +48,10 @@ public interface Channel extends RegisterableChannel {
     @Deprecated
     public void oldConnect(SocketAddress addr) throws IOException; 
 
+	public FutureOperation connect(SocketAddress addr) throws IOException, InterruptedException;
+	public FutureOperation write(ByteBuffer b) throws IOException, InterruptedException;
+	//public FutureOperation close();
+	
     /**
      * Asynchronous close where the WriteCloseHandler will be notified once
      * the close is completed.

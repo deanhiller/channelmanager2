@@ -16,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import biz.xsoftware.api.nio.channels.Channel;
+import biz.xsoftware.api.nio.channels.FutureOperation;
 import biz.xsoftware.api.nio.handlers.DataListener;
 import biz.xsoftware.api.nio.handlers.OperationCallback;
 import biz.xsoftware.api.nio.libs.BufferFactory;
@@ -225,7 +226,41 @@ public abstract class BasChannelImpl
 		}
 	}
     
-    
+	@Override
+	public FutureOperation write(ByteBuffer b) throws IOException, InterruptedException {
+		if(!getSelectorManager().isRunning())
+			throw new IllegalStateException(this+"ChannelManager must be running and is stopped");		
+		else if(isClosed) {
+			AsynchronousCloseException exc = new AsynchronousCloseException();
+			IOException ioe = new IOException(this+"Client cannot write after the client closed the socket");
+			exc.initCause(ioe);
+			throw exc;
+		}
+		FutureConnectImpl impl = new FutureConnectImpl();
+		
+		if(apiLog.isLoggable(Level.FINER))
+			apiLog.finer(this+"Basic.write");
+		
+        //copy the buffer here
+        ByteBuffer newOne = ByteBuffer.allocate(b.remaining());
+        newOne.put(b);
+        newOne.flip();
+        WriteRunnable holder = new WriteRunnable(this, newOne, impl);
+        
+		boolean wroteNow = tryWriteOrClose(holder);
+        
+		if(wroteNow)
+			impl.finished(this);
+		
+        if(log.isLoggable(Level.FINER)) {
+	        if(!wroteNow)
+	            log.finer(this+"did not write immediately, queued up for delivery");
+    	    else
+        	    log.finest(this+"delivered");
+       	}
+        return impl;
+	}
+	
 	public void oldWrite(ByteBuffer b, OperationCallback h) throws IOException, InterruptedException {
 		if(!getSelectorManager().isRunning())
 			throw new IllegalStateException(this+"ChannelManager must be running and is stopped");		

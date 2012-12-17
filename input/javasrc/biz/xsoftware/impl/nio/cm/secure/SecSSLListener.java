@@ -31,7 +31,7 @@ class SecSSLListener implements SSLListener {
 		} catch (InterruptedException e) {
 			throw new RuntimeException(channel+"Exception occured", e);
 		}
-		cb.connected(channel);
+		cb.finished(channel);
 		isConnected = true;
 	}
 	

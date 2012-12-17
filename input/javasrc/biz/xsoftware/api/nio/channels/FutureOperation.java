@@ -1,5 +1,5 @@
 package biz.xsoftware.api.nio.channels;
 
-public class FutureConnect {
+public interface FutureOperation {
 
 }

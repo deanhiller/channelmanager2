@@ -125,7 +125,7 @@ public class XTestDelayServer extends TestCase {
 		int size = 40;
 		String[] methodNames = new String[size];
 		for(int i = 0; i < size; i++) {
-			methodNames[i] = "connected";
+			methodNames[i] = "finished";
 		}
 		TCPChannel[] clients = new TCPChannel[size];	
 		for(int i = 0; i < size; i++) {

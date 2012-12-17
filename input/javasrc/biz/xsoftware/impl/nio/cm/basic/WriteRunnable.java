@@ -1,5 +1,6 @@
 package biz.xsoftware.impl.nio.cm.basic;
 
+import java.io.IOException;
 import java.net.PortUnreachableException;
 import java.nio.ByteBuffer;
 import java.util.logging.Level;
@@ -48,7 +49,11 @@ public class WriteRunnable implements DelayedWritesCloses {
 		if(apiLog.isLoggable(Level.FINER))
 			log.finer(channel+"WriteCloseCallback.finished called on client");
 		
-		handler.finished(channel);
+		try {
+			handler.finished(channel);
+		} catch(IOException e) {
+			log.log(Level.WARNING, "Exception firing finished", e);
+		}
 		return true;
 	}
 

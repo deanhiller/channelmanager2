@@ -77,7 +77,7 @@ public class TryRealConnection extends TestCase {
 		InetSocketAddress addr = new InetSocketAddress(host, 22);
 		channel.oldConnect(addr, (ConnectionCallback)mockConnect);
 
-		mockConnect.expect("connected");
+		mockConnect.expect("finished");
 		
 		handler.addIgnore("getBuffer");
 

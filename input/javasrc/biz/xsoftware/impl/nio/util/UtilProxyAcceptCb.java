@@ -1,9 +1,10 @@
 package biz.xsoftware.impl.nio.util;
 
+
 import java.io.IOException;
 
+import biz.xsoftware.api.nio.channels.Channel;
 import biz.xsoftware.api.nio.channels.RegisterableChannel;
-import biz.xsoftware.api.nio.channels.TCPChannel;
 import biz.xsoftware.api.nio.channels.TCPServerChannel;
 import biz.xsoftware.api.nio.handlers.ConnectionListener;
 
@@ -17,13 +18,13 @@ public class UtilProxyAcceptCb implements ConnectionListener {
 		this.cb = cb;
 	}
 
-	public void connected(TCPChannel realChannel) throws IOException {
+	public void finished(Channel realChannel) throws IOException {
 		UtilProxyTCPChannel newOne = new UtilProxyTCPChannel(realChannel);
-		cb.connected(newOne);
+		cb.finished(newOne);
 	}
 
-	public void connectFailed(RegisterableChannel realChannel, Throwable e) {
-		cb.connectFailed(channel, e);
+	public void failed(RegisterableChannel realChannel, Throwable e) {
+		cb.failed(channel, e);
 	}
 
 }

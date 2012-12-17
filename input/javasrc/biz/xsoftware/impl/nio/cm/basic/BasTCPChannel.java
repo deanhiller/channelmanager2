@@ -10,6 +10,7 @@ import java.nio.channels.SelectableChannel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import biz.xsoftware.api.nio.channels.FutureOperation;
 import biz.xsoftware.api.nio.channels.TCPChannel;
 import biz.xsoftware.api.nio.handlers.ConnectionCallback;
 import biz.xsoftware.api.nio.libs.BufferFactory;
@@ -142,7 +143,31 @@ class BasTCPChannel extends BasChannelImpl implements TCPChannel {
 			}
 		}
 	}
+	
+	@Override
+	public FutureOperation connect(SocketAddress addr) throws IOException, InterruptedException {
+		FutureConnectImpl future = new FutureConnectImpl();
 
+		if(apiLog.isLoggable(Level.FINE))
+			apiLog.fine(this+"Basic.connect-addr="+addr);
+		
+		boolean connected = channel.connect(addr);
+		if(log.isLoggable(Level.FINER))
+			log.finer(this+"connected status="+connected);
+
+		setConnecting(true);
+		if(connected) {
+			try {
+				future.finished(this);
+			} catch(Throwable e) {
+				log.log(Level.WARNING, this+"Exception occurred", e);
+			}
+		} else {
+			getSelectorManager().registerChannelForConnect(this, future);
+		}
+		return future;
+	}
+	
 	public void oldConnect(SocketAddress addr, ConnectionCallback c) throws IOException, InterruptedException {
 		if(c == null)
 			throw new IllegalArgumentException(this+"ConnectCallback cannot be null");
@@ -157,7 +182,7 @@ class BasTCPChannel extends BasChannelImpl implements TCPChannel {
 		setConnecting(true);
 		if(connected) {
 			try {
-				c.connected(this);
+				c.finished(this);
 			} catch(Throwable e) {
 				log.log(Level.WARNING, this+"Exception occurred", e);
 			}

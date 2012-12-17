@@ -7,6 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import biz.xsoftware.api.nio.channels.Channel;
+import biz.xsoftware.api.nio.channels.RegisterableChannel;
 import biz.xsoftware.api.nio.channels.TCPChannel;
 import biz.xsoftware.api.nio.handlers.ConnectionCallback;
 import biz.xsoftware.api.nio.handlers.DataListener;
@@ -64,10 +65,10 @@ class ExcTCPChannel extends UtilTCPChannel implements TCPChannel {
 	
 	private static class NullWriteHandler implements OperationCallback {
 
-		public void finished(Channel c) {
+		public void finished(Channel c) throws IOException {
 		}
 
-		public void failed(Channel c, Throwable e) {
+		public void failed(RegisterableChannel c, Throwable e) {
 			log.log(Level.WARNING, "Exception trying to write", e);
 		}
 		

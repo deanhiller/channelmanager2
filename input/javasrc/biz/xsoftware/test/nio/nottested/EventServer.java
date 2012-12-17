@@ -16,7 +16,6 @@ import biz.xsoftware.api.nio.ChannelServiceFactory;
 import biz.xsoftware.api.nio.Settings;
 import biz.xsoftware.api.nio.channels.Channel;
 import biz.xsoftware.api.nio.channels.RegisterableChannel;
-import biz.xsoftware.api.nio.channels.TCPChannel;
 import biz.xsoftware.api.nio.channels.TCPServerChannel;
 import biz.xsoftware.api.nio.handlers.ConnectionListener;
 import biz.xsoftware.api.nio.handlers.DataListener;
@@ -63,7 +62,7 @@ public class EventServer implements ConnectionListener, DataListener {
 		log.info(svrChannel+"Server started");
 	}
 
-	public void connected(TCPChannel channel) throws IOException {
+	public void finished(Channel channel) throws IOException {
 		try {
 			log.info(channel+"Connected channel remote="+channel.getRemoteAddress());
 			channel.registerForReads(this);
@@ -72,7 +71,7 @@ public class EventServer implements ConnectionListener, DataListener {
 		}
 	}
 
-	public void connectFailed(RegisterableChannel channel, Throwable e) {
+	public void failed(RegisterableChannel channel, Throwable e) {
 		log.log(Level.WARNING, channel+"Exception", e);
 	}
 

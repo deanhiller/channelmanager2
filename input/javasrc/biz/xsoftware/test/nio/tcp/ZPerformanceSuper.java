@@ -130,7 +130,7 @@ public abstract class ZPerformanceSuper extends TestCase {
 		int size = 40;
 		String[] methodNames = new String[size];
 		for(int i = 0; i < size; i++) {
-			methodNames[i] = "connected";
+			methodNames[i] = "finished";
 		}
 
 		TCPChannel[] clients = new TCPChannel[size];
@@ -175,7 +175,7 @@ public abstract class ZPerformanceSuper extends TestCase {
 			int size = 10;
 			String[] methodNames = new String[size];
 			for(int i = 0; i < size; i++) {
-				methodNames[i] = "connected";
+				methodNames[i] = "finished";
 			}
 	
 			for(int j = 0; j < 10000; j++) {
@@ -238,7 +238,7 @@ public abstract class ZPerformanceSuper extends TestCase {
 		int size = 40;
 		String[] methodNames = new String[size];
 		for(int i = 0; i < size; i++) {
-			methodNames[i] = "connected";
+			methodNames[i] = "finished";
 		}
 		TCPChannel[] clients = new TCPChannel[size];	
 		for(int i = 0; i < size; i++) {
@@ -319,7 +319,7 @@ public abstract class ZPerformanceSuper extends TestCase {
 		int size = 40;
 		String[] methodNames = new String[size];
 		for(int i = 0; i < size; i++) {
-			methodNames[i] = "connected";
+			methodNames[i] = "finished";
 		}
 		TCPChannel[] clients = new TCPChannel[size];	
 		for(int i = 0; i < size; i++) {

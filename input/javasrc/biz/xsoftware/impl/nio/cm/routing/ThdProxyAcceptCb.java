@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import biz.xsoftware.api.nio.channels.Channel;
 import biz.xsoftware.api.nio.channels.RegisterableChannel;
 import biz.xsoftware.api.nio.channels.TCPChannel;
 import biz.xsoftware.api.nio.channels.TCPServerChannel;
@@ -27,12 +28,12 @@ class ThdProxyAcceptCb implements ConnectionListener {
 		this.bufFactory = bufFactory;
 	}
 	
-	public void connected(final TCPChannel channel) throws IOException {
+	public void finished(final Channel channel) throws IOException {
 		ChannelsRunnable r = new ChannelsRunnable() {
 			public void run() {
 				try {
-					TCPChannel newChannel = new ThdTCPChannel(channel, svc, bufFactory);
-					cb.connected(newChannel);
+					TCPChannel newChannel = new ThdTCPChannel((TCPChannel) channel, svc, bufFactory);
+					cb.finished(newChannel);
 				} catch (Exception e) {
 					log.log(Level.WARNING, channel+"Exception", e);
 				}				
@@ -44,11 +45,11 @@ class ThdProxyAcceptCb implements ConnectionListener {
 		svc.execute(channel, r);			
 	}
 
-	public void connectFailed(RegisterableChannel channel, final Throwable e) {
+	public void failed(RegisterableChannel channel, final Throwable e) {
         ChannelsRunnable r = new ChannelsRunnable() {
 			public void run() {
 				try {
-					cb.connectFailed(svrChannel, e);
+					cb.failed(svrChannel, e);
 				} catch (Exception e) {
 					log.log(Level.WARNING, svrChannel+"Exception", e);
 				}				

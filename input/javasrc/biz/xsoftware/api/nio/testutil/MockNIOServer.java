@@ -27,8 +27,8 @@ import biz.xsoftware.api.nio.handlers.DataListener;
  */
 public class MockNIOServer extends MockDataHandler implements ConnectionListener {
 
-	public static final String CONNECTED = "connected";
-	public static final String CONN_FAILED = "connectFailed";
+	public static final String CONNECTED = "finished";
+	public static final String CONN_FAILED = "failed";
 	
 	private static final Logger log = Logger.getLogger(MockNIOServer.class.getName());
 
@@ -90,10 +90,10 @@ public class MockNIOServer extends MockDataHandler implements ConnectionListener
 		return o;
 	}
 
-	public void connected(TCPChannel channel) throws IOException {
+	public void finished(Channel channel) throws IOException {
 		try {
 			log.fine(channel+"mockserver accepted connection");
-			sockets.add(channel);
+			sockets.add((TCPChannel) channel);
 			channel.registerForReads(MockNIOServer.this);
 			methodCalled(CONNECTED, channel);
 		} catch (InterruptedException e) {
@@ -102,7 +102,7 @@ public class MockNIOServer extends MockDataHandler implements ConnectionListener
 		}		
 	}
 
-	public void connectFailed(RegisterableChannel channel, Throwable e) {
+	public void failed(RegisterableChannel channel, Throwable e) {
 		methodCalled(CONN_FAILED, e);
 	}
 	

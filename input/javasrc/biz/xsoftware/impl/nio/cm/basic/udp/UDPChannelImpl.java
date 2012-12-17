@@ -13,10 +13,12 @@ import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import biz.xsoftware.api.nio.channels.FutureOperation;
 import biz.xsoftware.api.nio.channels.UDPChannel;
 import biz.xsoftware.api.nio.handlers.OperationCallback;
 import biz.xsoftware.api.nio.libs.BufferFactory;
 import biz.xsoftware.impl.nio.cm.basic.BasChannelImpl;
+import biz.xsoftware.impl.nio.cm.basic.FutureConnectImpl;
 import biz.xsoftware.impl.nio.cm.basic.IdObject;
 import biz.xsoftware.impl.nio.cm.basic.SelectorManager2;
 
@@ -39,6 +41,24 @@ public class UDPChannelImpl extends BasChannelImpl implements UDPChannel {
         channel.socket().bind(addr);
 	}
 
+	@Override
+	public synchronized FutureOperation connect(SocketAddress addr) throws IOException, InterruptedException {
+        FutureConnectImpl future = new FutureConnectImpl();
+		try {
+			if(apiLog.isLoggable(Level.FINE))
+				apiLog.fine(this+"Basic.connect called-addr="+addr);
+			
+			channel.connect(addr);
+			
+	        isConnected = true;
+	        future.finished(this);
+		} catch(Exception e) {
+			future.failed(this, e);
+		}
+		
+        return future;
+	}
+	
 	public synchronized void oldConnect(SocketAddress addr) throws IOException {
 		if(apiLog.isLoggable(Level.FINE))
 			apiLog.fine(this+"Basic.connect called-addr="+addr);

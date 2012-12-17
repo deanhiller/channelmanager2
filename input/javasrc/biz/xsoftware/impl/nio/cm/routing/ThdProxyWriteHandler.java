@@ -1,5 +1,6 @@
 package biz.xsoftware.impl.nio.cm.routing;
 
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,7 +23,7 @@ public class ThdProxyWriteHandler implements OperationCallback {
 		svc = svc2;
 	}
 
-	public void finished(Channel realChannel) {
+	public void finished(Channel realChannel) throws IOException {
         ChannelsRunnable r = new ChannelsRunnable() {
 			public void run() {
 				try {
@@ -38,7 +39,7 @@ public class ThdProxyWriteHandler implements OperationCallback {
 		svc.execute(realChannel, r);		
 	}
 
-	public void failed(Channel c, final Throwable e) {
+	public void failed(RegisterableChannel c, final Throwable e) {
         ChannelsRunnable r = new ChannelsRunnable() {
 			public void run() {
 				try {
@@ -51,7 +52,7 @@ public class ThdProxyWriteHandler implements OperationCallback {
 				return channel;
 			}
 		};
-		svc.execute(c, r);
+		svc.execute((Channel) c, r);
 	}
 
 }

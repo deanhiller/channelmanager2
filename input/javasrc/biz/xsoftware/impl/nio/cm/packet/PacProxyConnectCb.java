@@ -1,7 +1,9 @@
 package biz.xsoftware.impl.nio.cm.packet;
 
+
 import java.io.IOException;
 
+import biz.xsoftware.api.nio.channels.Channel;
 import biz.xsoftware.api.nio.channels.RegisterableChannel;
 import biz.xsoftware.api.nio.channels.TCPChannel;
 import biz.xsoftware.api.nio.handlers.ConnectionCallback;
@@ -17,11 +19,11 @@ class PacProxyConnectCb implements ConnectionCallback {
 		this.cb = cb;
 	}
 	
-	public void connected(TCPChannel channel) throws IOException {
-		cb.connected(packetChannel);
+	public void finished(Channel channel) throws IOException {
+		cb.finished(packetChannel);
 	}
 
-	public void connectFailed(RegisterableChannel channel, Throwable e) {
-		cb.connectFailed(packetChannel, e);
+	public void failed(RegisterableChannel channel, Throwable e) {
+		cb.failed(packetChannel, e);
 	}
 }

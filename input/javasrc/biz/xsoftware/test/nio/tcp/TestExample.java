@@ -101,14 +101,14 @@ public class TestExample extends TestCase
     private class MyServerSocketListener implements ConnectionListener {
 
         /**
-         * @see biz.xsoftware.api.nio.handlers.ConnectionListener#connected(biz.xsoftware.api.nio.channels.TCPChannel)
+         * @see biz.xsoftware.api.nio.handlers.ConnectionListener#finished(Channel)
          */
-        public void connected(TCPChannel channel) throws IOException
+        public void finished(Channel channel) throws IOException
         {
             try
             {
                 //cache the server channel
-                TestExample.this.svrTCPChannel = channel;
+                TestExample.this.svrTCPChannel = (TCPChannel) channel;
                 channel.registerForReads(new MyDataListener("server"));
             }
             catch(InterruptedException e)
@@ -118,10 +118,10 @@ public class TestExample extends TestCase
         }
 
         /**
-         * @see biz.xsoftware.api.nio.handlers.ConnectionListener#connectFailed
-         * (biz.xsoftware.api.nio.channels.RegisterableChannel, java.lang.Throwable)
+         * @see biz.xsoftware.api.nio.handlers.ConnectionListener#failed
+         * (RegisterableChannel, java.lang.Throwable)
          */
-        public void connectFailed(RegisterableChannel channel, Throwable e)
+        public void failed(RegisterableChannel channel, Throwable e)
         {
             log.log(Level.WARNING, "", e);
         }

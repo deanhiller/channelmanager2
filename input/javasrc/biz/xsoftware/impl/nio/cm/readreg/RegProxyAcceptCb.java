@@ -1,7 +1,9 @@
 package biz.xsoftware.impl.nio.cm.readreg;
 
+
 import java.io.IOException;
 
+import biz.xsoftware.api.nio.channels.Channel;
 import biz.xsoftware.api.nio.channels.RegisterableChannel;
 import biz.xsoftware.api.nio.channels.TCPChannel;
 import biz.xsoftware.api.nio.channels.TCPServerChannel;
@@ -17,12 +19,12 @@ class RegProxyAcceptCb implements ConnectionListener {
 		this.cb = cb;
 	}
 	
-	public void connected(TCPChannel channel) throws IOException {
-		TCPChannel newChannel = new RegTCPChannel(channel);
-		cb.connected(newChannel);		
+	public void finished(Channel channel) throws IOException {
+		TCPChannel newChannel = new RegTCPChannel((TCPChannel) channel);
+		cb.finished(newChannel);		
 	}
 
-	public void connectFailed(RegisterableChannel channel, Throwable e) {
-		cb.connectFailed(svrChannel, e);
+	public void failed(RegisterableChannel channel, Throwable e) {
+		cb.failed(svrChannel, e);
 	}
 }
