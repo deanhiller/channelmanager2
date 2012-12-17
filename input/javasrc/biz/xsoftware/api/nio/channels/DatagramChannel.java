@@ -22,6 +22,5 @@ public interface DatagramChannel extends RegisterableChannel
 	/**
 	 * Closes and unregisters the channel if registered from the ChannelManager
 	 */
-	@Deprecated
-	public void oldClose();
+	public void close();
 }
