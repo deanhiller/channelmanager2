@@ -16,6 +16,7 @@ import biz.xsoftware.api.nio.channels.RegisterableChannel;
 import biz.xsoftware.api.nio.channels.TCPChannel;
 import biz.xsoftware.api.nio.channels.TCPServerChannel;
 import biz.xsoftware.api.nio.handlers.ConnectionListener;
+import biz.xsoftware.api.nio.handlers.DataChunk;
 import biz.xsoftware.api.nio.handlers.DataListener;
 import biz.xsoftware.api.nio.handlers.NullWriteCallback;
 import biz.xsoftware.api.nio.testutil.MockNIOServer;
@@ -80,9 +81,11 @@ public class EchoServer implements DataListener, ConnectionListener {
 	}
 
 	private int id = 0;
-	public void incomingData(Channel channel, ByteBuffer b) throws IOException {		
+	public void incomingData(Channel channel, DataChunk chunk) throws IOException {		
 		try {
+			ByteBuffer b = chunk.getData();
 			channel.oldWrite(b, NullWriteCallback.singleton());
+			chunk.setProcessed();
 		} catch (InterruptedException e) {
 			log.log(Level.WARNING, "Exception occurred", e);
 		}

@@ -6,10 +6,12 @@ import java.util.logging.Logger;
 
 import biz.xsoftware.api.nio.channels.Channel;
 import biz.xsoftware.api.nio.handlers.ConnectionListener;
+import biz.xsoftware.api.nio.handlers.DataChunk;
 import biz.xsoftware.api.nio.handlers.DataListener;
 import biz.xsoftware.api.nio.handlers.NullWriteCallback;
 import biz.xsoftware.api.nio.handlers.OperationCallback;
 import biz.xsoftware.api.nio.libs.SSLListener;
+import biz.xsoftware.impl.nio.util.PacketChunk;
 
 class SecSSLListener implements SSLListener {
 
@@ -53,7 +55,9 @@ class SecSSLListener implements SSLListener {
 	}
 	
 	public void packetUnencrypted(ByteBuffer out, Object passThrough) throws IOException {
-		client.incomingData(channel, out);
+		DataChunk c = (DataChunk) passThrough;
+		DataChunk newChunk = new PacketChunk(out, c);
+		client.incomingData(channel, newChunk);
 	}
 	
 	public void setClientHandler(DataListener client) {
@@ -93,8 +97,8 @@ class SecSSLListener implements SSLListener {
 		//which is effective immediately.
 	}
 
-	public void feedProblemThrough(Channel c, ByteBuffer b, Object problem) throws IOException {
-		client.incomingData(c, b);
+	public void feedProblemThrough(Channel c, ByteBuffer b, Exception e) throws IOException {
+		client.failure(c, b, e);
 	}
 
 }

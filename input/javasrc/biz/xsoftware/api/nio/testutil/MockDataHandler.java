@@ -3,6 +3,7 @@ package biz.xsoftware.api.nio.testutil;
 import java.nio.ByteBuffer;
 
 import biz.xsoftware.api.nio.channels.Channel;
+import biz.xsoftware.api.nio.handlers.DataChunk;
 import biz.xsoftware.api.nio.handlers.DataListener;
 import biz.xsoftware.impl.mock.MockSuperclass;
 
@@ -23,9 +24,11 @@ public class MockDataHandler extends MockSuperclass implements DataListener {
 	/* (non-Javadoc)
 	 * @see api.biz.xsoftware.nio.DataHandler#incomingData(java.nio.ByteBuffer)
 	 */
-	public void incomingData(Channel channel, ByteBuffer b) {
+	public void incomingData(Channel channel, DataChunk chunk) {
+		ByteBuffer b = chunk.getData();
 		Object cloned = CloneByteBuffer.clone(b);
 		methodCalled(INCOMING_DATA, new Object[] {channel, cloned});
+		chunk.setProcessed();
 	}
 
 	/* (non-Javadoc)

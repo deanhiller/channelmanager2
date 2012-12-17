@@ -250,7 +250,7 @@ public class SelectorManager2 implements SelectorListener {
         			+" needCloseOrRegister="+needCloseOrRegister+" wantShutdown="+selector.isWantShutdown());
         needCloseOrRegister = false;
         if(keySet.size() > 0) {
-        	Helper.processKeys(id, keySet);
+        	Helper.processKeys(id, keySet, this);
         }
     }
 	

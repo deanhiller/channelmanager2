@@ -11,5 +11,5 @@ public interface PacketListener {
 	 * @param b
 	 * @throws IOException 
 	 */
-	public void incomingPacket(ByteBuffer b) throws IOException;
+	public void incomingPacket(ByteBuffer b, Object passthrough) throws IOException;
 }

@@ -109,7 +109,7 @@ public class TestUnpacketizer extends MockTestCase {
 			ByteBuffer outgoing = unpacketizer.processOutgoing(b);
 			
 			//contract is a rewound buffer that it can read to begin with.
-			unpacketizer.incomingData(outgoing);
+			unpacketizer.incomingData(outgoing, null);
 			CalledMethod method = listener.expect(PACKET_METHOD);
 			
 			verifyBuffer(method, fullString, 11);
@@ -128,7 +128,7 @@ public class TestUnpacketizer extends MockTestCase {
 		helper.putString(b, HALF1);
 		helper.doneFillingBuffer(b);
 
-		unpacketizer.incomingData(b);
+		unpacketizer.incomingData(b, null);
 		listener.expect(MockObject.NONE);		
 		
 		helper.eraseBuffer(b);
@@ -140,7 +140,7 @@ public class TestUnpacketizer extends MockTestCase {
 		if (log.isLoggable(Level.FINE))
 			log.log(Level.FINE, "FEED NEXT BUFFER********************");
 		
-		unpacketizer.incomingData(b);
+		unpacketizer.incomingData(b, null);
 		CalledMethod method = listener.expect(PACKET_METHOD);
 			
 		verifyBuffer(method, fullString, size);
@@ -176,7 +176,7 @@ public class TestUnpacketizer extends MockTestCase {
 		methods[0] = PACKET_METHOD;
 		methods[1] = PACKET_METHOD;		
 		
-		unpacketizer.incomingData(b);
+		unpacketizer.incomingData(b, null);
 		CalledMethod[] calledMethods = listener.expect(methods);			
 		
 		//need to verify first 2 packets and then send 
@@ -194,7 +194,7 @@ public class TestUnpacketizer extends MockTestCase {
 		if (log.isLoggable(Level.FINE))
 			log.log(Level.FINE, "FEED NEXT BUFFER********************");
 			
-		unpacketizer.incomingData(b);
+		unpacketizer.incomingData(b, null);
 		CalledMethod method = listener.expect(PACKET_METHOD);
 		
 		verifyBuffer(method, fullString, size);
@@ -205,7 +205,7 @@ public class TestUnpacketizer extends MockTestCase {
 		b.put(PACKET_SEPARATOR);
 		helper.doneFillingBuffer(b);
 		
-		unpacketizer.incomingData(b);
+		unpacketizer.incomingData(b, null);
 		method = listener.expect(PACKET_METHOD);
 		
 		verifyBuffer(method, fullString, size);
@@ -241,7 +241,7 @@ public class TestUnpacketizer extends MockTestCase {
 		//b.put(b1);
 		helper.doneFillingBuffer(b);
 
-		unpacketizer.incomingData(b);
+		unpacketizer.incomingData(b, null);
 		//Object evt = 
 		listener.expect(MockObject.NONE);
 		
@@ -280,7 +280,7 @@ public class TestUnpacketizer extends MockTestCase {
 		helper.doneFillingBuffer(b);
 
 		//contract is a donePut()(flip() is donePut() buffer that it can read to begin with.
-		unpacketizer.incomingData(b);
+		unpacketizer.incomingData(b, null);
 		CalledMethod method = listener.expect(PACKET_METHOD);
 		
 		verifyBuffer(method, fullString, size);
@@ -305,7 +305,7 @@ public class TestUnpacketizer extends MockTestCase {
 		
 		try {
 			//feed packet with negative size.....
-			unpacketizer.incomingData(b);
+			unpacketizer.incomingData(b, null);
 			fail("Should have thrown a RuntimeException");
 		} catch(CorruptPacketException e) {
 			assertTrue("header should be corrupt", e.isHeaderCorrupt());
@@ -323,7 +323,7 @@ public class TestUnpacketizer extends MockTestCase {
 		
 		try {
 			//feed incoming packet with two large a header(ie. size is less than max size of packet)
-			unpacketizer.incomingData(b);
+			unpacketizer.incomingData(b, null);
 			fail("Should have thrown an Exception");
 		} catch(CorruptPacketException e) {
 			assertTrue("header should be corrupt", e.isHeaderCorrupt());			
@@ -333,7 +333,7 @@ public class TestUnpacketizer extends MockTestCase {
 		if (log.isLoggable(Level.FINE))
 			log.log(Level.FINE, "FEEDING NULL************");
 		try {
-			unpacketizer.incomingData(null);
+			unpacketizer.incomingData(null, null);
 			fail("Should have thrown a RuntimeException");
 		} catch(IllegalArgumentException e) {
 			assertEquals("Message was incorrect", "evt cannot be null", e.getMessage());
@@ -409,7 +409,7 @@ public class TestUnpacketizer extends MockTestCase {
 		b.put(PACKET_SEPARATOR);
 		helper.doneFillingBuffer(b);
 
-		unpacketizer.incomingData(b);
+		unpacketizer.incomingData(b, null);
 		CalledMethod method = listener.expect(PACKET_METHOD);		
 		assertTrue("evt should have been an instance of ByteBuffer", method.getAllParams()[0] instanceof ByteBuffer);
 			

@@ -17,6 +17,7 @@ import biz.xsoftware.api.nio.channels.RegisterableChannel;
 import biz.xsoftware.api.nio.channels.TCPChannel;
 import biz.xsoftware.api.nio.channels.TCPServerChannel;
 import biz.xsoftware.api.nio.handlers.ConnectionListener;
+import biz.xsoftware.api.nio.handlers.DataChunk;
 import biz.xsoftware.api.nio.handlers.DataListener;
 import biz.xsoftware.api.nio.libs.ChannelSession;
 
@@ -145,8 +146,9 @@ public class TestExampleSessions extends TestCase
         /**
          * @see biz.xsoftware.api.nio.handlers.DataListener#incomingData(Channel, java.nio.ByteBuffer)
          */
-        public synchronized void incomingData(Channel channel, ByteBuffer b) throws IOException
+        public synchronized void incomingData(Channel channel, DataChunk chunk) throws IOException
         {
+        	ByteBuffer b = chunk.getData();
         	//A session is associated with a channel which should make sense as
         	//if the channel goes away, the session goes away.
         	ChannelSession session = channel.getSession();
@@ -159,6 +161,7 @@ public class TestExampleSessions extends TestCase
             log.info(name+" count="+(sessionCount++)+" says '"+msg+"'    s="+session+"  t="+Thread.currentThread());
 
         	session.put("count", sessionCount);
+        	chunk.setProcessed();
         }
 
         /**

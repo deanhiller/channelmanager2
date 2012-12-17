@@ -11,10 +11,11 @@ public interface PacketProcessor {
 	
 	/**
 	 * processIncoming reads from the ByteBuffer
-	 * @param b
+	 * @param  true if we passed data to downstream listener, false if not
+	 * @return 
 	 * @throws IOException 
 	 */
-	public void incomingData(ByteBuffer b) throws IOException;
+	public boolean incomingData(ByteBuffer b, Object passthrough) throws IOException;
 	
 	public void setPacketListener(PacketListener l);
 	

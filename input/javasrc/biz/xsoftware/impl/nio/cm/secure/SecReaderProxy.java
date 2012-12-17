@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import biz.xsoftware.api.nio.channels.Channel;
+import biz.xsoftware.api.nio.handlers.DataChunk;
 import biz.xsoftware.api.nio.handlers.DataListener;
 import biz.xsoftware.api.nio.libs.AsynchSSLEngine;
+import biz.xsoftware.api.nio.libs.PacketAction;
 
 class SecReaderProxy implements DataListener {
 	
@@ -22,11 +24,17 @@ class SecReaderProxy implements DataListener {
 		return data;
 	}
 
-	public void incomingData(Channel c, ByteBuffer b) throws IOException {
+	public void incomingData(Channel c, DataChunk chunk) throws IOException {
+		ByteBuffer b = chunk.getData();
 		if(!isClosed) {
-			handler.feedEncryptedPacket(b, null);
-		} else
+			PacketAction action = handler.feedEncryptedPacket(b, chunk);
+			if(action == PacketAction.NOT_ENOUGH_BYTES_YET) {
+				chunk.setProcessed(); //trigger another read from socket
+			}
+		} else {
 			b.position(b.limit()); //if closed, read the data so we don't get warnings
+			chunk.setProcessed();
+		}
 	}
 	
 	public void farEndClosed(Channel c) {

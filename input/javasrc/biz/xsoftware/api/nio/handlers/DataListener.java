@@ -46,7 +46,7 @@ public interface DataListener {
 	 * @param channel
 	 * @param b
 	 */
-	public void incomingData(Channel channel, ByteBuffer b) throws IOException;
+	public void incomingData(Channel channel, DataChunk b) throws IOException;
 	
 	public void farEndClosed(Channel channel);
 

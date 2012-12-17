@@ -4,9 +4,11 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 
 import biz.xsoftware.api.nio.channels.Channel;
+import biz.xsoftware.api.nio.handlers.DataChunk;
 import biz.xsoftware.api.nio.handlers.DataListener;
 import biz.xsoftware.api.nio.handlers.PacketListener;
 import biz.xsoftware.api.nio.libs.PacketProcessor;
+import biz.xsoftware.impl.nio.util.PacketChunk;
 
 class PacProxyDataHandler implements DataListener, PacketListener {
 
@@ -22,11 +24,14 @@ class PacProxyDataHandler implements DataListener, PacketListener {
 		//this.realChannel = (TCPChannel)channel.getRealChannel();
 	}
 	
-	public void incomingData(Channel realChannel, ByteBuffer b) throws IOException {
+	public void incomingData(Channel realChannel, DataChunk chunk) throws IOException {
 		try {
-			packetProcessor.incomingData(b);
+			ByteBuffer b = chunk.getData();
+			boolean notified = packetProcessor.incomingData(b, chunk);
+			if(!notified)
+				chunk.setProcessed();
 		} catch(Exception e) {
-			handler.incomingData(channel, b);
+			handler.incomingData(channel, chunk);
 		}
 	}
 	
@@ -34,8 +39,10 @@ class PacProxyDataHandler implements DataListener, PacketListener {
 		handler.farEndClosed(channel);
 	}
 
-	public void incomingPacket(ByteBuffer b) throws IOException {
-		handler.incomingData(channel, b);
+	public void incomingPacket(ByteBuffer b, Object passthrough) throws IOException {
+		DataChunk chunk = (DataChunk) passthrough;
+		PacketChunk newChunk = new PacketChunk(b, chunk);
+		handler.incomingData(channel, newChunk);
 	}
 
 	public void failure(Channel realChannel, ByteBuffer data, Exception e) {

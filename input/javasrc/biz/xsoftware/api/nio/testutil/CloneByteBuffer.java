@@ -7,6 +7,7 @@ import biz.xsoftware.api.nio.BufferHelper;
 import biz.xsoftware.api.nio.ChannelServiceFactory;
 import biz.xsoftware.api.nio.channels.Channel;
 import biz.xsoftware.api.nio.channels.DatagramChannel;
+import biz.xsoftware.api.nio.handlers.DataChunk;
 import biz.xsoftware.mock.CloningBehavior;
 
 public class CloneByteBuffer implements CloningBehavior {
@@ -43,16 +44,17 @@ public class CloneByteBuffer implements CloningBehavior {
 		return new Object[] { clone(out) };
 	}
 	
-	public void incomingPacket(ByteBuffer b) {
+	public void incomingPacket(ByteBuffer b, Object obj) {
 	}
-	public Object[] incomingPacketCloner(ByteBuffer b) {
-		return new Object[] { clone(b) };
+	public Object[] incomingPacketCloner(ByteBuffer b, Object obj) {
+		return new Object[] { clone(b), obj};
 	}
 	
-	public void incomingData(Channel channel, ByteBuffer b) {	
+	public void incomingData(Channel channel, DataChunk chunk) {	
 		//log.info("b.rem="+b.remaining());
 	}
-	public Object[] incomingDataCloner(Channel channel, ByteBuffer b) {
+	public Object[] incomingDataCloner(Channel channel, DataChunk chunk) {
+		ByteBuffer b = chunk.getData();
 		return new Object[] { channel, clone(b) };
 	}
 //	private static final Logger log = Logger.getLogger(CloneByteBuffer.class.getName());

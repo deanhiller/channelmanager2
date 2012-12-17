@@ -12,9 +12,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import biz.xsoftware.api.nio.handlers.ConnectionListener;
+import biz.xsoftware.api.nio.handlers.DataChunk;
 import biz.xsoftware.api.nio.handlers.DataListener;
 import biz.xsoftware.api.nio.handlers.NullWriteCallback;
+import biz.xsoftware.api.nio.handlers.ProcessedListener;
 import biz.xsoftware.api.nio.testutil.nioapi.Select;
+import biz.xsoftware.impl.nio.util.DataChunkImpl;
 
 final class Helper {
 
@@ -23,6 +26,8 @@ final class Helper {
 	//private static BufferHelper helper = ChannelManagerFactory.bufferHelper(null);
 	private static boolean logBufferNextRead = false;
 
+	private static BufferPool pool = new BufferPool();
+	
 	private Helper() {}
 	
 	public static String opType(int ops) {
@@ -39,7 +44,7 @@ final class Helper {
 		return retVal;
 	}
 	
-	public static void processKeys(Object id, Set<SelectionKey> keySet) {
+	public static void processKeys(Object id, Set<SelectionKey> keySet, SelectorManager2 mgr) {
 		Iterator<SelectionKey> iter = keySet.iterator();
 		while (iter.hasNext()) {
 			SelectionKey key = null;
@@ -48,7 +53,7 @@ final class Helper {
 				if(log.isLoggable(Level.FINE))
 					log.fine(key.attachment()+" ops="+Helper.opType(key.readyOps())
 							+" acc="+key.isAcceptable()+" read="+key.isReadable()+" write"+key.isWritable());
-				processKey(id, key);
+				processKey(id, key, mgr);
 //			} catch(CancelledKeyException e) {
 //				log.log(Level.INFO, "Cancelled key may be normal", e);
 			} catch(IOException e) {
@@ -79,7 +84,7 @@ final class Helper {
 		keySet.clear();
 	}
 	
-	private static void processKey(Object id, SelectionKey key) throws IOException, InterruptedException {
+	private static void processKey(Object id, SelectionKey key, SelectorManager2 mgr) throws IOException, InterruptedException {
 		if(log.isLoggable(Level.FINEST))
 			log.finest(id+""+key.attachment()+"proccessing");
 
@@ -90,21 +95,20 @@ final class Helper {
 		//if isAcceptable, than is a ServerSocketChannel
 		if(key.isAcceptable()) {
 			Helper.acceptSocket(id, key);
-		} else {
-			//can a key be connectable and readable or writeable...no way
-			if(key.isConnectable())
-				Helper.connect(id, key);
-			else {            
-				if(key.isWritable()) {
-					Helper.write(id, key);
-				}
-                //The read MUST be after the write as a call to key.isWriteable is invalid if the
-                //read resulted in the far end closing the socket.
-                if(key.isReadable()) {
-                    Helper.read(id, key);
-                }                   
-			}
+		} 
+		
+		if(key.isConnectable())
+			Helper.connect(id, key);
+		
+		if(key.isWritable()) {
+			Helper.write(id, key);
 		}
+            
+		//The read MUST be after the write as a call to key.isWriteable is invalid if the
+		//read resulted in the far end closing the socket.
+		if(key.isReadable()) {
+			Helper.read(id, key, mgr);
+		}                   
 	}
 	
 	//each of these functions should be a handler for a new type that we set up
@@ -144,7 +148,7 @@ final class Helper {
 		}
 	}
 
-	private static void read(Object id, SelectionKey key) throws IOException {
+	private static void read(Object id, SelectionKey key, SelectorManager2 mgr) throws IOException {
 		if(log.isLoggable(Level.FINEST))
 			log.finest(id+""+key.attachment()+"reading data");
 		
@@ -152,8 +156,9 @@ final class Helper {
 		DataListener in = struct.getDataHandler();
 		BasChannelImpl channel = (BasChannelImpl)struct.getChannel();
 		
-		ByteBuffer b = channel.getIncomingDataBuf();
-
+		DataChunkImpl chunk = pool.nextBuffer();
+		ByteBuffer b = chunk.getData();
+		
 		try {
             if(logBufferNextRead)
             	log.info(channel+"buffer="+b);
@@ -163,7 +168,7 @@ final class Helper {
             	log.info(channel+"buffer2="+b);                	
             }
 
-            processBytes(id, key, b, bytes);
+            processBytes(id, key, chunk, bytes, mgr);
             
 		} catch(PortUnreachableException e) {
             //this is a normal occurence when some writes out udp to a port that is not
@@ -225,7 +230,7 @@ final class Helper {
 					|| msg.startsWith("Connection reset by peer")
 					|| msg.startsWith("An established connection was aborted by the software in your host machine"))) {
 		            log.log(Level.FINE, id+"Exception 2", e);
-		            processBytes(id, key, b, -1);
+		            processBytes(id, key, chunk, -1, mgr);
 			} else {
 				log.log(Level.WARNING, id+"IO Exception unexpected", e);
 				in.failure(channel, null, e);
@@ -237,14 +242,16 @@ final class Helper {
      * @param id
      * @param b
      * @param bytes
+     * @param mgr 
      * @throws IOException
      */
-    private static void processBytes(Object id, SelectionKey key, ByteBuffer b, int bytes) throws IOException
+    private static void processBytes(Object id, SelectionKey key, DataChunkImpl chunk, int bytes, SelectorManager2 mgr) throws IOException
     {
         WrapperAndListener struct = (WrapperAndListener)key.attachment();
         DataListener in = struct.getDataHandler();
         BasChannelImpl channel = (BasChannelImpl)struct.getChannel();
         
+        ByteBuffer b = chunk.getData();
         //in 1.5.0_08, was getting a nullpointer on helper...
         b.flip(); //helper.doneFillingBuffer(b);
         
@@ -254,22 +261,53 @@ final class Helper {
 	        channel.oldClose(NullWriteCallback.singleton());
 			in.farEndClosed(channel);
 		} else if(bytes > 0) {
+			//let's DEregister for read until this packet is processed and re-register when they set the chunk to processed(true)
+			unregisterChannelForReads(mgr, channel);
+			chunk.addProcessedListener(new ProcessedListenerImpl(channel, in, mgr));
+			key.interestOps(key.interestOps() ^ SelectionKey.OP_READ);
+			
 			if(apiLog.isLoggable(Level.FINER))
 				apiLog.finer(channel+"READ bytes="+bytes);
-			in.incomingData(channel, b);
+			in.incomingData(channel, chunk);
 			if(b.hasRemaining()) {
 				log.warning(id+"Discarding unread data("+b.remaining()+") from class="+in.getClass());
 			}			
-		} else {
-            //I know this can happen if the buffer is full, but we check that before 
-            //the read.  This should not happen but still does!!!!!
-            if(log.isLoggable(Level.WARNING))
-                log.warning(channel+"READ 0 bytes(this is strange)...buffer="+b);            
-            
-            logBufferNextRead = true;
-			assert false : "Should not occur";
 		}
-		b.clear();
+    }
+
+	private static void unregisterChannelForReads(SelectorManager2 mgr,
+			BasChannelImpl channel) {
+		try {
+			mgr.unregisterChannelForRead(channel);
+		} catch (IOException e) {
+			log.log(Level.WARNING, "Exception on unregister for read", e);
+		} catch (InterruptedException e) {
+			log.log(Level.WARNING, "exception on unregsiter", e);
+		}
+	}
+    
+    private static class ProcessedListenerImpl implements ProcessedListener {
+
+		private SelectorManager2 mgr;
+		private BasChannelImpl channel;
+		private DataListener in;
+
+		public ProcessedListenerImpl(BasChannelImpl channel, DataListener in, SelectorManager2 mgr) {
+			this.mgr = mgr;
+			this.channel = channel;
+			this.in = in;
+		}
+
+		@Override
+		public void processed(DataChunk chunk) {
+			try {
+				mgr.registerSelectableChannel(channel, SelectionKey.OP_READ, in, false);
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			} catch (InterruptedException e) {
+				throw new RuntimeException(e);
+			}
+		}
     }
     
 	private static void write(Object id, SelectionKey key) throws IOException, InterruptedException {

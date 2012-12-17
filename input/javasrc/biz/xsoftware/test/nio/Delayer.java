@@ -13,6 +13,7 @@ import biz.xsoftware.api.nio.BufferHelper;
 import biz.xsoftware.api.nio.ChannelServiceFactory;
 import biz.xsoftware.api.nio.channels.Channel;
 import biz.xsoftware.api.nio.channels.TCPChannel;
+import biz.xsoftware.api.nio.handlers.DataChunk;
 import biz.xsoftware.api.nio.handlers.DataListener;
 import biz.xsoftware.api.nio.libs.BufferFactory;
 import biz.xsoftware.api.nio.libs.FactoryCreator;
@@ -35,7 +36,9 @@ public class Delayer implements DataListener {
 			bufFactory = creator.createBufferFactory(map);			
 		}		
 	}
-	public void incomingData(Channel channel, ByteBuffer b) throws IOException {
+	public void incomingData(Channel channel, DataChunk chunk) throws IOException {
+		ByteBuffer b = chunk.getData();
+		
 		final ByteBuffer newBuffer = bufFactory.createBuffer(channel, b.remaining());
 		newBuffer.put(b);
 		TimerTask t = new TimerTask() {
@@ -51,6 +54,8 @@ public class Delayer implements DataListener {
 			
 		};
 		timer.schedule(t, 1000);
+		
+		chunk.setProcessed();
 	}
 
 	public void farEndClosed(Channel channel) {

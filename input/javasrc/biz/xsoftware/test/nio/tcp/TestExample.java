@@ -17,6 +17,7 @@ import biz.xsoftware.api.nio.channels.RegisterableChannel;
 import biz.xsoftware.api.nio.channels.TCPChannel;
 import biz.xsoftware.api.nio.channels.TCPServerChannel;
 import biz.xsoftware.api.nio.handlers.ConnectionListener;
+import biz.xsoftware.api.nio.handlers.DataChunk;
 import biz.xsoftware.api.nio.handlers.DataListener;
 
 /**
@@ -139,10 +140,12 @@ public class TestExample extends TestCase
         /**
          * @see biz.xsoftware.api.nio.handlers.DataListener#incomingData(Channel, java.nio.ByteBuffer)
          */
-        public void incomingData(Channel channel, ByteBuffer b) throws IOException
+        public void incomingData(Channel channel, DataChunk chunk) throws IOException
         {
+        	ByteBuffer b = chunk.getData();
             String msg = HELPER.readString(b, b.remaining());            
             log.info(name+" says '"+msg+"'");
+            chunk.setProcessed();
         }
 
         /**

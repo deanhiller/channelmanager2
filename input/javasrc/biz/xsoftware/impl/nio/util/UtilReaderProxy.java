@@ -5,6 +5,7 @@ import java.nio.ByteBuffer;
 import java.util.logging.Logger;
 
 import biz.xsoftware.api.nio.channels.Channel;
+import biz.xsoftware.api.nio.handlers.DataChunk;
 import biz.xsoftware.api.nio.handlers.DataListener;
 
 public class UtilReaderProxy implements DataListener {
@@ -19,8 +20,9 @@ public class UtilReaderProxy implements DataListener {
 		this.handler = h;
 	}
 
-	public void incomingData(Channel realChannel, ByteBuffer b) throws IOException {
-		handler.incomingData(channel, b);
+	public void incomingData(Channel realChannel, DataChunk chunk) throws IOException {
+		ByteBuffer b = chunk.getData();
+		handler.incomingData(channel, chunk);
         
         if(b.remaining() > 0) {
             log.warning("Discarding unread data("+b.remaining()+") from class="+handler.getClass().getName());

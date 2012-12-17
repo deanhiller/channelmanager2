@@ -6,6 +6,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import biz.xsoftware.api.nio.channels.Channel;
+import biz.xsoftware.api.nio.handlers.DataChunk;
 import biz.xsoftware.api.nio.handlers.DataListener;
 
 class ExcProxyDataHandler implements DataListener {
@@ -19,7 +20,7 @@ class ExcProxyDataHandler implements DataListener {
 		this.handler = handler;
 	}
 	
-	public void incomingData(Channel realChannel, ByteBuffer b) throws IOException {
+	public void incomingData(Channel realChannel, DataChunk b) throws IOException {
 		try {
 			handler.incomingData(channel, b);
 		} catch(Exception e) {

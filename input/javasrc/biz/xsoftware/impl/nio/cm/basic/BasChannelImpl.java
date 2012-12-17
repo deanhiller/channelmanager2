@@ -38,18 +38,13 @@ public abstract class BasChannelImpl
     
     private ChannelSession session;
 	private LinkedBlockingQueue<DelayedWritesCloses> waitingWriters = new LinkedBlockingQueue<DelayedWritesCloses>(100);
-	private ByteBuffer b;
 	private boolean isConnecting = false;
 	private boolean isClosed = false;
     private boolean registered;	
     
 	public BasChannelImpl(IdObject id, BufferFactory factory, SelectorManager2 selMgr) {
 		super(id, selMgr);
-		session = CREATOR.createSession(this);
-		//the default size of our read buffers is 1000
-		//and the packet layer OR encryption layer may increase the
-		//size of the buffer
-		b = factory.createBuffer(id, 1000);      
+		session = CREATOR.createSession(this);  
 	}
 	
 	/* (non-Javadoc)
@@ -187,10 +182,6 @@ public abstract class BasChannelImpl
 			apiLog.fine(this+"Basic.unregisterForReads called");		
 		getSelectorManager().unregisterChannelForRead(this);
 	}	
-	
-	ByteBuffer getIncomingDataBuf() {
-		return b;
-	}
 	
 	public int oldWrite(ByteBuffer b) throws IOException {
 		if(!getSelectorManager().isRunning())

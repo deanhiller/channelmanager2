@@ -152,9 +152,9 @@ public class SequenceProcessor implements PacketProcessor {
 	/* (non-Javadoc)
 	 * @see org.dhiller.common.bus.Listener#notify(java.lang.Object)
 	 */
-	public void incomingData(ByteBuffer b) throws IOException {
+	public boolean incomingData(ByteBuffer b, Object passthrough) throws IOException {
 		try {
-			notifyImpl(b);
+			return notifyImpl(b, passthrough);
 		} catch(CorruptPacketException e) {
 			log.log(Level.WARNING, "Corrupt packet received", e);
 			clearState();
@@ -175,12 +175,14 @@ public class SequenceProcessor implements PacketProcessor {
 //		}
 //	}
 
-	public void notifyImpl(ByteBuffer b) throws IOException {
+	public boolean notifyImpl(ByteBuffer b, Object passthrough) throws IOException {
 		if (log.isLoggable(Level.FINEST))
 			log.log(Level.FINEST, "processing stream");
 		if(b == null)
 			throw new IllegalArgumentException("evt cannot be null");
 
+		boolean notified = false;
+		
 		while(b.remaining() > 0) {
 			switch(state) {
 				case PROCESSING_HEADER:
@@ -190,7 +192,7 @@ public class SequenceProcessor implements PacketProcessor {
 					processBody(b);
 				break;
 				case PROCESSING_TAIL:
-					processTail(b);
+					notified = processTail(b, passthrough);
 				break;
 				case RECOVERING:
 					findNewTrailer(b);
@@ -199,6 +201,7 @@ public class SequenceProcessor implements PacketProcessor {
 				break;
 			}
 		}
+		return notified;
 	}
 	
 	private void processHeader(ByteBuffer b) {
@@ -222,15 +225,17 @@ public class SequenceProcessor implements PacketProcessor {
 			state = ProcessingState.PROCESSING_TAIL;
 		}
 	}
-	private void processTail(ByteBuffer b) throws IOException {
+	private boolean processTail(ByteBuffer b, Object passthrough) throws IOException {
 		if(processDone(b, tail)) {
 			state = ProcessingState.PROCESSING_HEADER;
 			try {
-				firePacket();
+				firePacket(passthrough);
 			} finally {
 				clearState();
 			}
+			return true;
 		}
+		return false;
 	}
 	
 	private void findNewTrailer(ByteBuffer b) {
@@ -282,13 +287,13 @@ public class SequenceProcessor implements PacketProcessor {
 		HELPER.eraseBuffer(body.getCache());
 		HELPER.eraseBuffer(tail.getCache());
 	}
-	private void firePacket() throws IOException {
+	private void firePacket(Object passthrough) throws IOException {
 		HELPER.doneFillingBuffer(body.getCache());
 
 		if(log.isLoggable(Level.FINER))
 			log.finer(id+"unpacketize<- #"+body.getSequence()+" b="+body.getCache());
 
-		listener.incomingPacket(body.getCache());
+		listener.incomingPacket(body.getCache(), passthrough);
 	}
 	
 //--------------------------------------------------------------------

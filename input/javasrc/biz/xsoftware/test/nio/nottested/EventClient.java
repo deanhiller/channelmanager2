@@ -15,6 +15,7 @@ import biz.xsoftware.api.nio.channels.Channel;
 import biz.xsoftware.api.nio.channels.RegisterableChannel;
 import biz.xsoftware.api.nio.channels.TCPChannel;
 import biz.xsoftware.api.nio.handlers.ConnectionCallback;
+import biz.xsoftware.api.nio.handlers.DataChunk;
 import biz.xsoftware.api.nio.handlers.DataListener;
 import biz.xsoftware.api.nio.libs.SSLEngineFactory;
 import biz.xsoftware.api.nio.testutil.MockSSLEngineFactory;
@@ -69,8 +70,10 @@ public class EventClient implements ConnectionCallback, DataListener {
 		log.log(Level.WARNING, channel+"Exception", e);
 	}
 
-	public void incomingData(Channel channel, ByteBuffer b) throws IOException {
+	public void incomingData(Channel channel, DataChunk chunk) throws IOException {
+		ByteBuffer b = chunk.getData();
 		String s = HELPER.readString(b, b.remaining());
+		chunk.setProcessed();
 		log.info(channel+"Received event="+s);
 	}
 

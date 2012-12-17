@@ -18,6 +18,7 @@ import biz.xsoftware.api.nio.channels.Channel;
 import biz.xsoftware.api.nio.channels.RegisterableChannel;
 import biz.xsoftware.api.nio.channels.TCPServerChannel;
 import biz.xsoftware.api.nio.handlers.ConnectionListener;
+import biz.xsoftware.api.nio.handlers.DataChunk;
 import biz.xsoftware.api.nio.handlers.DataListener;
 import biz.xsoftware.api.nio.libs.SSLEngineFactory;
 import biz.xsoftware.api.nio.testutil.MockSSLEngineFactory;
@@ -78,7 +79,8 @@ public class EventServer implements ConnectionListener, DataListener {
 	/**
 	 * 
 	 */
-	public void incomingData(Channel channel, ByteBuffer b) throws IOException {
+	public void incomingData(Channel channel, DataChunk chunk) throws IOException {
+		ByteBuffer b = chunk.getData();
 		log.info(channel+"incoming data");
 		ByteBuffer buf = ByteBuffer.allocate(b.remaining());
 		buf.clear();
@@ -87,6 +89,7 @@ public class EventServer implements ConnectionListener, DataListener {
 		SendBytesTask task = new SendBytesTask(buf, channel);
 		channelToTask.put(channel, task);
 		TIMER.schedule(task, 0, 3000);
+		chunk.setProcessed();
 	}
 
 	public void farEndClosed(Channel channel) {
