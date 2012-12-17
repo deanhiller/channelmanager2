@@ -264,7 +264,6 @@ final class Helper {
 			//let's DEregister for read until this packet is processed and re-register when they set the chunk to processed(true)
 			unregisterChannelForReads(mgr, channel);
 			chunk.addProcessedListener(new ProcessedListenerImpl(channel, in, mgr));
-			key.interestOps(key.interestOps() ^ SelectionKey.OP_READ);
 			
 			if(apiLog.isLoggable(Level.FINER))
 				apiLog.finer(channel+"READ bytes="+bytes);

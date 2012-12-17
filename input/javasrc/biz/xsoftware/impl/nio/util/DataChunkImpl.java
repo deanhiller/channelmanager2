@@ -23,6 +23,9 @@ public class DataChunkImpl implements DataChunk {
 
 	@Override
 	public void setProcessed() {
+		for(ProcessedListener l : listeners) {
+			l.processed(this);
+		}
 	}
 
 	public void addProcessedListener(ProcessedListener l) {
