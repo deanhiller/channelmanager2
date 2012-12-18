@@ -38,7 +38,6 @@ class PacTCPChannel extends UtilTCPChannel implements TCPChannel {
 	public int oldWrite(ByteBuffer b) throws IOException {
 		int retVal = b.remaining();
 		ByteBuffer out = packetProcessor.processOutgoing(b);
-		log.info("outgoing="+out);
 		realChannel.oldWrite(out);
 		return retVal;
 	}
@@ -46,7 +45,6 @@ class PacTCPChannel extends UtilTCPChannel implements TCPChannel {
 	@Override
 	public void oldWrite(ByteBuffer b, OperationCallback h) throws IOException, InterruptedException {
 		ByteBuffer out = packetProcessor.processOutgoing(b);
-		log.info("outgoing2="+out);
 		realChannel.oldWrite(out, new UtilPassThroughWriteHandler(this, h));
 	}
 	

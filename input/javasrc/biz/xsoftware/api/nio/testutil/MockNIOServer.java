@@ -148,7 +148,8 @@ public class MockNIOServer extends MockDataHandler implements ConnectionListener
 							return buffer;
 						}
 						@Override
-						public void releaseBuffer() {
+						public boolean releaseBuffer() {
+							return true;
 						}
 					};
 					handler.incomingData(null, c);

@@ -38,4 +38,9 @@ public class UtilReaderProxy implements DataListener {
 		handler.failure(channel, data, e);		
 	}
 
+	@Override
+	public String toString() {
+		return "UtilReaderProxy.java[h="+handler+"]";
+	}
+	
 }

@@ -25,7 +25,8 @@ public class PacketChunk implements DataChunk {
 	}
 
 	@Override
-	public void releaseBuffer() {
+	public boolean releaseBuffer() {
+		return true;
 	}
 
 }

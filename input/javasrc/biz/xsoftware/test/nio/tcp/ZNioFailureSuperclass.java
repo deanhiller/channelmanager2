@@ -15,6 +15,7 @@ import biz.xsoftware.api.nio.Settings;
 import biz.xsoftware.api.nio.channels.Channel;
 import biz.xsoftware.api.nio.channels.TCPChannel;
 import biz.xsoftware.api.nio.handlers.ConnectionCallback;
+import biz.xsoftware.api.nio.handlers.DataChunk;
 import biz.xsoftware.api.nio.handlers.DataListener;
 import biz.xsoftware.api.nio.libs.BufferFactory;
 import biz.xsoftware.api.nio.libs.FactoryCreator;
@@ -146,10 +147,11 @@ public abstract class ZNioFailureSuperclass extends MockTestCase {
 	}
 	
 	private static class ThrowAndClone implements CloningBehavior {
-		public void incomingData(Channel channel, ByteBuffer b) {	
+		public void incomingData(Channel channel, DataChunk b) {	
 			throw new RuntimeException("testing");
 		}
-		public Object[] incomingDataCloner(Channel channel, ByteBuffer b) {
+		public Object[] incomingDataCloner(Channel channel, DataChunk chunk) {
+			ByteBuffer b = chunk.getData();
 			return new Object[] { channel, CloneByteBuffer.clone(b) };
 		}		
 		

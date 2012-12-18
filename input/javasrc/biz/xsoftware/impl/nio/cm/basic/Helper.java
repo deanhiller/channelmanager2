@@ -155,7 +155,7 @@ final class Helper {
 		DataListener in = struct.getDataHandler();
 		BasChannelImpl channel = (BasChannelImpl)struct.getChannel();
 		
-		ProcessedListenerImpl l = new ProcessedListenerImpl(channel, in, mgr, pool);
+		ProcessedListenerImpl l = new ProcessedListenerImpl(channel, in, mgr);
 		DataChunkImpl chunk = pool.nextBuffer(id, l);
 		ByteBuffer b = chunk.getData();
 		
@@ -286,13 +286,11 @@ final class Helper {
 		private SelectorManager2 mgr;
 		private BasChannelImpl channel;
 		private DataListener in;
-		private BufferPool pool;
 
-		public ProcessedListenerImpl(BasChannelImpl channel, DataListener in, SelectorManager2 mgr, BufferPool pool) {
+		public ProcessedListenerImpl(BasChannelImpl channel, DataListener in, SelectorManager2 mgr) {
 			this.mgr = mgr;
 			this.channel = channel;
 			this.in = in;
-			this.pool = pool;
 		}
 
 		@Override
@@ -304,11 +302,6 @@ final class Helper {
 			} catch (InterruptedException e) {
 				throw new RuntimeException(e);
 			}
-		}
-
-		@Override
-		public void releaseBuffer(ByteBuffer data) {
-			pool.releaseBuffer(data);
 		}
     }
     

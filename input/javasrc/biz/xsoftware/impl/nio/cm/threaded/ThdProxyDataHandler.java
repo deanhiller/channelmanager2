@@ -31,11 +31,12 @@ class ThdProxyDataHandler implements DataListener {
 		this.bufFactory = bufFactory;
 	}
 	
-	public void incomingData(Channel realChannel, final DataChunk b) throws IOException {
+	public void incomingData(Channel realChannel, final DataChunk chunk) throws IOException {
         ChannelsRunnable r = new ChannelsRunnable() {
 			public void run() {
 				try {
-					handler.incomingData(channel, b);
+					handler.incomingData(channel, chunk);
+					chunk.releaseBuffer();
 				} catch (Exception e) {
 					log.log(Level.WARNING, channel+"Exception", e);
 				}				

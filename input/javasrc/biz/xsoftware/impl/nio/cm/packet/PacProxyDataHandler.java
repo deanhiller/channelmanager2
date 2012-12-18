@@ -10,7 +10,6 @@ import biz.xsoftware.api.nio.handlers.DataChunk;
 import biz.xsoftware.api.nio.handlers.DataListener;
 import biz.xsoftware.api.nio.handlers.PacketListener;
 import biz.xsoftware.api.nio.libs.PacketProcessor;
-import biz.xsoftware.impl.nio.util.DataChunkImpl;
 import biz.xsoftware.impl.nio.util.PacketChunk;
 
 class PacProxyDataHandler implements DataListener, PacketListener {
@@ -30,7 +29,6 @@ class PacProxyDataHandler implements DataListener, PacketListener {
 	public void incomingData(Channel realChannel, DataChunk chunk) throws IOException {
 		ByteBuffer b = chunk.getData();
 		try {
-			log.info("incoming packet="+b);
 			boolean notified = packetProcessor.incomingData(b, chunk);
 			
 			//release buffer back to the pool..

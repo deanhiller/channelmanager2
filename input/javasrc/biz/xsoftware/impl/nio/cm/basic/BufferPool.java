@@ -20,7 +20,7 @@ public class BufferPool implements BufferListener {
 			b = iter.next();
 			iter.remove();
 		} else 
-			b = ByteBuffer.allocate(1000);
+			b = ByteBuffer.allocateDirect(1000);
 		
 		DataChunkImpl impl = new DataChunkImpl(id, b, this);
 		impl.setListener(l);
@@ -30,8 +30,6 @@ public class BufferPool implements BufferListener {
 	public synchronized void releaseBuffer(ByteBuffer buffer) {
 		if(freePackets.size() > 300)
 			return; //we discard more than 300 buffers as we don't want to take up too much memory
-
-		buffer.clear();
 		freePackets.add(buffer);
 	}
 

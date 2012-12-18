@@ -44,4 +44,10 @@ class ExcProxyDataHandler implements DataListener {
 		}	
 	}
 
+	@Override
+	public String toString() {
+		return "ExcProxyDataHandler.java[handler="+handler+"]";
+	}
+
+	
 }

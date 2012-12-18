@@ -26,7 +26,8 @@ public interface DataChunk {
 	 * on how the layers are setup.  This also
 	 * @param c
 	 * @param handler
+	 * @return 
 	 */
-	public void releaseBuffer();
+	public boolean releaseBuffer();
 
 }

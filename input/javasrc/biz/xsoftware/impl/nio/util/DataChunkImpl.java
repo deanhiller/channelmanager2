@@ -37,13 +37,17 @@ public class DataChunkImpl implements DataChunk {
 		this.listener = l;
 	}
 
-	public void releaseBuffer() {
+	public boolean releaseBuffer() {
+		boolean fullyRead = true;
 		if(data != null) {
 			if(data.hasRemaining()) {
+				fullyRead = false;
 				log.log(Level.WARNING, id+"Discarding unread data("+data.remaining()+")", new RuntimeException().fillInStackTrace());
 			}
+			data.clear();
 			bufferListener.releaseBuffer(data);
 			data = null;
 		}
+		return fullyRead;
 	}
 }

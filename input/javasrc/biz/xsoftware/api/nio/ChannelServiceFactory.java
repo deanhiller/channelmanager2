@@ -155,15 +155,15 @@ public abstract class ChannelServiceFactory {
 		ChannelServiceFactory cmProcFactory = ChannelServiceFactory.createFactory(props1);
 		
 		//LAYER 5: threadpool
-		Map<String, Object> props3 = new HashMap<String, Object>();
-		props3.put(ChannelServiceFactory.KEY_IMPLEMENTATION_CLASS, ChannelServiceFactory.VAL_THREAD_CHANNEL_MGR);
-		props3.put(ChannelServiceFactory.KEY_CHILD_CHANNELMGR_FACTORY, cmProcFactory);
-		ChannelServiceFactory threadedFactory = ChannelServiceFactory.createFactory(props3);
+//		Map<String, Object> props3 = new HashMap<String, Object>();
+//		props3.put(ChannelServiceFactory.KEY_IMPLEMENTATION_CLASS, ChannelServiceFactory.VAL_THREAD_CHANNEL_MGR);
+//		props3.put(ChannelServiceFactory.KEY_CHILD_CHANNELMGR_FACTORY, cmProcFactory);
+//		ChannelServiceFactory threadedFactory = ChannelServiceFactory.createFactory(props3);
 		
 		//LAYER 6: exception protection
 		Map<String, Object> props4 = new HashMap<String, Object>();
 		props4.put(ChannelServiceFactory.KEY_IMPLEMENTATION_CLASS, ChannelServiceFactory.VAL_EXCEPTION_CHANNEL_MGR);
-		props4.put(ChannelServiceFactory.KEY_CHILD_CHANNELMGR_FACTORY, threadedFactory);
+		props4.put(ChannelServiceFactory.KEY_CHILD_CHANNELMGR_FACTORY, cmProcFactory);
 		ChannelServiceFactory excFactory = ChannelServiceFactory.createFactory(props4);
 		
 		return excFactory;
