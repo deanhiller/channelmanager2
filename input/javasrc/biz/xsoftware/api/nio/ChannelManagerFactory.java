@@ -12,8 +12,10 @@ import biz.xsoftware.api.nio.deprecated.ChannelServiceFactory;
 
 public class ChannelManagerFactory {
 
+	private ChannelManagerFactory() {}
+	
 	public static ChannelManager createChannelManager(String id, Map<String, Object> props) {
-		ChannelService svc = ChannelServiceFactory.createRawChannelManager(id);
+		ChannelService svc = ChannelServiceFactory.createNewChannelManager(id);
 		try {
 			svc.start();
 		} catch(IOException e) {

@@ -17,11 +17,12 @@ class RegTCPChannel extends RegHelperChannel implements TCPChannel {
 //	private static final Logger log = Logger.getLogger(TCPChannelImpl.class.getName());
 //	private BufferHelper helper = ChannelManagerFactory.bufferHelper(null);
 	
-	private TCPChannel realChannel;
-
 	public RegTCPChannel(TCPChannel channel) {
 		super(channel);
-		realChannel = channel;
+	}
+	
+	protected TCPChannel getRealTcpChannel() {
+		return (TCPChannel)super.getRealChannel();
 	}
 	
 	public synchronized void oldConnect(SocketAddress addr, ConnectionCallback c) throws IOException, InterruptedException {
@@ -31,6 +32,7 @@ class RegTCPChannel extends RegHelperChannel implements TCPChannel {
 		//Can I register for reads after initiating connect or should I register
 		//for reads in a ConnectionCallback proxy??  For now, I register
 		//after initiating the connect
+		TCPChannel realChannel = getRealTcpChannel();
 		realChannel.oldConnect(addr, c);
 		if(cachedListener != null) {
 			getRealChannel().registerForReads(cachedListener);
@@ -47,10 +49,12 @@ class RegTCPChannel extends RegHelperChannel implements TCPChannel {
 	}
 
 	public boolean getKeepAlive() throws SocketException {
+		TCPChannel realChannel = getRealTcpChannel();
 		return realChannel.getKeepAlive();
 	}
 
 	public void setKeepAlive(boolean b) throws SocketException {
+		TCPChannel realChannel = getRealTcpChannel();
 		realChannel.setKeepAlive(b);
 	}
 }

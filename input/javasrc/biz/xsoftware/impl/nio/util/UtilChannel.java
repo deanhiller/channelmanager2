@@ -23,58 +23,71 @@ public abstract class UtilChannel extends UtilRegisterable implements Channel {
 	}
 	
 	public FutureOperation write(ByteBuffer b) throws IOException, InterruptedException {
-		return getRealChannel().write(b);
+		Channel realChannel = getRealChannel();
+		return realChannel.write(b);
 	}
 	
 	public int oldWrite(ByteBuffer b) throws IOException {
-		return getRealChannel().oldWrite(b);
+		Channel realChannel = getRealChannel();
+		return realChannel.oldWrite(b);
 	}
 	
 	public void oldWrite(ByteBuffer b, OperationCallback h) throws IOException, InterruptedException {
+		Channel realChannel = getRealChannel();
 		if(h == null)
-			getRealChannel().oldWrite(b, NullWriteCallback.singleton());
+			realChannel.oldWrite(b, NullWriteCallback.singleton());
 		else
-			getRealChannel().oldWrite(b, new UtilPassThroughWriteHandler(this, h));
+			realChannel.oldWrite(b, new UtilPassThroughWriteHandler(this, h));
 	}
 	
 	public void registerForReads(DataListener listener) throws IOException, InterruptedException {
-		UtilReaderProxy proxy = new UtilReaderProxy(getRealChannel(), listener);
-		getRealChannel().registerForReads(proxy);
+		Channel realChannel = getRealChannel();
+		UtilReaderProxy proxy = new UtilReaderProxy(realChannel, listener);
+		realChannel.registerForReads(proxy);
 	}
 	
 	public void unregisterForReads() throws IOException, InterruptedException {
-		getRealChannel().unregisterForReads();
+		Channel realChannel = getRealChannel();
+		realChannel.unregisterForReads();
 	}
 
 	@Override
 	public FutureOperation connect(SocketAddress addr) throws IOException, InterruptedException {
-		return getRealChannel().connect(addr);
+		Channel realChannel = getRealChannel();
+		return realChannel.connect(addr);
 	}
 	
 	public void oldConnect(SocketAddress addr) throws IOException {    
-		getRealChannel().oldConnect(addr);
+		Channel realChannel = getRealChannel();
+		realChannel.oldConnect(addr);
 	}
 
 	public void oldClose(OperationCallback h) {
-		getRealChannel().oldClose(new UtilPassThroughWriteHandler(this, h));
+		Channel realChannel = getRealChannel();
+		realChannel.oldClose(new UtilPassThroughWriteHandler(this, h));
 	}
 	public void oldClose() {
-		getRealChannel().oldClose();
+		Channel realChannel = getRealChannel();
+		realChannel.oldClose();
 	}
 
 	public FutureOperation close() {
-		return getRealChannel().close();
+		Channel realChannel = getRealChannel();
+		return realChannel.close();
 	}
 	
 	public InetSocketAddress getRemoteAddress() {
-		return getRealChannel().getRemoteAddress();
+		Channel realChannel = getRealChannel();
+		return realChannel.getRemoteAddress();
 	}
 	public boolean isConnected() {
-		return getRealChannel().isConnected();
+		Channel realChannel = getRealChannel();
+		return realChannel.isConnected();
 	}
 
 	public ChannelSession getSession() {
-		return getRealChannel().getSession();
+		Channel realChannel = getRealChannel();
+		return realChannel.getSession();
 	}
 	  	
 }

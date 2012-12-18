@@ -20,20 +20,19 @@ class ExcTCPChannel extends UtilTCPChannel implements TCPChannel {
 //	private BufferHelper helper = ChannelManagerFactory.bufferHelper(null);
 	private static final OperationCallback NULL_WRITE_HANDLER = new NullWriteHandler();
 	
-	private TCPChannel realChannel;
-	
 	public ExcTCPChannel(TCPChannel channel) {
 		super(channel);
-		this.realChannel = channel;
 	}
 	
 	public void registerForReads(DataListener listener) throws IOException, InterruptedException {
 		ExcProxyDataHandler handler = new ExcProxyDataHandler(this, listener);
+		TCPChannel realChannel = getRealChannel();
 		realChannel.registerForReads(handler);
 	}
 
 	@Override
 	public int oldWrite(ByteBuffer b) throws IOException {
+		TCPChannel realChannel = getRealChannel();
 		return realChannel.oldWrite(b);
 	}
 	
@@ -43,6 +42,7 @@ class ExcTCPChannel extends UtilTCPChannel implements TCPChannel {
 			callback = NULL_WRITE_HANDLER;
 		}else
 			callback = h;
+		TCPChannel realChannel = getRealChannel();
 		realChannel.oldWrite(b, new ExcProxyWriteHandler(this, callback));
 	}
 	
@@ -51,6 +51,7 @@ class ExcTCPChannel extends UtilTCPChannel implements TCPChannel {
 			throw new IllegalArgumentException("ConnectCallback cannot be null");
 		
 		ExcProxyConnectCb proxy = new ExcProxyConnectCb(this, c);
+		TCPChannel realChannel = getRealChannel();
 		realChannel.oldConnect(addr, proxy);
 	}
 
@@ -60,6 +61,7 @@ class ExcTCPChannel extends UtilTCPChannel implements TCPChannel {
 			callback = NULL_WRITE_HANDLER;
 		}else
 			callback = h;
+		TCPChannel realChannel = getRealChannel();
 		realChannel.oldClose(new ExcProxyWriteHandler(this, callback));
 	}	
 	

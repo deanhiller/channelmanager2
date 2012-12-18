@@ -18,7 +18,8 @@ public class FutureConnectImpl implements FutureOperation, ConnectionCallback {
 	public synchronized void connected(Channel channel) throws IOException {
 		this.channel = channel;
 		this.notify();
-		operationCallback.finished(channel);
+		if(operationCallback != null)
+			operationCallback.finished(channel);
 	}
 
 	@Override
@@ -26,7 +27,8 @@ public class FutureConnectImpl implements FutureOperation, ConnectionCallback {
 		this.channel = channel;
 		this.e = e;
 		this.notify();
-		operationCallback.failed(channel, e);
+		if(operationCallback != null)
+			operationCallback.failed(channel, e);
 	}
 
 	@Override

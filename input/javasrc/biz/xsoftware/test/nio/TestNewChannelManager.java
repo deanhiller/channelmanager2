@@ -14,6 +14,7 @@ import biz.xsoftware.api.nio.channels.TCPChannel;
 import biz.xsoftware.api.nio.channels.TCPServerChannel;
 import biz.xsoftware.api.nio.deprecated.ChannelServiceFactory;
 import biz.xsoftware.api.nio.handlers.ConnectionListener;
+import biz.xsoftware.api.nio.handlers.DataChunk;
 import biz.xsoftware.api.nio.handlers.DataListener;
 import biz.xsoftware.api.nio.handlers.FutureOperation;
 import biz.xsoftware.api.nio.handlers.OperationCallback;
@@ -21,7 +22,6 @@ import biz.xsoftware.api.nio.libs.BufferHelper;
 import biz.xsoftware.api.nio.testutil.HandlerForTests;
 import biz.xsoftware.api.nio.testutil.MockDataHandler;
 import biz.xsoftware.api.nio.testutil.MockNIOServer;
-import biz.xsoftware.impl.nio.util.DataChunkImpl;
 import biz.xsoftware.mock.CalledMethod;
 import biz.xsoftware.mock.MockObject;
 import biz.xsoftware.mock.MockObjectFactory;
@@ -73,10 +73,11 @@ public class TestNewChannelManager extends TestCase {
 	public void testBasic() throws Exception {
 		client1.bind(loopBackAnyPort);		
 		InetSocketAddress remoteAddr = new InetSocketAddress(loopBack, srvrChannel.getLocalAddress().getPort());
-		client1.registerForReads((DataListener)clientHandler);
 		FutureOperation future = client1.connect(remoteAddr);
 		future.setListener((OperationCallback) clientConnect);
 		clientConnect.expect("finished");
+		
+		client1.registerForReads((DataListener)clientHandler);
 		
 		future.waitForOperation(); //should return immediately since listener fired
 		
@@ -88,11 +89,11 @@ public class TestNewChannelManager extends TestCase {
 		boolean isConnected = client1.isConnected();
 		assertTrue("Client should be connected", isConnected);
 		
-		verifyDataPassing(client1);
+		verifyDataPassing();
 		verifyTearDown();	
 	}
 	
-	private ByteBuffer verifyDataPassing(TCPChannel svrChan) throws Exception {
+	private ByteBuffer verifyDataPassing() throws Exception {
 		ByteBuffer b = ByteBuffer.allocate(10);
 		helper.putString(b, "de");
 		helper.doneFillingBuffer(b);
@@ -102,19 +103,39 @@ public class TestNewChannelManager extends TestCase {
 		
 		CalledMethod m = serverHandler.expect("incomingData");
 		TCPChannel actualChannel = (TCPChannel)m.getAllParams()[0];
-		DataChunkImpl chunk = (DataChunkImpl)m.getAllParams()[1];
+		DataChunk chunk = (DataChunk)m.getAllParams()[1];
 		ByteBuffer actualBuf = chunk.getData();
 		String result = helper.readString(actualBuf, actualBuf.remaining());
 		assertEquals("de", result);
+		chunk.setProcessed("TestNewChannelManagerA");
 		
 		b.rewind();
 		FutureOperation future = actualChannel.write(b);
 		future.waitForOperation(5000); //synchronously wait for write to happen
 		
 		m = clientHandler.expect(MockDataHandler.INCOMING_DATA);
-		actualBuf = (ByteBuffer)m.getAllParams()[1];
+		DataChunk c = (DataChunk) m.getAllParams()[1];
+		actualBuf = c.getData();
 		result = helper.readString(actualBuf, actualBuf.remaining());
 		assertEquals("de", result);	
+
+		b.rewind();
+		FutureOperation future2 = actualChannel.write(b);
+		future2.waitForOperation(5000); //synchronously wait for write to happen
+
+		Thread.sleep(1000);
+		
+		clientHandler.expect(MockObject.NONE);
+		
+		c.setProcessed("TestNewChannelManager");
+		
+		m = clientHandler.expect(MockDataHandler.INCOMING_DATA);
+		c = (DataChunk) m.getAllParams()[1];
+		actualBuf = c.getData();
+		result = helper.readString(actualBuf, actualBuf.remaining());
+		assertEquals("de", result);	
+		c.setProcessed("testnewChannelMgr2");
+		
 		return b;
 	}
 	

@@ -84,6 +84,23 @@ public abstract class ChannelServiceFactory {
 		return mgr;
 	}
 
+	public static ChannelService createNewChannelManager(String id) {
+		FactoryCreator creator = FactoryCreator.createFactory(null);
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put(FactoryCreator.KEY_IS_DIRECT, false);
+		map.put(FactoryCreator.KEY_NUM_THREADS, 10);
+		
+		BufferFactory bufferFactory = creator.createBufferFactory(map);
+		StartableExecutorService executorSvc = creator.createExecSvcFactory(map);
+		
+		ChannelServiceFactory factory = createNewStack();
+		Map<String, Object> props = new HashMap<String, Object>();
+		props.put(ChannelManager.KEY_ID, id);
+		props.put(ChannelManager.KEY_BUFFER_FACTORY, bufferFactory);
+		props.put(ChannelManager.KEY_EXECUTORSVC_FACTORY, executorSvc);
+		return factory.createChannelManager(props);
+	}
+	
 	/**
 	 * 
 	 * 
@@ -103,6 +120,31 @@ public abstract class ChannelServiceFactory {
 		props.put(ChannelManager.KEY_BUFFER_FACTORY, bufferFactory);
 		props.put(ChannelManager.KEY_ROUTINGEXECUTORSVC_FACTORY, executorSvc);
 		return factory.createChannelManager(props);
+	}
+
+	private static ChannelServiceFactory createNewStack() {
+		//LAYER 1: basic
+		ChannelServiceFactory basic = ChannelServiceFactory.createFactory(null);
+		
+		//LAYER 2: threadpool
+		Map<String, Object> props3 = new HashMap<String, Object>();
+		props3.put(ChannelServiceFactory.KEY_IMPLEMENTATION_CLASS, ChannelServiceFactory.VAL_THREAD_CHANNEL_MGR);
+		props3.put(ChannelServiceFactory.KEY_CHILD_CHANNELMGR_FACTORY, basic);
+		ChannelServiceFactory threadedFactory = ChannelServiceFactory.createFactory(props3);
+		
+		//LAYER 3: secure
+		Map<String, Object> props2 = new HashMap<String, Object>();
+		props2.put(ChannelServiceFactory.KEY_IMPLEMENTATION_CLASS, ChannelServiceFactory.VAL_SECURE_CHANNEL_MGR);
+		props2.put(ChannelServiceFactory.KEY_CHILD_CHANNELMGR_FACTORY, threadedFactory);
+		ChannelServiceFactory secureFactory = ChannelServiceFactory.createFactory(props2);
+		
+		//Layer 4: catch log exceptions thrown from the clients listeners
+		Map<String, Object> props4 = new HashMap<String, Object>();
+		props4.put(ChannelServiceFactory.KEY_IMPLEMENTATION_CLASS, ChannelServiceFactory.VAL_EXCEPTION_CHANNEL_MGR);
+		props4.put(ChannelServiceFactory.KEY_CHILD_CHANNELMGR_FACTORY, secureFactory);
+		ChannelServiceFactory excFactory = ChannelServiceFactory.createFactory(props4);
+		
+		return excFactory;		
 	}
 	
 	private static ChannelServiceFactory createRawStack() {

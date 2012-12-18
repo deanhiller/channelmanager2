@@ -18,18 +18,17 @@ class PacTCPChannel extends UtilTCPChannel implements TCPChannel {
 	private static final Logger log = Logger.getLogger(PacTCPChannel.class.getName());
 //	private BufferHelper helper = ChannelManagerFactory.bufferHelper(null);
 	
-	private TCPChannel realChannel;
 	private PacketProcessor packetProcessor;
 	
 	public PacTCPChannel(TCPChannel channel, PacketProcessor proc) {
 		super(channel);
-		this.realChannel = channel;
 		this.packetProcessor = proc;
 	}
 	
 	public void registerForReads(DataListener listener) throws IOException, InterruptedException {
 		PacProxyDataHandler handler = new PacProxyDataHandler(this, packetProcessor, listener);
 		packetProcessor.setPacketListener(handler);
+		TCPChannel realChannel = getRealChannel();
 		realChannel.registerForReads(handler);
 	}
 
@@ -38,6 +37,7 @@ class PacTCPChannel extends UtilTCPChannel implements TCPChannel {
 	public int oldWrite(ByteBuffer b) throws IOException {
 		int retVal = b.remaining();
 		ByteBuffer out = packetProcessor.processOutgoing(b);
+		TCPChannel realChannel = getRealChannel();
 		realChannel.oldWrite(out);
 		return retVal;
 	}
@@ -45,6 +45,7 @@ class PacTCPChannel extends UtilTCPChannel implements TCPChannel {
 	@Override
 	public void oldWrite(ByteBuffer b, OperationCallback h) throws IOException, InterruptedException {
 		ByteBuffer out = packetProcessor.processOutgoing(b);
+		TCPChannel realChannel = getRealChannel();
 		realChannel.oldWrite(out, new UtilPassThroughWriteHandler(this, h));
 	}
 	
@@ -53,6 +54,7 @@ class PacTCPChannel extends UtilTCPChannel implements TCPChannel {
 			throw new IllegalArgumentException("ConnectCallback cannot be null");
 		
 		PacProxyConnectCb proxy = new PacProxyConnectCb(this, c);
+		TCPChannel realChannel = getRealChannel();
 		realChannel.oldConnect(addr, proxy);
 	}	
 }

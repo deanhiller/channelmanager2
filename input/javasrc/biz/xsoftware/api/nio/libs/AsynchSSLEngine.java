@@ -48,13 +48,15 @@ public interface AsynchSSLEngine {
 	 *   <li>packetEncrypted - this is a handshake response message
 	 *   <li>packetUnencrypted - this is a message that has been unencrypted and is ready for consumption
 	 *   <li>encryptionLinkEstablished - the last handshake message was received and handshake is complete
-	 *   <li>No method is called as we are waiting for more data from the stream(ie. there was not enough for one whole SSL packet).  We cache the data for you ;)
+	 *   <li>No method is called as we are waiting for more data from the stream(ie. there 
+	 *   was not enough for one whole SSL packet).  We cache the data for you ;)
 	 * </ol>
 	 * Like SSLEngine.unwrap, this method is not thread safe and should not be called from
 	 * multiple threads.
 	 * 
 	 * @param b The bytes
-	 * @param passthrough - This is ONLY passed through IF SSLListener is called, otherwise we discard it!!!  We tell you if we decrypted it with the return value
+	 * @param passthrough - This is ONLY passed through IF SSLListener is called, otherwise we discard it!!!  
+	 * 	We tell you if we decrypted it with the return value
 	 * @return PacketAction with the result of what happened in the engine.	
 	 */
 	public PacketAction feedEncryptedPacket(ByteBuffer b, Object passthrough) throws IOException;

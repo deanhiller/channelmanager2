@@ -21,8 +21,6 @@ class SecTCPChannel extends UtilTCPChannel implements TCPChannel {
 
 	private static final Logger log = Logger.getLogger(SecTCPChannel.class.getName());
 	
-	private TCPChannel realChannel;
-	
 	private boolean isConnecting = false;
 	private SSLEngineFactory sslFactory;
 	private SecReaderProxy reader;
@@ -31,8 +29,6 @@ class SecTCPChannel extends UtilTCPChannel implements TCPChannel {
 	//Server Socket created by TCPServerSocket
 	public SecTCPChannel(TCPChannel channel) {
 		super(channel);
-		this.realChannel = channel;
-
 		connectProxy = new SecSSLListener(this);
 		reader = new SecReaderProxy(connectProxy);
 	}
@@ -48,6 +44,7 @@ class SecTCPChannel extends UtilTCPChannel implements TCPChannel {
 			throw new NotYetConnectedException();
 		int remain = b.remaining();
 		reader.getHandler().feedPlainPacket(b, null);
+		TCPChannel realChannel = getRealChannel();
 		if(b.hasRemaining())
 			throw new RuntimeException(realChannel+"Bug, not all data written, buf="+b);
 		return remain;
@@ -68,6 +65,7 @@ class SecTCPChannel extends UtilTCPChannel implements TCPChannel {
 	public synchronized void registerForReads(DataListener listener) throws IOException, InterruptedException {
 		//TODO: this is a big problem, if they don't register for a read before the connect,
 		//we will not receive the certificate info!!!!
+		TCPChannel realChannel = getRealChannel();
 		connectProxy.setClientHandler(listener);
 		if(log.isLoggable(Level.FINEST))
 			log.finest(realChannel+" about to register for reads");				
@@ -80,7 +78,7 @@ class SecTCPChannel extends UtilTCPChannel implements TCPChannel {
 	}
 	
 	public synchronized void unregisterForReads() throws IOException, InterruptedException {
-
+		TCPChannel realChannel = getRealChannel();
 		//this first call ensure that if we are connecting, the
 		//real unregisterForReads happens once connected...
 		if(log.isLoggable(Level.FINEST))
@@ -95,6 +93,7 @@ class SecTCPChannel extends UtilTCPChannel implements TCPChannel {
 	}
 	
 	public synchronized void oldConnect(SocketAddress addr, ConnectionCallback c) throws IOException, InterruptedException {
+		TCPChannel realChannel = getRealChannel();
 		if(c == null)
 			throw new IllegalArgumentException(realChannel+"ConnectCallback cannot be null");
 		else if(sslFactory == null)
@@ -106,6 +105,7 @@ class SecTCPChannel extends UtilTCPChannel implements TCPChannel {
 	}
 	
 	public synchronized void resetRegisterForReadState() throws IOException, InterruptedException {
+		TCPChannel realChannel = getRealChannel();
 		isConnecting = false;
 		//if client has not registered for reads, unregister for reads
 		//as we don't need any more data for handshake...
@@ -119,6 +119,7 @@ class SecTCPChannel extends UtilTCPChannel implements TCPChannel {
 	}
 
 	public void oldConnect(SocketAddress addr) throws IOException {
+		TCPChannel realChannel = getRealChannel();
 		if(isBlocking()) {
 			realChannel.oldConnect(addr);
 		} else {
@@ -133,15 +134,17 @@ class SecTCPChannel extends UtilTCPChannel implements TCPChannel {
 	}
 	
 	public InetSocketAddress getRemoteAddress() {
+		TCPChannel realChannel = getRealChannel();
 		return realChannel.getRemoteAddress();
 	}
 
 	public boolean isConnected() {
+		TCPChannel realChannel = getRealChannel();
 		return realChannel.isConnected();
 	}
 	
 	public TCPChannel getRealChannel() {
-		return realChannel;
+		return super.getRealChannel();
 	}
 
 	@Override
@@ -162,6 +165,7 @@ class SecTCPChannel extends UtilTCPChannel implements TCPChannel {
 
 	public void oldClose(OperationCallback h) {
 		reader.close();
+		TCPChannel realChannel = getRealChannel();
 		realChannel.oldClose(new SecProxyWriteHandler(this, h));
 	}
 	
@@ -174,6 +178,7 @@ class SecTCPChannel extends UtilTCPChannel implements TCPChannel {
 	}
 	
 	public ChannelSession getSession() {
+		TCPChannel realChannel = getRealChannel();
 		return realChannel.getSession();
 	}
 }

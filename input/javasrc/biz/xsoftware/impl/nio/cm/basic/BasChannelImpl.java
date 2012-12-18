@@ -168,7 +168,7 @@ public abstract class BasChannelImpl
 		if(listener == null)
 			throw new IllegalArgumentException(this+"listener cannot be null");
 		else if(!isConnecting && !isConnected()) {
-			throw new IllegalStateException(this+"Must call one of the connect methods first");
+			throw new IllegalStateException(this+"Must call one of the connect methods first(ie. connect THEN register for reads)");
 		}
 
 		if(apiLog.isLoggable(Level.FINE))

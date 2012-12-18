@@ -16,28 +16,29 @@ class ThdTCPChannel extends UtilTCPChannel implements TCPChannel {
 //	private static final Logger log = Logger.getLogger(TCPChannelImpl.class.getName());
 //	private BufferHelper helper = ChannelManagerFactory.bufferHelper(null);
 	
-	private TCPChannel realChannel;
 	private SpecialRoutingExecutor svc;
 	private BufferFactory bufFactory;
 	
 	public ThdTCPChannel(TCPChannel channel, SpecialRoutingExecutor svc2, BufferFactory bufFactory) {
 		super(channel);
-		this.realChannel = channel;
 		this.svc = svc2;
 		this.bufFactory = bufFactory;
 	}
 	
 	public void registerForReads(DataListener listener) throws IOException, InterruptedException {
 		ThdProxyDataHandler handler = new ThdProxyDataHandler(this, listener, svc, bufFactory);
+		TCPChannel realChannel = getRealChannel();
 		realChannel.registerForReads(handler);
 	}
 
 	@Override
 	public int oldWrite(ByteBuffer b) throws IOException {
+		TCPChannel realChannel = getRealChannel();
 		return realChannel.oldWrite(b);
 	}
 	
 	public void oldWrite(ByteBuffer b, OperationCallback h) throws IOException, InterruptedException {
+		TCPChannel realChannel = getRealChannel();
 		realChannel.oldWrite(b, new ThdProxyWriteHandler(this, h, svc));
 	}
 	
@@ -46,10 +47,12 @@ class ThdTCPChannel extends UtilTCPChannel implements TCPChannel {
 			throw new IllegalArgumentException("ConnectCallback cannot be null");
 		
 		ThdProxyConnectCb proxy = new ThdProxyConnectCb(this, c, svc);
+		TCPChannel realChannel = getRealChannel();
 		realChannel.oldConnect(addr, proxy);
 	}
 
 	public void oldClose(OperationCallback h) {
+		TCPChannel realChannel = getRealChannel();
 		realChannel.oldClose(new ThdProxyWriteHandler(this, h, svc));
 	}    
 }

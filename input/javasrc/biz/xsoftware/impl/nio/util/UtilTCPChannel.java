@@ -6,7 +6,6 @@ import biz.xsoftware.api.nio.channels.Channel;
 import biz.xsoftware.api.nio.channels.TCPChannel;
 
 public abstract class UtilTCPChannel extends UtilChannel {
-
 	
 	public UtilTCPChannel(Channel realChannel) {
 		super(realChannel);
@@ -18,15 +17,18 @@ public abstract class UtilTCPChannel extends UtilChannel {
 	}
 
 	public void oldClose() {
-		getRealChannel().oldClose();
+		TCPChannel realChannel = getRealChannel();
+		realChannel.oldClose();
 	}
 	
 	public boolean getKeepAlive() throws SocketException {
-		return getRealChannel().getKeepAlive();
+		TCPChannel realChannel = getRealChannel();
+		return realChannel.getKeepAlive();
 	}
 
 	public void setKeepAlive(boolean b) throws SocketException {
-		getRealChannel().setKeepAlive(b);
-	}  	
+		TCPChannel realChannel = getRealChannel();
+		realChannel.setKeepAlive(b);
+	}
 	
 }
