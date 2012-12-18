@@ -7,7 +7,7 @@ import java.nio.ByteBuffer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import biz.xsoftware.impl.nio.util.BufferHelper;
+import biz.xsoftware.api.nio.libs.BufferHelper;
 
 /** 
  * @author dhiller
@@ -29,7 +29,7 @@ public class BufferHelperImpl implements BufferHelper {
 	 * another MR that CharBuffer does not have an encoding choice like much of old io Readers
 	 * and Writers have.
 	 * 
-	 * @see biz.xsoftware.impl.nio.util.BufferHelper#putString(java.nio.ByteBuffer, java.lang.String)
+	 * @see biz.xsoftware.api.nio.libs.BufferHelper#putString(java.nio.ByteBuffer, java.lang.String)
 	 */
 	public void putString(ByteBuffer b, String fullString) {
 		if(b == null)
@@ -67,7 +67,7 @@ public class BufferHelperImpl implements BufferHelper {
 	}
 	
 	/**
-	 * @see biz.xsoftware.impl.nio.util.BufferHelper#doneFillingBuffer(java.nio.ByteBuffer)
+	 * @see biz.xsoftware.api.nio.libs.BufferHelper#doneFillingBuffer(java.nio.ByteBuffer)
 	 */
 	public void doneFillingBuffer(ByteBuffer b) {
 		b.flip();
@@ -88,7 +88,7 @@ public class BufferHelperImpl implements BufferHelper {
 
 	
 	/**
-	 * @see biz.xsoftware.impl.nio.util.BufferHelper#eraseBuffer(java.nio.ByteBuffer)
+	 * @see biz.xsoftware.api.nio.libs.BufferHelper#eraseBuffer(java.nio.ByteBuffer)
 	 */
 	public void eraseBuffer(ByteBuffer b) {
 		b.clear();
@@ -96,7 +96,7 @@ public class BufferHelperImpl implements BufferHelper {
 
 
 	/**
-	 * @see biz.xsoftware.impl.nio.util.BufferHelper#processForPacket(java.nio.ByteBuffer, java.nio.ByteBuffer)
+	 * @see biz.xsoftware.api.nio.libs.BufferHelper#processForPacket(java.nio.ByteBuffer, java.nio.ByteBuffer)
 	 */
 	public boolean processForPacket(ByteBuffer from, ByteBuffer dest) {
 	

@@ -15,8 +15,8 @@ import biz.xsoftware.api.nio.deprecated.ChannelServiceFactory;
 import biz.xsoftware.api.nio.handlers.DataChunk;
 import biz.xsoftware.api.nio.handlers.DataListener;
 import biz.xsoftware.api.nio.libs.BufferFactory;
+import biz.xsoftware.api.nio.libs.BufferHelper;
 import biz.xsoftware.api.nio.libs.FactoryCreator;
-import biz.xsoftware.impl.nio.util.BufferHelper;
 
 public class Delayer implements DataListener {
 

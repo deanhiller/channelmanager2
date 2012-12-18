@@ -1,4 +1,4 @@
-package biz.xsoftware.impl.nio.util;
+package biz.xsoftware.api.nio.libs;
 
 import java.nio.ByteBuffer;
 

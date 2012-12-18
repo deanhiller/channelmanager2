@@ -7,7 +7,7 @@ import biz.xsoftware.api.nio.channels.Channel;
 import biz.xsoftware.api.nio.channels.DatagramChannel;
 import biz.xsoftware.api.nio.deprecated.ChannelServiceFactory;
 import biz.xsoftware.api.nio.handlers.DataChunk;
-import biz.xsoftware.impl.nio.util.BufferHelper;
+import biz.xsoftware.api.nio.libs.BufferHelper;
 import biz.xsoftware.mock.CloningBehavior;
 
 public class CloneByteBuffer implements CloningBehavior {

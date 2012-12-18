@@ -16,9 +16,9 @@ import biz.xsoftware.api.nio.deprecated.Settings;
 import biz.xsoftware.api.nio.handlers.ConnectionCallback;
 import biz.xsoftware.api.nio.handlers.DataChunk;
 import biz.xsoftware.api.nio.handlers.DataListener;
+import biz.xsoftware.api.nio.libs.BufferHelper;
 import biz.xsoftware.api.nio.libs.SSLEngineFactory;
 import biz.xsoftware.api.nio.testutil.MockSSLEngineFactory;
-import biz.xsoftware.impl.nio.util.BufferHelper;
 
 public class EventClient implements ConnectionCallback, DataListener {
 

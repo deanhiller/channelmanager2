@@ -18,7 +18,7 @@ import biz.xsoftware.api.nio.deprecated.ChannelServiceFactory;
 import biz.xsoftware.api.nio.handlers.ConnectionListener;
 import biz.xsoftware.api.nio.handlers.DataChunk;
 import biz.xsoftware.api.nio.handlers.DataListener;
-import biz.xsoftware.impl.nio.util.BufferHelper;
+import biz.xsoftware.api.nio.libs.BufferHelper;
 
 /**
  */
