@@ -2,14 +2,12 @@ package biz.xsoftware.impl.nio.util;
 
 import java.nio.ByteBuffer;
 
-import biz.xsoftware.api.nio.handlers.DataChunk;
-
-public class PacketChunk implements DataChunk {
+public class PacketChunk implements DataChunkWithBuffer {
 
 	private ByteBuffer data;
-	private DataChunk chunk;
+	private DataChunkWithBuffer chunk;
 
-	public PacketChunk(ByteBuffer b, DataChunk chunk) {
+	public PacketChunk(ByteBuffer b, DataChunkWithBuffer chunk) {
 		this.data = b;
 		this.chunk = chunk;
 	}
@@ -20,13 +18,16 @@ public class PacketChunk implements DataChunk {
 	}
 
 	@Override
-	public void setProcessed() {
-		chunk.setProcessed();
+	public void setProcessed(String namedByteConsumerForLogs) {
+		chunk.setProcessedImpl();
 	}
-
+	
 	@Override
-	public boolean releaseBuffer() {
-		return true;
+	public void setProcessedImpl() {
+		chunk.setProcessedImpl();
 	}
-
+	
+	@Override
+	public void releaseBuffer(String logInfo) {
+	}
 }

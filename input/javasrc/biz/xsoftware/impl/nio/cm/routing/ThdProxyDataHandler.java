@@ -31,10 +31,6 @@ class ThdProxyDataHandler implements DataListener {
 			public void run() {
 				try {
 					handler.incomingData(channel, chunk);
-					boolean fullyRead = chunk.releaseBuffer();
-					if(!fullyRead) {
-						log.log(Level.WARNING, "Client did not read all data="+handler);
-					}
 				} catch (Exception e) {
 					log.log(Level.WARNING, channel+"Exception", e);
 				}				

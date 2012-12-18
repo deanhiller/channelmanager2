@@ -28,7 +28,7 @@ public class MockDataHandler extends MockSuperclass implements DataListener {
 		ByteBuffer b = chunk.getData();
 		Object cloned = CloneByteBuffer.clone(b);
 		methodCalled(INCOMING_DATA, new Object[] {channel, cloned});
-		chunk.setProcessed();
+		chunk.setProcessed("MockDataHandler");
 	}
 
 	/* (non-Javadoc)

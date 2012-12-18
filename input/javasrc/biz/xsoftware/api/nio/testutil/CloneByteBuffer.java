@@ -52,7 +52,7 @@ public class CloneByteBuffer implements CloningBehavior {
 	
 	public void incomingData(Channel channel, DataChunk chunk) {	
 		//log.info("b.rem="+b.remaining());
-		chunk.setProcessed();
+		chunk.setProcessed("CloneByteBuffer");
 	}
 	
 	public Object[] incomingDataCloner(Channel channel, DataChunk chunk) {

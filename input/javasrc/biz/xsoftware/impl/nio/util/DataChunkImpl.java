@@ -4,9 +4,7 @@ import java.nio.ByteBuffer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import biz.xsoftware.api.nio.handlers.DataChunk;
-
-public class DataChunkImpl implements DataChunk {
+public class DataChunkImpl implements DataChunkWithBuffer {
 
 	private static final Logger log = Logger.getLogger(DataChunkImpl.class.getName());
 	private ByteBuffer data;
@@ -26,7 +24,12 @@ public class DataChunkImpl implements DataChunk {
 	}
 
 	@Override
-	public void setProcessed() {
+	public void setProcessed(String namedByteConsumerForLogs) {
+		setProcessedImpl();
+		releaseBuffer(namedByteConsumerForLogs);
+	}
+
+	public void setProcessedImpl() {
 		if(listener != null) {
 			listener.processed(this);
 			listener = null;
@@ -37,17 +40,15 @@ public class DataChunkImpl implements DataChunk {
 		this.listener = l;
 	}
 
-	public boolean releaseBuffer() {
-		boolean fullyRead = true;
+	@Override
+	public void releaseBuffer(String clientName) {
 		if(data != null) {
 			if(data.hasRemaining()) {
-				fullyRead = false;
-				log.log(Level.WARNING, id+"Discarding unread data("+data.remaining()+")", new RuntimeException().fillInStackTrace());
+				log.log(Level.WARNING, id+"Discarding unread data("+data.remaining()+") client that didn't consume data="+clientName, new RuntimeException().fillInStackTrace());
 			}
 			data.clear();
 			bufferListener.releaseBuffer(data);
 			data = null;
 		}
-		return fullyRead;
 	}
 }

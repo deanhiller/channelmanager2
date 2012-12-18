@@ -89,7 +89,7 @@ public class EventServer implements ConnectionListener, DataListener {
 		SendBytesTask task = new SendBytesTask(buf, channel);
 		channelToTask.put(channel, task);
 		TIMER.schedule(task, 0, 3000);
-		chunk.setProcessed();
+		chunk.setProcessed("EventServer");
 	}
 
 	public void farEndClosed(Channel channel) {

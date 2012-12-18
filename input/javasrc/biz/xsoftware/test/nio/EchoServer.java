@@ -85,7 +85,7 @@ public class EchoServer implements DataListener, ConnectionListener {
 		try {
 			ByteBuffer b = chunk.getData();
 			channel.oldWrite(b, NullWriteCallback.singleton());
-			chunk.setProcessed();
+			chunk.setProcessed("EchoServer");
 		} catch (InterruptedException e) {
 			log.log(Level.WARNING, "Exception occurred", e);
 		}

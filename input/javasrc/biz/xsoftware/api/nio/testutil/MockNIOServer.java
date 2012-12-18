@@ -19,8 +19,8 @@ import biz.xsoftware.api.nio.channels.TCPServerChannel;
 import biz.xsoftware.api.nio.deprecated.ChannelService;
 import biz.xsoftware.api.nio.deprecated.Settings;
 import biz.xsoftware.api.nio.handlers.ConnectionListener;
-import biz.xsoftware.api.nio.handlers.DataChunk;
 import biz.xsoftware.api.nio.handlers.DataListener;
+import biz.xsoftware.impl.nio.util.DataChunkWithBuffer;
 
 
 /**
@@ -139,17 +139,19 @@ public class MockNIOServer extends MockDataHandler implements ConnectionListener
 					buffer.clear();
 					udp.receive(buffer);
 					buffer.flip();
-					DataChunk c = new DataChunk() {
+					DataChunkWithBuffer c = new DataChunkWithBuffer() {
 						@Override
-						public void setProcessed() {
+						public void setProcessed(String name) {
 						}
 						@Override
 						public ByteBuffer getData() {
 							return buffer;
 						}
 						@Override
-						public boolean releaseBuffer() {
-							return true;
+						public void releaseBuffer(String logInfo) {
+						}
+						@Override
+						public void setProcessedImpl() {
 						}
 					};
 					handler.incomingData(null, c);

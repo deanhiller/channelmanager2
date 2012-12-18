@@ -2,15 +2,18 @@ package biz.xsoftware.impl.nio.cm.secure;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.util.logging.Logger;
 
 import biz.xsoftware.api.nio.channels.Channel;
 import biz.xsoftware.api.nio.handlers.DataChunk;
 import biz.xsoftware.api.nio.handlers.DataListener;
 import biz.xsoftware.api.nio.libs.AsynchSSLEngine;
 import biz.xsoftware.api.nio.libs.PacketAction;
+import biz.xsoftware.impl.nio.util.DataChunkWithBuffer;
 
 class SecReaderProxy implements DataListener {
 	
+	private static final Logger log = Logger.getLogger(SecReaderProxy.class.getName());
 	private AsynchSSLEngine handler;
 	private SecSSLListener sslListener;
 	private ByteBuffer data = ByteBuffer.allocate(2000);
@@ -29,14 +32,16 @@ class SecReaderProxy implements DataListener {
 		if(!isClosed) {
 			PacketAction action = handler.feedEncryptedPacket(b, chunk);
 			if(action == PacketAction.NOT_ENOUGH_BYTES_YET) {
-				chunk.setProcessed(); //trigger another read from socket
+				chunk.setProcessed("SecReaderProxy"); //trigger another read from socket
 			}
+			
 		} else {
 			b.position(b.limit()); //if closed, read the data so we don't get warnings
-			chunk.setProcessed();
+			chunk.setProcessed("SecReaderProxy");
 		}
-		
-		chunk.releaseBuffer();
+
+		DataChunkWithBuffer cb = (DataChunkWithBuffer) chunk;
+		cb.releaseBuffer(" hander that did not consume all data="+handler);
 	}
 	
 	public void farEndClosed(Channel c) {

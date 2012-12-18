@@ -21,6 +21,7 @@ import biz.xsoftware.api.nio.libs.BufferHelper;
 import biz.xsoftware.api.nio.testutil.HandlerForTests;
 import biz.xsoftware.api.nio.testutil.MockDataHandler;
 import biz.xsoftware.api.nio.testutil.MockNIOServer;
+import biz.xsoftware.impl.nio.util.DataChunkImpl;
 import biz.xsoftware.mock.CalledMethod;
 import biz.xsoftware.mock.MockObject;
 import biz.xsoftware.mock.MockObjectFactory;
@@ -92,21 +93,17 @@ public class TestNewChannelManager extends TestCase {
 	}
 	
 	private ByteBuffer verifyDataPassing(TCPChannel svrChan) throws Exception {
-		String myStr  = create();
-		ByteBuffer b = null;
-		for(int i = 0; i < 1000000; i++) {
-			b = ByteBuffer.allocate(myStr.length());
-			helper.putString(b, myStr);
-			helper.doneFillingBuffer(b);
-			log.fine("***********************************************");
-			FutureOperation write = client1.write(b);
-			write.waitForOperation(5000);
-			log.info("wrote len="+myStr.length()+" count="+i);
-		}
+		ByteBuffer b = ByteBuffer.allocate(10);
+		helper.putString(b, "de");
+		helper.doneFillingBuffer(b);
+		log.fine("***********************************************");
+		FutureOperation write = client1.write(b);
+		write.waitForOperation(5000);
 		
 		CalledMethod m = serverHandler.expect("incomingData");
 		TCPChannel actualChannel = (TCPChannel)m.getAllParams()[0];
-		ByteBuffer actualBuf = (ByteBuffer)m.getAllParams()[1];
+		DataChunkImpl chunk = (DataChunkImpl)m.getAllParams()[1];
+		ByteBuffer actualBuf = chunk.getData();
 		String result = helper.readString(actualBuf, actualBuf.remaining());
 		assertEquals("de", result);
 		
@@ -121,14 +118,6 @@ public class TestNewChannelManager extends TestCase {
 		return b;
 	}
 	
-	private String create() {
-		String s = "";
-		for(int i = 0; i < 10000; i++) {
-			s += "dean";
-		}
-		return s;
-	}
-
 	private void verifyTearDown() throws IOException {
         log.info("local="+client1.getLocalAddress()+" remote="+client1.getRemoteAddress());
 		log.info("CLIENT1 CLOSE");

@@ -161,7 +161,7 @@ public class TestExampleSessions extends TestCase
             log.info(name+" count="+(sessionCount++)+" says '"+msg+"'    s="+session+"  t="+Thread.currentThread());
 
         	session.put("count", sessionCount);
-        	chunk.setProcessed();
+        	chunk.setProcessed("TestExampleSessions.MyDataListener");
         }
 
         /**

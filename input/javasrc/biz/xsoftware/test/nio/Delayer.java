@@ -55,7 +55,7 @@ public class Delayer implements DataListener {
 		};
 		timer.schedule(t, 1000);
 		
-		chunk.setProcessed();
+		chunk.setProcessed("Delayer");
 	}
 
 	public void farEndClosed(Channel channel) {

@@ -73,7 +73,7 @@ public class EventClient implements ConnectionCallback, DataListener {
 	public void incomingData(Channel channel, DataChunk chunk) throws IOException {
 		ByteBuffer b = chunk.getData();
 		String s = HELPER.readString(b, b.remaining());
-		chunk.setProcessed();
+		chunk.setProcessed("EventClient");
 		log.info(channel+"Received event="+s);
 	}
 

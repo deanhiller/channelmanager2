@@ -10,6 +10,7 @@ import biz.xsoftware.api.nio.handlers.DataChunk;
 import biz.xsoftware.api.nio.handlers.DataListener;
 import biz.xsoftware.api.nio.libs.PacketListener;
 import biz.xsoftware.api.nio.libs.PacketProcessor;
+import biz.xsoftware.impl.nio.util.DataChunkWithBuffer;
 import biz.xsoftware.impl.nio.util.PacketChunk;
 
 class PacProxyDataHandler implements DataListener, PacketListener {
@@ -31,11 +32,11 @@ class PacProxyDataHandler implements DataListener, PacketListener {
 		try {
 			boolean notified = packetProcessor.incomingData(b, chunk);
 			
-			//release buffer back to the pool..
-			chunk.releaseBuffer();
+			DataChunkWithBuffer c = (DataChunkWithBuffer) chunk;
+			c.releaseBuffer(" handler that didn't consume="+handler);
 			
 			if(!notified)
-				chunk.setProcessed();
+				chunk.setProcessed("PacProxyDataHandler");
 		} catch(Exception e) {
 			log.log(Level.WARNING, "exception", e);
 			handler.failure(channel, b, e);
@@ -49,7 +50,7 @@ class PacProxyDataHandler implements DataListener, PacketListener {
 	public void incomingPacket(ByteBuffer b, Object passthrough) throws IOException {
 		//MUST create a new packet here as the same DataChunk is sometimes used
 		//since one ByteBuffer can contain multiple packets!!!!
-		DataChunk chunk = (DataChunk) passthrough;
+		DataChunkWithBuffer chunk = (DataChunkWithBuffer) passthrough;
 		PacketChunk c = new PacketChunk(b, chunk);
 		handler.incomingData(channel, c);
 	}

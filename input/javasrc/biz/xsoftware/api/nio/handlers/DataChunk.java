@@ -11,6 +11,8 @@ public interface DataChunk {
 	 * down and can't write to the socket anymore until you have processed your data.  It is a very clean way of
 	 * slowly degrading and forcing clients to slowdown while you catchup.
 	 * 
+	 * NOTE: You should also call releaseBuffer when done reading the buffer.
+	 * 
 	 * @return
 	 */
 	public ByteBuffer getData();
@@ -18,16 +20,6 @@ public interface DataChunk {
 	/**
 	 * 
 	 */
-	public void setProcessed();
-
-	/**
-	 * Calling this allows lower levers to recycle the buffers.  If you don't call it, it will just be garbage
-	 * collected.  If you do call it, it may or may not be added back to a buffer pool to be re-used.  It depends
-	 * on how the layers are setup.  This also
-	 * @param c
-	 * @param handler
-	 * @return 
-	 */
-	public boolean releaseBuffer();
+	public void setProcessed(String namedByteConsumerForLogs);
 
 }

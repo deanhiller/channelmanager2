@@ -36,7 +36,6 @@ class ThdProxyDataHandler implements DataListener {
 			public void run() {
 				try {
 					handler.incomingData(channel, chunk);
-					chunk.releaseBuffer();
 				} catch (Exception e) {
 					log.log(Level.WARNING, channel+"Exception", e);
 				}				

@@ -157,7 +157,7 @@ public class AsynchSSLEngineImpl implements AsynchSSLEngine {
 
 			PacketAction result = feedEncryptedPacketImpl(passthrough);
 			if(b.hasRemaining())
-				throw new RuntimeException(this+"BUG, need to read all data from ByteBuffer");
+				throw new RuntimeException(this+"BUG, need to read all data from ByteBuffer.  incoming="+b+" socketToEngineBuf="+socketToEngineData2);
 			return result;
 		} catch (IOException e) {
 			//try to close SSLEngine

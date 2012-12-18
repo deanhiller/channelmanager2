@@ -145,7 +145,7 @@ public class TestExample extends TestCase
         	ByteBuffer b = chunk.getData();
             String msg = HELPER.readString(b, b.remaining());            
             log.info(name+" says '"+msg+"'");
-            chunk.setProcessed();
+            chunk.setProcessed("TestExample.MyDataListner");
         }
 
         /**
