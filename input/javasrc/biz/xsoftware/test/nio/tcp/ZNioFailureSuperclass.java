@@ -12,8 +12,8 @@ import biz.xsoftware.api.nio.channels.Channel;
 import biz.xsoftware.api.nio.channels.TCPChannel;
 import biz.xsoftware.api.nio.deprecated.ChannelService;
 import biz.xsoftware.api.nio.deprecated.ChannelServiceFactory;
+import biz.xsoftware.api.nio.deprecated.ConnectionCallback;
 import biz.xsoftware.api.nio.deprecated.Settings;
-import biz.xsoftware.api.nio.handlers.ConnectionCallback;
 import biz.xsoftware.api.nio.handlers.DataChunk;
 import biz.xsoftware.api.nio.handlers.DataListener;
 import biz.xsoftware.api.nio.libs.BufferFactory;
@@ -106,13 +106,13 @@ public abstract class ZNioFailureSuperclass extends MockTestCase {
 		log.info("class name"+client1.getClass().getName());
 		String msg = "some exception message";
 		IOException e = new IOException(msg);
-		mockConnect.addThrowException("finished", e);
+		mockConnect.addThrowException("connected", e);
 		
 		client1.bind(loopBackAnyPort);		
 		client1.oldConnect(svrAddr, (ConnectionCallback)mockConnect);
 		client1.registerForReads((DataListener)mockHandler);
 		
-		mockConnect.expect("finished");
+		mockConnect.expect("connected");
 		TCPChannel svrChan = expectServerChannel(mockServer, c);
 
 		verifyDataPassing(svrChan);
@@ -139,7 +139,7 @@ public abstract class ZNioFailureSuperclass extends MockTestCase {
 		client1.oldConnect(svrAddr, (ConnectionCallback)mockConnect);
 		client1.registerForReads((DataListener)mockHandler);
 		
-		mockConnect.expect("finished");
+		mockConnect.expect("connected");
 		TCPChannel svrChan = expectServerChannel(mockServer, c);
 
 		verifyDataPassing(svrChan);
@@ -172,7 +172,7 @@ public abstract class ZNioFailureSuperclass extends MockTestCase {
 		client1.oldConnect(svrAddr, (ConnectionCallback)mockConnect);
 		client1.registerForReads((DataListener)mockHandler);
 		
-		mockConnect.expect("finished");
+		mockConnect.expect("connected");
 		TCPChannel svrChan = expectServerChannel(mockServer, c);
 
 		verifyDataPassing(svrChan);
@@ -195,13 +195,13 @@ public abstract class ZNioFailureSuperclass extends MockTestCase {
 	
 		String msg = "some exception message";
 		IOException e = new IOException(msg);
-		mockServer.addThrowException("finished", e);
+		mockServer.addThrowException("connected", e);
 		
 		client1.bind(loopBackAnyPort);
 		client1.oldConnect(svrAddr, (ConnectionCallback)mockConnect);
 		client1.registerForReads((DataListener)mockHandler);
 		
-		mockConnect.expect("finished");
+		mockConnect.expect("connected");
 		TCPChannel svrChan = expectServerChannel(mockServer, c);
 
 		verifyDataPassing(svrChan);

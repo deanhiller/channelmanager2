@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import biz.xsoftware.api.nio.channels.Channel;
 import biz.xsoftware.api.nio.channels.RegisterableChannel;
-import biz.xsoftware.api.nio.handlers.ConnectionCallback;
+import biz.xsoftware.api.nio.deprecated.ConnectionCallback;
 import biz.xsoftware.api.nio.handlers.FutureOperation;
 import biz.xsoftware.api.nio.handlers.OperationCallback;
 
@@ -15,7 +15,7 @@ public class FutureConnectImpl implements FutureOperation, ConnectionCallback {
 	private OperationCallback operationCallback;
 
 	@Override
-	public synchronized void finished(Channel channel) throws IOException {
+	public synchronized void connected(Channel channel) throws IOException {
 		this.channel = channel;
 		this.notify();
 		operationCallback.finished(channel);

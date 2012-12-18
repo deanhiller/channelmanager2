@@ -67,7 +67,7 @@ class BasTCPServerChannel extends RegisterableChannelImpl implements TCPServerCh
 			TCPChannel tcpChan = new BasTCPChannel(obj, bufFactory, proxyChan, getSelectorManager());
 			if(log.isLoggable(Level.FINER))
 				log.finer(tcpChan+"Accepted new incoming connection");
-			cb.finished(tcpChan);
+			cb.connected(tcpChan);
 		} catch(Throwable e) {
 			log.log(Level.WARNING, this+"Failed to connect", e);
 			cb.failed(this, e);

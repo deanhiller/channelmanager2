@@ -28,12 +28,12 @@ class ThdProxyAcceptCb implements ConnectionListener {
 		this.bufFactory = bufFactory;
 	}
 	
-	public void finished(final Channel channel) throws IOException {
+	public void connected(final Channel channel) throws IOException {
 		ChannelsRunnable r = new ChannelsRunnable() {
 			public void run() {
 				try {
 					TCPChannel newChannel = new ThdTCPChannel((TCPChannel) channel, svc, bufFactory);
-					cb.finished(newChannel);
+					cb.connected(newChannel);
 				} catch (Exception e) {
 					log.log(Level.WARNING, channel+"Exception", e);
 				}				

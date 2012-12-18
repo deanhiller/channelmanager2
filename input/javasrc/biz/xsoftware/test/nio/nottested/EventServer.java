@@ -63,7 +63,7 @@ public class EventServer implements ConnectionListener, DataListener {
 		log.info(svrChannel+"Server started");
 	}
 
-	public void finished(Channel channel) throws IOException {
+	public void connected(Channel channel) throws IOException {
 		try {
 			log.info(channel+"Connected channel remote="+channel.getRemoteAddress());
 			channel.registerForReads(this);

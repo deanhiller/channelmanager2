@@ -9,7 +9,7 @@ import java.util.logging.Logger;
 import biz.xsoftware.api.nio.channels.Channel;
 import biz.xsoftware.api.nio.channels.RegisterableChannel;
 import biz.xsoftware.api.nio.channels.TCPChannel;
-import biz.xsoftware.api.nio.handlers.ConnectionCallback;
+import biz.xsoftware.api.nio.deprecated.ConnectionCallback;
 import biz.xsoftware.api.nio.handlers.DataListener;
 import biz.xsoftware.api.nio.handlers.OperationCallback;
 import biz.xsoftware.impl.nio.util.UtilTCPChannel;

@@ -7,14 +7,14 @@ import java.io.IOException;
 
 import biz.xsoftware.api.nio.channels.Channel;
 import biz.xsoftware.api.nio.channels.RegisterableChannel;
-import biz.xsoftware.api.nio.handlers.ConnectionCallback;
+import biz.xsoftware.api.nio.deprecated.ConnectionCallback;
 
 public class UtilWaitForConnect implements ConnectionCallback {
 
 	private Throwable e;
 	private boolean isFinished = false;
 	
-	public synchronized void finished(Channel channels) throws IOException {
+	public synchronized void connected(Channel channels) throws IOException {
 		isFinished = true;
 		this.notifyAll();
 	}

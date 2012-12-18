@@ -1,4 +1,4 @@
-package biz.xsoftware.api.nio.handlers;
+package biz.xsoftware.api.nio.libs;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;

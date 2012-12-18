@@ -5,7 +5,7 @@ import java.net.SocketAddress;
 
 import biz.xsoftware.api.nio.channels.Channel;
 import biz.xsoftware.api.nio.channels.TCPChannel;
-import biz.xsoftware.api.nio.handlers.ConnectionCallback;
+import biz.xsoftware.api.nio.deprecated.ConnectionCallback;
 import biz.xsoftware.api.nio.handlers.DataListener;
 
 public class UtilProxyTCPChannel extends UtilTCPChannel implements TCPChannel {

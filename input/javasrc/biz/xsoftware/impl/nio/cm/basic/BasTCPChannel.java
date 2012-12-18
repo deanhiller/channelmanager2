@@ -11,7 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import biz.xsoftware.api.nio.channels.TCPChannel;
-import biz.xsoftware.api.nio.handlers.ConnectionCallback;
+import biz.xsoftware.api.nio.deprecated.ConnectionCallback;
 import biz.xsoftware.api.nio.handlers.FutureOperation;
 import biz.xsoftware.api.nio.libs.BufferFactory;
 import biz.xsoftware.api.nio.testutil.chanapi.ChannelsFactory;
@@ -158,7 +158,7 @@ class BasTCPChannel extends BasChannelImpl implements TCPChannel {
 		setConnecting(true);
 		if(connected) {
 			try {
-				future.finished(this);
+				future.connected(this);
 			} catch(Throwable e) {
 				log.log(Level.WARNING, this+"Exception occurred", e);
 			}
@@ -182,7 +182,7 @@ class BasTCPChannel extends BasChannelImpl implements TCPChannel {
 		setConnecting(true);
 		if(connected) {
 			try {
-				c.finished(this);
+				c.connected(this);
 			} catch(Throwable e) {
 				log.log(Level.WARNING, this+"Exception occurred", e);
 			}

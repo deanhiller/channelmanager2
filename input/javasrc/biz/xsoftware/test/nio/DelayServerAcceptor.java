@@ -32,7 +32,7 @@ public class DelayServerAcceptor implements ConnectionListener {
 		this.delaySvrAddr = delaySvrAddr;
 	}
 		
-	public void finished(Channel channel) throws IOException {
+	public void connected(Channel channel) throws IOException {
 		if(log.isLoggable(Level.FINE))
 			log.fine(channel+"about to accept");
 		currentChannel = clientSideChanMgr.createTCPChannel("xxx", null);

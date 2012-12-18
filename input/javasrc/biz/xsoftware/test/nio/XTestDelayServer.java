@@ -12,8 +12,8 @@ import biz.xsoftware.api.nio.channels.TCPChannel;
 import biz.xsoftware.api.nio.deprecated.ChannelManager;
 import biz.xsoftware.api.nio.deprecated.ChannelService;
 import biz.xsoftware.api.nio.deprecated.ChannelServiceFactory;
+import biz.xsoftware.api.nio.deprecated.ConnectionCallback;
 import biz.xsoftware.api.nio.deprecated.Settings;
-import biz.xsoftware.api.nio.handlers.ConnectionCallback;
 import biz.xsoftware.api.nio.handlers.DataListener;
 import biz.xsoftware.api.nio.libs.BufferFactory;
 import biz.xsoftware.api.nio.libs.BufferHelper;
@@ -125,7 +125,7 @@ public class XTestDelayServer extends TestCase {
 		int size = 40;
 		String[] methodNames = new String[size];
 		for(int i = 0; i < size; i++) {
-			methodNames[i] = "finished";
+			methodNames[i] = "connected";
 		}
 		TCPChannel[] clients = new TCPChannel[size];	
 		for(int i = 0; i < size; i++) {

@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 import biz.xsoftware.api.nio.channels.Channel;
 import biz.xsoftware.api.nio.handlers.DataChunk;
 import biz.xsoftware.api.nio.handlers.DataListener;
-import biz.xsoftware.api.nio.handlers.PacketListener;
+import biz.xsoftware.api.nio.libs.PacketListener;
 import biz.xsoftware.api.nio.libs.PacketProcessor;
 import biz.xsoftware.impl.nio.util.PacketChunk;
 

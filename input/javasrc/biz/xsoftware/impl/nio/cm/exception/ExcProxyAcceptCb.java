@@ -22,10 +22,10 @@ class ExcProxyAcceptCb implements ConnectionListener {
 		this.cb = cb;
 	}
 	
-	public void finished(Channel channel) throws IOException {
+	public void connected(Channel channel) throws IOException {
 		try {
 			TCPChannel newChannel = new ExcTCPChannel((TCPChannel) channel);
-			cb.finished(newChannel);
+			cb.connected(newChannel);
 		} catch(Exception e) {
 			log.log(Level.WARNING, channel+"Exception", e);
 		}

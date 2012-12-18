@@ -18,9 +18,9 @@ public class UtilProxyAcceptCb implements ConnectionListener {
 		this.cb = cb;
 	}
 
-	public void finished(Channel realChannel) throws IOException {
+	public void connected(Channel realChannel) throws IOException {
 		UtilProxyTCPChannel newOne = new UtilProxyTCPChannel(realChannel);
-		cb.finished(newOne);
+		cb.connected(newOne);
 	}
 
 	public void failed(RegisterableChannel realChannel, Throwable e) {

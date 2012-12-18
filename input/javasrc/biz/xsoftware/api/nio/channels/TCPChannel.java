@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.SocketAddress;
 import java.net.SocketException;
 
-import biz.xsoftware.api.nio.handlers.ConnectionCallback;
+import biz.xsoftware.api.nio.deprecated.ConnectionCallback;
 
 
 
@@ -28,4 +28,5 @@ public interface TCPChannel extends Channel {
 	
 	public boolean getKeepAlive() throws SocketException;
 	public void setKeepAlive(boolean b) throws SocketException;
+	
 }

@@ -5,7 +5,7 @@ import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 
 import biz.xsoftware.api.nio.channels.TCPChannel;
-import biz.xsoftware.api.nio.handlers.ConnectionCallback;
+import biz.xsoftware.api.nio.deprecated.ConnectionCallback;
 import biz.xsoftware.api.nio.handlers.DataListener;
 import biz.xsoftware.api.nio.handlers.OperationCallback;
 import biz.xsoftware.api.nio.libs.BufferFactory;

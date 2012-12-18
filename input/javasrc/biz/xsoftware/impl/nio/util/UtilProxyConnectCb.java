@@ -6,7 +6,7 @@ import java.io.IOException;
 import biz.xsoftware.api.nio.channels.Channel;
 import biz.xsoftware.api.nio.channels.RegisterableChannel;
 import biz.xsoftware.api.nio.channels.TCPChannel;
-import biz.xsoftware.api.nio.handlers.ConnectionCallback;
+import biz.xsoftware.api.nio.deprecated.ConnectionCallback;
 import biz.xsoftware.api.nio.handlers.ConnectionListener;
 
 public class UtilProxyConnectCb implements ConnectionCallback {
@@ -20,8 +20,8 @@ public class UtilProxyConnectCb implements ConnectionCallback {
 		this.cb = cb;
 	}
 
-	public void finished(Channel realChannel) throws IOException {
-		cb.finished(channel);
+	public void connected(Channel realChannel) throws IOException {
+		cb.connected(channel);
 	}
 
 	public void failed(RegisterableChannel realChannel, Throwable e) {

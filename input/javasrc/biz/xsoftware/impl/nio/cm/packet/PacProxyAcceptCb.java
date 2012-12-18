@@ -23,10 +23,10 @@ class PacProxyAcceptCb implements ConnectionListener {
 		this.factory = proc;
 	}
 	
-	public void finished(Channel channel) throws IOException {
+	public void connected(Channel channel) throws IOException {
 		PacketProcessor processor = factory.createPacketProcessor(channel);
 		TCPChannel newChannel = new PacTCPChannel((TCPChannel) channel, processor);
-		cb.finished(newChannel);		
+		cb.connected(newChannel);		
 	}
 
 	public void failed(RegisterableChannel channel, Throwable e) {

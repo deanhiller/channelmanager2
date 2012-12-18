@@ -38,9 +38,9 @@ import java.util.logging.Logger;
 
 import biz.xsoftware.api.nio.deprecated.ChannelServiceFactory;
 import biz.xsoftware.api.nio.deprecated.CorruptPacketException;
-import biz.xsoftware.api.nio.handlers.PacketListener;
 import biz.xsoftware.api.nio.libs.BufferHelper;
 import biz.xsoftware.api.nio.libs.FactoryCreator;
+import biz.xsoftware.api.nio.libs.PacketListener;
 import biz.xsoftware.api.nio.libs.PacketProcessor;
 import biz.xsoftware.api.nio.libs.PacketProcessorFactory;
 import biz.xsoftware.api.nio.testutil.CloneByteBuffer;

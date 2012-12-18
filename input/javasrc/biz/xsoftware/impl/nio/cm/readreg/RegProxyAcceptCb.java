@@ -19,9 +19,9 @@ class RegProxyAcceptCb implements ConnectionListener {
 		this.cb = cb;
 	}
 	
-	public void finished(Channel channel) throws IOException {
+	public void connected(Channel channel) throws IOException {
 		TCPChannel newChannel = new RegTCPChannel((TCPChannel) channel);
-		cb.finished(newChannel);		
+		cb.connected(newChannel);		
 	}
 
 	public void failed(RegisterableChannel channel, Throwable e) {

@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 import biz.xsoftware.api.nio.channels.Channel;
 import biz.xsoftware.api.nio.channels.RegisterableChannel;
 import biz.xsoftware.api.nio.channels.TCPChannel;
-import biz.xsoftware.api.nio.handlers.ConnectionCallback;
+import biz.xsoftware.api.nio.deprecated.ConnectionCallback;
 import biz.xsoftware.api.nio.handlers.ConnectionListener;
 import biz.xsoftware.api.nio.libs.ChannelsRunnable;
 
@@ -26,11 +26,11 @@ class ThdProxyConnectCb implements ConnectionCallback {
 		this.svc = svc;
 	}
 	
-	public void finished(Channel realChannel) throws IOException {
+	public void connected(Channel realChannel) throws IOException {
         ChannelsRunnable r = new ChannelsRunnable() {
 			public void run() {
 				try {
-					cb.finished(channel);
+					cb.connected(channel);
 				} catch (Exception e) {
 					log.log(Level.WARNING, channel+"Exception", e);
 				}				

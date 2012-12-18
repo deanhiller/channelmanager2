@@ -13,8 +13,8 @@ import biz.xsoftware.api.nio.channels.TCPChannel;
 import biz.xsoftware.api.nio.deprecated.ChannelManager;
 import biz.xsoftware.api.nio.deprecated.ChannelService;
 import biz.xsoftware.api.nio.deprecated.ChannelServiceFactory;
+import biz.xsoftware.api.nio.deprecated.ConnectionCallback;
 import biz.xsoftware.api.nio.deprecated.Settings;
-import biz.xsoftware.api.nio.handlers.ConnectionCallback;
 import biz.xsoftware.api.nio.handlers.DataListener;
 import biz.xsoftware.api.nio.testutil.MockDataHandler;
 import biz.xsoftware.api.nio.testutil.MockSSLEngineFactory;
@@ -77,7 +77,7 @@ public class TryRealConnection extends TestCase {
 		InetSocketAddress addr = new InetSocketAddress(host, 22);
 		channel.oldConnect(addr, (ConnectionCallback)mockConnect);
 
-		mockConnect.expect("finished");
+		mockConnect.expect("connected");
 		
 		handler.addIgnore("getBuffer");
 

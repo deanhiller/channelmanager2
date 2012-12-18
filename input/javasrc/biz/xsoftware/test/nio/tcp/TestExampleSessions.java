@@ -108,9 +108,9 @@ public class TestExampleSessions extends TestCase
     private class MyServerSocketListener implements ConnectionListener {
 
         /**
-         * @see biz.xsoftware.api.nio.handlers.ConnectionListener#finished(Channel)
+         * @see biz.xsoftware.api.nio.handlers.ConnectionListener#connected(Channel)
          */
-        public void finished(Channel channel) throws IOException
+        public void connected(Channel channel) throws IOException
         {
             try
             {

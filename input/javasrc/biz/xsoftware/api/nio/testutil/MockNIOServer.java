@@ -28,7 +28,7 @@ import biz.xsoftware.api.nio.handlers.DataListener;
  */
 public class MockNIOServer extends MockDataHandler implements ConnectionListener {
 
-	public static final String CONNECTED = "finished";
+	public static final String CONNECTED = "connected";
 	public static final String CONN_FAILED = "failed";
 	
 	private static final Logger log = Logger.getLogger(MockNIOServer.class.getName());
@@ -91,7 +91,7 @@ public class MockNIOServer extends MockDataHandler implements ConnectionListener
 		return o;
 	}
 
-	public void finished(Channel channel) throws IOException {
+	public void connected(Channel channel) throws IOException {
 		try {
 			log.fine(channel+"mockserver accepted connection");
 			sockets.add((TCPChannel) channel);

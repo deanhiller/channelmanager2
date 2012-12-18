@@ -8,7 +8,7 @@ import biz.xsoftware.api.nio.channels.RegisterableChannel;
 
 public interface ConnectionListener {
 	
-	public void finished(Channel channel) throws IOException;
+	public void connected(Channel channel) throws IOException;
 	
 	public void failed(RegisterableChannel channel, Throwable e);
 }

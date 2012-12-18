@@ -12,8 +12,8 @@ import biz.xsoftware.api.nio.channels.RegisterableChannel;
 import biz.xsoftware.api.nio.channels.TCPChannel;
 import biz.xsoftware.api.nio.deprecated.ChannelService;
 import biz.xsoftware.api.nio.deprecated.ChannelServiceFactory;
+import biz.xsoftware.api.nio.deprecated.ConnectionCallback;
 import biz.xsoftware.api.nio.deprecated.Settings;
-import biz.xsoftware.api.nio.handlers.ConnectionCallback;
 import biz.xsoftware.api.nio.handlers.DataChunk;
 import biz.xsoftware.api.nio.handlers.DataListener;
 import biz.xsoftware.api.nio.libs.BufferHelper;
@@ -50,7 +50,7 @@ public class EventClient implements ConnectionCallback, DataListener {
 		channel.oldConnect(sockAddr, this);
 	}
 
-	public void finished(Channel channel) throws IOException {
+	public void connected(Channel channel) throws IOException {
 		try {
 			log.info(channel+"Connected now="+channel.getRemoteAddress());
 			channel.registerForReads(this);

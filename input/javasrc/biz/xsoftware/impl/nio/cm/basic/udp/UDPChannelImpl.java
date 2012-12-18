@@ -51,7 +51,7 @@ public class UDPChannelImpl extends BasChannelImpl implements UDPChannel {
 			channel.connect(addr);
 			
 	        isConnected = true;
-	        future.finished(this);
+	        future.connected(this);
 		} catch(Exception e) {
 			future.failed(this, e);
 		}

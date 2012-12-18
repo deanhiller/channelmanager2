@@ -13,8 +13,8 @@ import junit.framework.TestCase;
 import biz.xsoftware.api.nio.channels.TCPChannel;
 import biz.xsoftware.api.nio.deprecated.ChannelService;
 import biz.xsoftware.api.nio.deprecated.ChannelServiceFactory;
+import biz.xsoftware.api.nio.deprecated.ConnectionCallback;
 import biz.xsoftware.api.nio.deprecated.Settings;
-import biz.xsoftware.api.nio.handlers.ConnectionCallback;
 import biz.xsoftware.api.nio.handlers.DataListener;
 import biz.xsoftware.api.nio.libs.BufferFactory;
 import biz.xsoftware.api.nio.libs.BufferHelper;
@@ -106,13 +106,13 @@ public abstract class ZNioSuperclassTest extends TestCase {
 //	
 //		String msg = "some exception message";
 //		IOException e = new IOException(msg);
-//		mockConnect.addThrowException("finished", e);
+//		mockConnect.addThrowException("connected", e);
 //		
 //		client1.bind(loopBackAnyPort);		
 //		client1.registerForReads((DataHandler)mockHandler);
 //		client1.connect(svrAddr, (ConnectCallback)mockConnect);
 //
-//		mockConnect.expect("finished");
+//		mockConnect.expect("connected");
 //		TCPChannel svrChan = (TCPChannel)mockServer.expect(MockNIOServer.CONNECTED).getAllParams()[0];
 //		assertEquals("should be instance of correct channel type", c, svrChan.getClass());
 //
@@ -137,7 +137,7 @@ public abstract class ZNioSuperclassTest extends TestCase {
 		client1.bind(loopBackAnyPort);		
 		client1.registerForReads((DataListener)mockHandler);
 		client1.oldConnect(svrAddr, (ConnectionCallback)mockConnect);
-		mockConnect.expect("finished");
+		mockConnect.expect("connected");
 		
 		boolean isConnected = client1.isConnected();
 		assertTrue("Client should be connected", isConnected);
@@ -158,7 +158,7 @@ public abstract class ZNioSuperclassTest extends TestCase {
     
         //no bind, just do connect to test port is not zero
         client1.oldConnect(svrAddr, (ConnectionCallback)mockConnect);
-        mockConnect.expect("finished");
+        mockConnect.expect("connected");
         
         mockServer.expect(MockNIOServer.CONNECTED);
 
@@ -177,7 +177,7 @@ public abstract class ZNioSuperclassTest extends TestCase {
 	
 		//no bind, just do connect to test port is not zero
 		client1.oldConnect(svrAddr, (ConnectionCallback)mockConnect);
-		mockConnect.expect("finished");
+		mockConnect.expect("connected");
 		
 		boolean isConnected = client1.isConnected();
 		assertTrue("Client should be connected", isConnected);
@@ -314,7 +314,7 @@ public abstract class ZNioSuperclassTest extends TestCase {
 		client1.oldConnect(svrAddr);		
 		int port = client1.getLocalAddress().getPort();
 		assertTrue("port is zero, this is bad", port != 0);
-		mockServer.expect("finished");
+		mockServer.expect("connected");
 		//verifyTearDown();
 	}
 	

@@ -11,8 +11,8 @@ import junit.framework.TestCase;
 import biz.xsoftware.api.nio.channels.TCPChannel;
 import biz.xsoftware.api.nio.deprecated.ChannelService;
 import biz.xsoftware.api.nio.deprecated.ChannelServiceFactory;
+import biz.xsoftware.api.nio.deprecated.ConnectionCallback;
 import biz.xsoftware.api.nio.deprecated.Settings;
-import biz.xsoftware.api.nio.handlers.ConnectionCallback;
 import biz.xsoftware.api.nio.handlers.DataListener;
 import biz.xsoftware.api.nio.handlers.NullWriteCallback;
 import biz.xsoftware.api.nio.libs.BufferFactory;
@@ -130,7 +130,7 @@ public abstract class ZPerformanceSuper extends TestCase {
 		int size = 40;
 		String[] methodNames = new String[size];
 		for(int i = 0; i < size; i++) {
-			methodNames[i] = "finished";
+			methodNames[i] = "connected";
 		}
 
 		TCPChannel[] clients = new TCPChannel[size];
@@ -175,7 +175,7 @@ public abstract class ZPerformanceSuper extends TestCase {
 			int size = 10;
 			String[] methodNames = new String[size];
 			for(int i = 0; i < size; i++) {
-				methodNames[i] = "finished";
+				methodNames[i] = "connected";
 			}
 	
 			for(int j = 0; j < 10000; j++) {
@@ -238,7 +238,7 @@ public abstract class ZPerformanceSuper extends TestCase {
 		int size = 40;
 		String[] methodNames = new String[size];
 		for(int i = 0; i < size; i++) {
-			methodNames[i] = "finished";
+			methodNames[i] = "connected";
 		}
 		TCPChannel[] clients = new TCPChannel[size];	
 		for(int i = 0; i < size; i++) {
@@ -319,7 +319,7 @@ public abstract class ZPerformanceSuper extends TestCase {
 		int size = 40;
 		String[] methodNames = new String[size];
 		for(int i = 0; i < size; i++) {
-			methodNames[i] = "finished";
+			methodNames[i] = "connected";
 		}
 		TCPChannel[] clients = new TCPChannel[size];	
 		for(int i = 0; i < size; i++) {

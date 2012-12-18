@@ -3,7 +3,6 @@ package biz.xsoftware.api.nio.libs;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
-import biz.xsoftware.api.nio.handlers.PacketListener;
 
 public interface PacketProcessor {
 	

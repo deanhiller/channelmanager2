@@ -6,6 +6,7 @@ import biz.xsoftware.api.nio.channels.Channel;
 import biz.xsoftware.api.nio.channels.RegisterableChannel;
 import biz.xsoftware.api.nio.handlers.FutureOperation;
 import biz.xsoftware.api.nio.handlers.OperationCallback;
+import biz.xsoftware.api.nio.handlers.TimeoutException;
 
 public class FutureOperationImpl implements FutureOperation, OperationCallback {
 
@@ -17,7 +18,8 @@ public class FutureOperationImpl implements FutureOperation, OperationCallback {
 	public synchronized void finished(Channel channel) throws IOException {
 		this.channel = channel;
 		this.notify();
-		operationCallback.finished(channel);
+		if(operationCallback != null)
+			operationCallback.finished(channel);
 	}
 
 	@Override
@@ -25,7 +27,8 @@ public class FutureOperationImpl implements FutureOperation, OperationCallback {
 		this.channel = channel;
 		this.e = e;
 		this.notify();
-		operationCallback.failed(channel, e);
+		if(operationCallback != null)
+			operationCallback.failed(channel, e);
 	}
 
 	@Override
@@ -40,6 +43,9 @@ public class FutureOperationImpl implements FutureOperation, OperationCallback {
 			this.wait(timeoutInMillis);
 		} else
 			this.wait();
+		
+		if(channel == null)
+			throw new TimeoutException("Waited for operation for time="+timeoutInMillis+" but did not complete");
 	}
 
 	@Override

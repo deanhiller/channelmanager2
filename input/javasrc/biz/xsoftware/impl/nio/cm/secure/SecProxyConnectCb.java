@@ -10,7 +10,7 @@ import javax.net.ssl.SSLEngine;
 import biz.xsoftware.api.nio.channels.Channel;
 import biz.xsoftware.api.nio.channels.RegisterableChannel;
 import biz.xsoftware.api.nio.channels.TCPChannel;
-import biz.xsoftware.api.nio.handlers.ConnectionCallback;
+import biz.xsoftware.api.nio.deprecated.ConnectionCallback;
 import biz.xsoftware.api.nio.handlers.ConnectionListener;
 import biz.xsoftware.api.nio.libs.AsynchSSLEngine;
 import biz.xsoftware.api.nio.libs.FactoryCreator;
@@ -38,7 +38,7 @@ class SecProxyConnectCb implements ConnectionCallback {
 		this.sslFactory = factory;
 		this.cb = cb;
 	}
-	public void finished(Channel realChannel) throws IOException {
+	public void connected(Channel realChannel) throws IOException {
 		if(log.isLoggable(Level.FINE))
 			log.fine(realChannel+" Tcp connected, running handshake before fire connect");
 		SecTCPChannel secureChannel = channel;
