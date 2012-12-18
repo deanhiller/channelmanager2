@@ -4,8 +4,8 @@ import java.util.Map;
 
 import javax.net.ssl.SSLEngine;
 
-import biz.xsoftware.api.nio.ChannelManager;
 import biz.xsoftware.api.nio.channels.RegisterableChannel;
+import biz.xsoftware.api.nio.deprecated.ChannelManager;
 
 
 public abstract class FactoryCreator {

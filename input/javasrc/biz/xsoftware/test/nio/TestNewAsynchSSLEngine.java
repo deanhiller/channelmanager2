@@ -9,14 +9,14 @@ import javax.net.ssl.SSLException;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
-import biz.xsoftware.api.nio.BufferHelper;
-import biz.xsoftware.api.nio.ChannelServiceFactory;
+import biz.xsoftware.api.nio.deprecated.ChannelServiceFactory;
 import biz.xsoftware.api.nio.libs.AsynchSSLEngine;
 import biz.xsoftware.api.nio.libs.FactoryCreator;
 import biz.xsoftware.api.nio.libs.SSLEngineFactory;
 import biz.xsoftware.api.nio.libs.SSLListener;
 import biz.xsoftware.api.nio.testutil.HandlerForTests;
 import biz.xsoftware.api.nio.testutil.MockSSLEngineFactory;
+import biz.xsoftware.impl.nio.util.BufferHelper;
 import biz.xsoftware.mock.MockObject;
 
 /**

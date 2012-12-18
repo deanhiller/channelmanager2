@@ -36,14 +36,14 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import biz.xsoftware.api.nio.BufferHelper;
-import biz.xsoftware.api.nio.ChannelServiceFactory;
-import biz.xsoftware.api.nio.CorruptPacketException;
+import biz.xsoftware.api.nio.deprecated.ChannelServiceFactory;
+import biz.xsoftware.api.nio.deprecated.CorruptPacketException;
 import biz.xsoftware.api.nio.handlers.PacketListener;
 import biz.xsoftware.api.nio.libs.FactoryCreator;
 import biz.xsoftware.api.nio.libs.PacketProcessor;
 import biz.xsoftware.api.nio.libs.PacketProcessorFactory;
 import biz.xsoftware.api.nio.testutil.CloneByteBuffer;
+import biz.xsoftware.impl.nio.util.BufferHelper;
 import biz.xsoftware.mock.CalledMethod;
 import biz.xsoftware.mock.MockObject;
 import biz.xsoftware.mock.testcase.MockTestCase;

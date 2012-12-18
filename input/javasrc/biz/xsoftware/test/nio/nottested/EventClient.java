@@ -7,18 +7,18 @@ import java.nio.ByteBuffer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import biz.xsoftware.api.nio.BufferHelper;
-import biz.xsoftware.api.nio.ChannelService;
-import biz.xsoftware.api.nio.ChannelServiceFactory;
-import biz.xsoftware.api.nio.Settings;
 import biz.xsoftware.api.nio.channels.Channel;
 import biz.xsoftware.api.nio.channels.RegisterableChannel;
 import biz.xsoftware.api.nio.channels.TCPChannel;
+import biz.xsoftware.api.nio.deprecated.ChannelService;
+import biz.xsoftware.api.nio.deprecated.ChannelServiceFactory;
+import biz.xsoftware.api.nio.deprecated.Settings;
 import biz.xsoftware.api.nio.handlers.ConnectionCallback;
 import biz.xsoftware.api.nio.handlers.DataChunk;
 import biz.xsoftware.api.nio.handlers.DataListener;
 import biz.xsoftware.api.nio.libs.SSLEngineFactory;
 import biz.xsoftware.api.nio.testutil.MockSSLEngineFactory;
+import biz.xsoftware.impl.nio.util.BufferHelper;
 
 public class EventClient implements ConnectionCallback, DataListener {
 

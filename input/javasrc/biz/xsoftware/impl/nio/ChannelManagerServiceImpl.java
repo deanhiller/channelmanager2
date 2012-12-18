@@ -8,14 +8,14 @@ import java.util.logging.Logger;
 import javax.management.Notification;
 import javax.management.NotificationListener;
 
-import biz.xsoftware.api.nio.ChannelManager;
-import biz.xsoftware.api.nio.ChannelService;
-import biz.xsoftware.api.nio.ChannelServiceFactory;
-import biz.xsoftware.api.nio.Settings;
 import biz.xsoftware.api.nio.channels.DatagramChannel;
 import biz.xsoftware.api.nio.channels.TCPChannel;
 import biz.xsoftware.api.nio.channels.TCPServerChannel;
 import biz.xsoftware.api.nio.channels.UDPChannel;
+import biz.xsoftware.api.nio.deprecated.ChannelManager;
+import biz.xsoftware.api.nio.deprecated.ChannelService;
+import biz.xsoftware.api.nio.deprecated.ChannelServiceFactory;
+import biz.xsoftware.api.nio.deprecated.Settings;
 import biz.xsoftware.api.nio.libs.BufferFactory;
 import biz.xsoftware.api.nio.libs.FactoryCreator;
 import biz.xsoftware.api.nio.libs.StartableExecutorService;

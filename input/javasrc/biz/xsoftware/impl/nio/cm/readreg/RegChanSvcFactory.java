@@ -2,9 +2,9 @@ package biz.xsoftware.impl.nio.cm.readreg;
 
 import java.util.Map;
 
-import biz.xsoftware.api.nio.ChannelManager;
-import biz.xsoftware.api.nio.ChannelService;
-import biz.xsoftware.api.nio.ChannelServiceFactory;
+import biz.xsoftware.api.nio.deprecated.ChannelManager;
+import biz.xsoftware.api.nio.deprecated.ChannelService;
+import biz.xsoftware.api.nio.deprecated.ChannelServiceFactory;
 
 
 /**

@@ -2,12 +2,12 @@ package biz.xsoftware.impl.nio.cm.threaded;
 
 import java.io.IOException;
 
-import biz.xsoftware.api.nio.ChannelService;
-import biz.xsoftware.api.nio.Settings;
 import biz.xsoftware.api.nio.channels.DatagramChannel;
 import biz.xsoftware.api.nio.channels.TCPChannel;
 import biz.xsoftware.api.nio.channels.TCPServerChannel;
 import biz.xsoftware.api.nio.channels.UDPChannel;
+import biz.xsoftware.api.nio.deprecated.ChannelService;
+import biz.xsoftware.api.nio.deprecated.Settings;
 import biz.xsoftware.api.nio.libs.BufferFactory;
 import biz.xsoftware.impl.nio.util.UtilUDPChannel;
 

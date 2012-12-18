@@ -1,4 +1,4 @@
-package biz.xsoftware.api.nio;
+package biz.xsoftware.api.nio.deprecated;
 
 import biz.xsoftware.api.nio.libs.PacketProcessorFactory;
 import biz.xsoftware.api.nio.libs.SSLEngineFactory;

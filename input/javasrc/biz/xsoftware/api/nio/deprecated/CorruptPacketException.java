@@ -1,4 +1,4 @@
-package biz.xsoftware.api.nio;
+package biz.xsoftware.api.nio.deprecated;
 
 /** 
  * @author dhiller

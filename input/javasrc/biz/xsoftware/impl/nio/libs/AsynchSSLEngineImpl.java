@@ -13,11 +13,11 @@ import javax.net.ssl.SSLEngineResult.Status;
 import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLSession;
 
-import biz.xsoftware.api.nio.BufferHelper;
-import biz.xsoftware.api.nio.ChannelServiceFactory;
+import biz.xsoftware.api.nio.deprecated.ChannelServiceFactory;
 import biz.xsoftware.api.nio.libs.AsynchSSLEngine;
 import biz.xsoftware.api.nio.libs.PacketAction;
 import biz.xsoftware.api.nio.libs.SSLListener;
+import biz.xsoftware.impl.nio.util.BufferHelper;
 
 /**
  * There is synchronization on the close so if two threads call close, they both return

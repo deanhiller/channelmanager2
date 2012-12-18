@@ -3,10 +3,10 @@ package biz.xsoftware.test.nio.tcp;
 import java.util.HashMap;
 import java.util.Map;
 
-import biz.xsoftware.api.nio.ChannelManager;
-import biz.xsoftware.api.nio.ChannelService;
-import biz.xsoftware.api.nio.ChannelServiceFactory;
-import biz.xsoftware.api.nio.Settings;
+import biz.xsoftware.api.nio.deprecated.ChannelManager;
+import biz.xsoftware.api.nio.deprecated.ChannelService;
+import biz.xsoftware.api.nio.deprecated.ChannelServiceFactory;
+import biz.xsoftware.api.nio.deprecated.Settings;
 import biz.xsoftware.api.nio.libs.FactoryCreator;
 import biz.xsoftware.api.nio.libs.PacketProcessorFactory;
 import biz.xsoftware.api.nio.libs.StartableExecutorService;

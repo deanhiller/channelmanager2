@@ -1,4 +1,4 @@
-package biz.xsoftware.api.nio;
+package biz.xsoftware.api.nio.deprecated;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,6 +8,7 @@ import biz.xsoftware.api.nio.libs.BufferFactory;
 import biz.xsoftware.api.nio.libs.FactoryCreator;
 import biz.xsoftware.api.nio.libs.StartableExecutorService;
 import biz.xsoftware.api.nio.libs.StartableRouterExecutor;
+import biz.xsoftware.impl.nio.util.BufferHelper;
 
 /**
  * There is really two cases for channelmanager

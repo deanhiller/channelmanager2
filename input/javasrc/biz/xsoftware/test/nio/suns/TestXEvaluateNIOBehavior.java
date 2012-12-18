@@ -12,9 +12,9 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import junit.framework.TestCase;
-import biz.xsoftware.api.nio.ChannelManager;
-import biz.xsoftware.api.nio.ChannelService;
-import biz.xsoftware.api.nio.ChannelServiceFactory;
+import biz.xsoftware.api.nio.deprecated.ChannelManager;
+import biz.xsoftware.api.nio.deprecated.ChannelService;
+import biz.xsoftware.api.nio.deprecated.ChannelServiceFactory;
 import biz.xsoftware.api.nio.libs.BufferFactory;
 import biz.xsoftware.api.nio.libs.FactoryCreator;
 import biz.xsoftware.api.nio.testutil.MockNIOServer;

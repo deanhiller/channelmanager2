@@ -9,14 +9,14 @@ import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import biz.xsoftware.api.nio.BufferHelper;
-import biz.xsoftware.api.nio.ChannelServiceFactory;
 import biz.xsoftware.api.nio.channels.Channel;
 import biz.xsoftware.api.nio.channels.TCPChannel;
+import biz.xsoftware.api.nio.deprecated.ChannelServiceFactory;
 import biz.xsoftware.api.nio.handlers.DataChunk;
 import biz.xsoftware.api.nio.handlers.DataListener;
 import biz.xsoftware.api.nio.libs.BufferFactory;
 import biz.xsoftware.api.nio.libs.FactoryCreator;
+import biz.xsoftware.impl.nio.util.BufferHelper;
 
 public class Delayer implements DataListener {
 

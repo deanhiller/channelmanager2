@@ -31,12 +31,12 @@ import java.nio.ByteBuffer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import biz.xsoftware.api.nio.BufferHelper;
-import biz.xsoftware.api.nio.ChannelServiceFactory;
-import biz.xsoftware.api.nio.CorruptPacketException;
+import biz.xsoftware.api.nio.deprecated.ChannelServiceFactory;
+import biz.xsoftware.api.nio.deprecated.CorruptPacketException;
 import biz.xsoftware.api.nio.handlers.PacketListener;
 import biz.xsoftware.api.nio.libs.PacketProcessor;
 import biz.xsoftware.impl.nio.libs.ProcessingState;
+import biz.xsoftware.impl.nio.util.BufferHelper;
 
 
 public class SequenceProcessor implements PacketProcessor {

@@ -15,7 +15,6 @@ import biz.xsoftware.api.nio.libs.ChannelSession;
  */
 public interface Channel extends RegisterableChannel {
 
-
 	public FutureOperation connect(SocketAddress addr) throws IOException, InterruptedException;
 	public FutureOperation write(ByteBuffer b) throws IOException, InterruptedException;
 	public FutureOperation close();

@@ -8,10 +8,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import biz.xsoftware.api.nio.ChannelService;
 import biz.xsoftware.api.nio.channels.Channel;
 import biz.xsoftware.api.nio.channels.RegisterableChannel;
 import biz.xsoftware.api.nio.channels.TCPChannel;
+import biz.xsoftware.api.nio.deprecated.ChannelService;
 import biz.xsoftware.api.nio.handlers.ConnectionListener;
 
 public class DelayServerAcceptor implements ConnectionListener {

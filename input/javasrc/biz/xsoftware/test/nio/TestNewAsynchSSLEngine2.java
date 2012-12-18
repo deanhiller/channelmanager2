@@ -7,8 +7,7 @@ import java.util.logging.Logger;
 import javax.net.ssl.SSLEngine;
 
 import junit.framework.TestCase;
-import biz.xsoftware.api.nio.BufferHelper;
-import biz.xsoftware.api.nio.ChannelServiceFactory;
+import biz.xsoftware.api.nio.deprecated.ChannelServiceFactory;
 import biz.xsoftware.api.nio.libs.AsynchSSLEngine;
 import biz.xsoftware.api.nio.libs.FactoryCreator;
 import biz.xsoftware.api.nio.libs.SSLEngineFactory;
@@ -16,6 +15,7 @@ import biz.xsoftware.api.nio.libs.SSLListener;
 import biz.xsoftware.api.nio.testutil.CloneByteBuffer;
 import biz.xsoftware.api.nio.testutil.HandlerForTests;
 import biz.xsoftware.api.nio.testutil.MockSSLEngineFactory;
+import biz.xsoftware.impl.nio.util.BufferHelper;
 import biz.xsoftware.mock.CalledMethod;
 import biz.xsoftware.mock.MockObject;
 import biz.xsoftware.mock.MockObjectFactory;
