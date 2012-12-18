@@ -262,7 +262,7 @@ public abstract class ZNioSuperclassTest extends TestCase {
 		client1.unregisterForReads();
 		b.rewind();
 		svrChan.oldWrite(b);
-		Thread.sleep(2000);
+		Thread.sleep(5000);
 		mockHandler.expect(MockObject.NONE);
 		
 		client1.registerForReads((DataListener)mockHandler);

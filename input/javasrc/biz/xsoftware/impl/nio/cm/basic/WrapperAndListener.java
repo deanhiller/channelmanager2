@@ -46,8 +46,12 @@ public class WrapperAndListener {
 			break;
 		case SelectionKey.OP_READ:
 			if(dataHandler != null) {
-				if(!dataHandler.equals(l)) //we only throw if it is NOT the exact same listener
-					throw new RuntimeException(channel+"DataListener is already set, cannot be set again");
+				//A VERY BAD hack for now.  When SSL layer fires connected, the client calls registerForRead which calls this addListener
+				//method BUT then when we return down the stack, the SSL layer calls DataChunk.setProcessed() which is required to notify
+				//bottom basic layer to start reading again EXCEPT that results in two calls to this method which I don't like.
+				return;
+//				if(!dataHandler.equals(l)) //we only throw if it is NOT the exact same listener
+//					throw new RuntimeException(channel+"DataListener is already set, cannot be set again");
 			}
 			dataHandler = (DataListener)l;
 			break;

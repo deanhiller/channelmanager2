@@ -21,19 +21,6 @@ public interface Channel extends RegisterableChannel {
 	public FutureOperation close();
 	
     /**
-     * Gets the remote address the channel is communicating with.
-     * 
-     * @return the remote address the channel is communicating with.
-     */
-    public InetSocketAddress getRemoteAddress();
-    
-    /**
-     * Returns whether or not the channel is connected.
-     * @return whether or not the channel is connected.
-     */
-    public boolean isConnected();    
-    
-    /**
      * Registers a DataListener that will be notified of all incoming data.  If the threadpool layer setup,
      * requests from clients may come out of order unless you install your own executorService.
      * 
@@ -47,6 +34,19 @@ public interface Channel extends RegisterableChannel {
      * @throws InterruptedException
      */
     public void unregisterForReads() throws IOException, InterruptedException;
+    
+    /**
+     * Gets the remote address the channel is communicating with.
+     * 
+     * @return the remote address the channel is communicating with.
+     */
+    public InetSocketAddress getRemoteAddress();
+    
+    /**
+     * Returns whether or not the channel is connected.
+     * @return whether or not the channel is connected.
+     */
+    public boolean isConnected();    
     
     /**
      * Each Channel has a ChannelSession where you can store state.  IF you have one client per Socket, then you can

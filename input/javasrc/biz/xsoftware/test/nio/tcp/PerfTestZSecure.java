@@ -10,6 +10,7 @@ import biz.xsoftware.api.nio.Settings;
 import biz.xsoftware.api.nio.libs.FactoryCreator;
 import biz.xsoftware.api.nio.libs.PacketProcessorFactory;
 import biz.xsoftware.api.nio.libs.SSLEngineFactory;
+import biz.xsoftware.api.nio.libs.StartableExecutorService;
 import biz.xsoftware.api.nio.testutil.MockSSLEngineFactory;
 
 public class PerfTestZSecure extends ZPerformanceSuper {
@@ -18,14 +19,27 @@ public class PerfTestZSecure extends ZPerformanceSuper {
 	private SSLEngineFactory sslEngineFactory;
 	private Settings clientFactoryHolder;
 	private Settings serverFactoryHolder;
+    private StartableExecutorService clientExecFactory;
+    private StartableExecutorService serverExecFactory;
 	
 	public PerfTestZSecure(String name) {
 		super(name);
+        FactoryCreator creator = FactoryCreator.createFactory(null);
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put(FactoryCreator.KEY_NUM_THREADS, 1);
+        clientExecFactory = creator.createExecSvcFactory(map);
+        serverExecFactory = creator.createExecSvcFactory(map);
+        
 		ChannelServiceFactory basic = ChannelServiceFactory.createFactory(null);
+
+		Map<String, Object> threadedProps = new HashMap<String, Object>();
+		threadedProps.put(ChannelServiceFactory.KEY_IMPLEMENTATION_CLASS, ChannelServiceFactory.VAL_THREAD_CHANNEL_MGR);
+		threadedProps.put(ChannelServiceFactory.KEY_CHILD_CHANNELMGR_FACTORY, basic);
+		ChannelServiceFactory threaded = ChannelServiceFactory.createFactory(threadedProps);
 		
 		Map<String, Object> factoryName = new HashMap<String, Object>();
 		factoryName.put(ChannelServiceFactory.KEY_IMPLEMENTATION_CLASS, ChannelServiceFactory.VAL_SECURE_CHANNEL_MGR);
-		factoryName.put(ChannelServiceFactory.KEY_CHILD_CHANNELMGR_FACTORY, basic);
+		factoryName.put(ChannelServiceFactory.KEY_CHILD_CHANNELMGR_FACTORY, threaded);
 		ChannelServiceFactory sslLayer = ChannelServiceFactory.createFactory(factoryName);
 		
 		Map<String, Object> props = new HashMap<String, Object>();
@@ -35,7 +49,6 @@ public class PerfTestZSecure extends ZPerformanceSuper {
 		
 		sslEngineFactory = new MockSSLEngineFactory();
 		
-		FactoryCreator creator = FactoryCreator.createFactory(null);
 		PacketProcessorFactory procFactory = creator.createPacketProcFactory(null);
 		clientFactoryHolder = new Settings(sslEngineFactory, procFactory);
 		serverFactoryHolder = new Settings(sslEngineFactory, procFactory);		
@@ -46,6 +59,7 @@ public class PerfTestZSecure extends ZPerformanceSuper {
 		Map<String, Object> p = new HashMap<String, Object>();
 		p.put(ChannelManager.KEY_ID, "client");		
 		p.put(ChannelManager.KEY_BUFFER_FACTORY, getBufFactory());
+		p.put(ChannelManager.KEY_EXECUTORSVC_FACTORY, clientExecFactory);
 		ChannelService chanMgr = secureFactory.createChannelManager(p);		
 		return chanMgr;
 	}
@@ -55,6 +69,7 @@ public class PerfTestZSecure extends ZPerformanceSuper {
 		Map<String, Object> p = new HashMap<String, Object>();
 		p.put(ChannelManager.KEY_ID, "echoServer");
 		p.put(ChannelManager.KEY_BUFFER_FACTORY, getBufFactory());
+		p.put(ChannelManager.KEY_EXECUTORSVC_FACTORY, serverExecFactory);
 		ChannelService svcChanMgr = secureFactory.createChannelManager(p);
 		
 		return svcChanMgr;
