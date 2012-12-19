@@ -62,12 +62,12 @@ public class TestZFailureExceptionCM extends ZNioFailureSuperclass {
 	}	
 	@Override
 	protected String getChannelImplName() {
-		return "biz.xsoftware.impl.nio.cm.exception.ExcTCPChannel";
+		return "org.playorm.nio.impl.cm.exception.ExcTCPChannel";
 	}
 
 	@Override
 	protected String getServerChannelImplName() {
-		return "biz.xsoftware.impl.nio.cm.exception.ExcTCPServerChannel";
+		return "org.playorm.nio.impl.cm.exception.ExcTCPServerChannel";
 	}	
 	
 }

@@ -337,7 +337,7 @@ public class TestUnpacketizer extends MockTestCase {
 			unpacketizer.incomingData(null, null);
 			fail("Should have thrown a RuntimeException");
 		} catch(IllegalArgumentException e) {
-			assertEquals("Message was incorrect", "evt cannot be null", e.getMessage());
+			assertEquals("Message was incorrect", "someId evt cannot be null", e.getMessage());
 		}		
 		listener.expect(MockObject.NONE);	
 

@@ -80,12 +80,12 @@ public class TestZFailureThreadedCM extends ZNioFailureSuperclass {
 	}
 	@Override
 	protected String getChannelImplName() {
-		return "biz.xsoftware.impl.nio.cm.threaded.ThdTCPChannel";
+		return "org.playorm.nio.impl.cm.threaded.ThdTCPChannel";
 	}
 
 	@Override
 	protected String getServerChannelImplName() {
-		return "biz.xsoftware.impl.nio.cm.threaded.ThdTCPServerChannel";
+		return "org.playorm.nio.impl.cm.threaded.ThdTCPServerChannel";
 	}
 	
 	public void specialCaseThreadedCM() throws InterruptedException {

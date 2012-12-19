@@ -1,4 +1,4 @@
-package org.playorm.nio.impl.cm.basic;
+package org.playorm.nio.impl.util;
 
 import java.io.IOException;
 

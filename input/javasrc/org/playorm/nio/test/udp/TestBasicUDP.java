@@ -204,6 +204,6 @@ public class TestBasicUDP extends TestCase {
 //	}
 	
 	private String getChannelImplName() {
-		return "biz.xsoftware.impl.nio.util.UtilUDPChannel";
+		return "org.playorm.nio.impl.util.UtilUDPChannel";
 	}
 }

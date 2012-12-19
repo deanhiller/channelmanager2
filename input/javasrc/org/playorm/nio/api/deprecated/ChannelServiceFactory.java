@@ -24,14 +24,14 @@ public abstract class ChannelServiceFactory {
 	//a secure nio channel manager reuses the non secure channel manager adding security
 	//to that layer....
 	public static final String KEY_IMPLEMENTATION_CLASS = "Nio.Implementation";
-	public static final String VAL_BASIC_CHANNEL_MGR                 = "biz.xsoftware.impl.nio.cm.basic.BasChanSvcFactory";	
-	public static final String VAL_SECURE_CHANNEL_MGR          = "biz.xsoftware.impl.nio.cm.secure.SecChanSvcFactory";
-	public static final String VAL_PACKET_CHANNEL_MGR          = "biz.xsoftware.impl.nio.cm.packet.PacChanSvcFactory";
-	public static final Object VAL_EXCEPTION_CHANNEL_MGR       = "biz.xsoftware.impl.nio.cm.exception.ExcChanSvcFactory";	
-	public static final String VAL_THREAD_CHANNEL_MGR          = "biz.xsoftware.impl.nio.cm.threaded.ThdChanSvcFactory";
-	public static final String VAL_DENIALOFSERVICE_CHANNEL_MGR = "biz.xsoftware.impl.nio.cm.dos.ChanSvcFactoryImpl";	
-	public static final String VAL_REGISTER_FOR_READ_MGR       = "biz.xsoftware.impl.nio.cm.readreg.RegChanSvcFactory";
-	public static final String VAL_ROUTING_EXEC_MGR            = "biz.xsoftware.impl.nio.cm.routing.ThdChanSvcFactory";
+	public static final String VAL_BASIC_CHANNEL_MGR                 = "org.playorm.nio.impl.cm.basic.BasChanSvcFactory";	
+	public static final String VAL_SECURE_CHANNEL_MGR          = "org.playorm.nio.impl.cm.secure.SecChanSvcFactory";
+	public static final String VAL_PACKET_CHANNEL_MGR          = "org.playorm.nio.impl.cm.packet.PacChanSvcFactory";
+	public static final Object VAL_EXCEPTION_CHANNEL_MGR       = "org.playorm.nio.impl.cm.exception.ExcChanSvcFactory";	
+	public static final String VAL_THREAD_CHANNEL_MGR          = "org.playorm.nio.impl.cm.threaded.ThdChanSvcFactory";
+	public static final String VAL_DENIALOFSERVICE_CHANNEL_MGR = "org.playorm.nio.impl.cm.dos.ChanSvcFactoryImpl";	
+	public static final String VAL_REGISTER_FOR_READ_MGR       = "org.playorm.nio.impl.cm.readreg.RegChanSvcFactory";
+	public static final String VAL_ROUTING_EXEC_MGR            = "org.playorm.nio.impl.cm.routing.ThdChanSvcFactory";
 	
 	/**
 	 * Key specific to all ChannelManagers except basic
@@ -42,7 +42,7 @@ public abstract class ChannelServiceFactory {
 	 * Key for BufferHelper implementation class not used with channelmanager.
 	 */
 	public static final String KEY_BUFFER_IMPL = "buffer.impl";
-	public static final String VAL_DEFAULT_HELPER = "biz.xsoftware.impl.nio.cm.basic.BufferHelperImpl";
+	public static final String VAL_DEFAULT_HELPER = "org.playorm.nio.impl.cm.basic.BufferHelperImpl";
 	
 	private static ChannelService chanMgr;
 	

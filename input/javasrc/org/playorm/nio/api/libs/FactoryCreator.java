@@ -12,7 +12,7 @@ import org.playorm.nio.api.deprecated.ChannelManager;
 public abstract class FactoryCreator {
 
 	public static final String KEY_IMPLEMENTATION_CLASS = "ByteBuffer.Implementation";	
-	public static final String VAL_DEFAULT_FACTORY = "biz.xsoftware.impl.nio.libs.FactoryCreatorImpl";
+	public static final String VAL_DEFAULT_FACTORY = "org.playorm.nio.impl.libs.FactoryCreatorImpl";
 	//public static final String VAL_HEADER_IMPL = "biz.xsoftware.impl.nio.ChanMgrFactoryImpl";
 	
 	public static final String KEY_IS_DIRECT = "key.is.direct";

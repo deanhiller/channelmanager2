@@ -128,7 +128,7 @@ public class HeaderTrailerProcessor implements PacketProcessor {
 		if (log.isLoggable(Level.FINEST))
 			log.log(Level.FINEST, id+"processing stream");
 		if(b == null)
-			throw new IllegalArgumentException(id+"evt cannot be null");
+			throw new IllegalArgumentException(id+" evt cannot be null");
 
 		boolean notified = false;
 		while(b.remaining() > 0) {

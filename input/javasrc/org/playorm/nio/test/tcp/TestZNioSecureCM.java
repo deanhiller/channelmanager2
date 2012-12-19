@@ -69,11 +69,11 @@ public class TestZNioSecureCM extends ZNioSuperclassTest {
 	}
 	@Override
 	protected String getChannelImplName() {
-		return "biz.xsoftware.impl.nio.cm.packet.PacTCPChannel";
+		return "org.playorm.nio.impl.cm.packet.PacTCPChannel";
 	}
 	@Override
 	protected String getServerChannelImplName() {
-		return "biz.xsoftware.impl.nio.cm.packet.PacTCPServerChannel";
+		return "org.playorm.nio.impl.cm.packet.PacTCPServerChannel";
 	}	
 //	public void testHandshakeFailure() {
 //		

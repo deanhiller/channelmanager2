@@ -22,6 +22,7 @@ import org.playorm.nio.api.handlers.OperationCallback;
 import org.playorm.nio.api.libs.BufferFactory;
 import org.playorm.nio.api.libs.ChannelSession;
 import org.playorm.nio.api.libs.FactoryCreator;
+import org.playorm.nio.impl.util.FutureOperationImpl;
 import org.playorm.nio.impl.util.UtilWaitForCompletion;
 
 

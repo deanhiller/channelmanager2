@@ -16,7 +16,7 @@ import org.playorm.nio.api.handlers.FutureOperation;
 import org.playorm.nio.api.handlers.OperationCallback;
 import org.playorm.nio.api.libs.ChannelSession;
 import org.playorm.nio.api.libs.SSLEngineFactory;
-import org.playorm.nio.impl.cm.basic.FutureOperationImpl;
+import org.playorm.nio.impl.util.FutureOperationImpl;
 import org.playorm.nio.impl.util.UtilTCPChannel;
 import org.playorm.nio.impl.util.UtilWaitForConnect;
 

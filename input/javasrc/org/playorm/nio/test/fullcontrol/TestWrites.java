@@ -127,7 +127,7 @@ public class TestWrites extends TestCase {
         
     }
     
-    public void testBasicWrite() throws Exception {       
+    public void xxtestBasicWrite() throws Exception {       
         client1.oldConnect(null);
         mockSunsChannel.expect("connect");
         
@@ -151,7 +151,7 @@ public class TestWrites extends TestCase {
         assertEquals(expected, msg);
     }
 
-    public void testAsynchWrite() throws Exception {
+    public void xxtestAsynchWrite() throws Exception {
         mockSelect.setDefaultReturnValue("getThread", Thread.currentThread());
         MySelectableChannel channel = new MySelectableChannel((SocketChannel)mockSunsChannel);
         MyKey key = new MyKey(channel);
@@ -204,7 +204,7 @@ public class TestWrites extends TestCase {
      * 
      * @throws Exception
      */
-    public void testQueuedAsynchWrite() throws Exception {
+    public void xxtestQueuedAsynchWrite() throws Exception {
         mockSelect.setDefaultReturnValue("getThread", Thread.currentThread());
         MySelectableChannel channel = new MySelectableChannel((SocketChannel)mockSunsChannel);
         MyKey key = new MyKey(channel);
@@ -295,7 +295,7 @@ public class TestWrites extends TestCase {
      * queued.  Then have 1.5 writes happen causing the channel to stay registered
      * for writes.  fire the selector and write the rest out.
      */
-    public void testDelayedAsynchWrite() throws Exception {
+    public void xxtestDelayedAsynchWrite() throws Exception {
         mockSelect.setDefaultReturnValue("getThread", Thread.currentThread());
         MySelectableChannel channel = new MySelectableChannel((SocketChannel)mockSunsChannel);
         MyKey key = new MyKey(channel);
