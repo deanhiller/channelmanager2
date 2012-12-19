@@ -89,7 +89,9 @@ public abstract class ZNioSuperclassTest extends TestCase {
 		chanMgr = null;
 		log.info("MOCK SERVER STOP");
 		mockServer.stop();
+		log.info("check for warns");
 		HandlerForTests.checkForWarnings();
+		log.info("done");
 	}
 	
 	//TODO: write test that proves if data comes between calls to Selector.select,
@@ -178,6 +180,7 @@ public abstract class ZNioSuperclassTest extends TestCase {
 		//no bind, just do connect to test port is not zero
 		client1.oldConnect(svrAddr, (ConnectionCallback)mockConnect);
 		mockConnect.expect("connected");
+		log.info("connected");
 		
 		boolean isConnected = client1.isConnected();
 		assertTrue("Client should be connected", isConnected);
@@ -189,8 +192,11 @@ public abstract class ZNioSuperclassTest extends TestCase {
 
 		client1.registerForReads((DataListener)mockHandler);
 
+		log.info("data passing");
 		verifyDataPassing(svrChan);
+		log.info("teardown");
 		verifyTearDown();
+		log.info("done");
 	}
 	
 	/**
@@ -239,8 +245,9 @@ public abstract class ZNioSuperclassTest extends TestCase {
 
 		//shutdown channel manager first....should all sockets be closed?  Right now
 		//someone has to manually close all accepted sockets...ie. client responsibility.
-		mockServer.stop();		
 		svrChan.oldClose();
+		
+		mockServer.stop();		
 	
 		//notice the Channelmanager on the client side has not shut down so we should
 		//see a close event....

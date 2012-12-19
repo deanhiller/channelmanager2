@@ -8,12 +8,15 @@ import java.nio.channels.NotYetConnectedException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import biz.xsoftware.api.nio.channels.Channel;
 import biz.xsoftware.api.nio.channels.TCPChannel;
 import biz.xsoftware.api.nio.deprecated.ConnectionCallback;
 import biz.xsoftware.api.nio.handlers.DataListener;
+import biz.xsoftware.api.nio.handlers.FutureOperation;
 import biz.xsoftware.api.nio.handlers.OperationCallback;
 import biz.xsoftware.api.nio.libs.ChannelSession;
 import biz.xsoftware.api.nio.libs.SSLEngineFactory;
+import biz.xsoftware.impl.nio.cm.basic.FutureOperationImpl;
 import biz.xsoftware.impl.nio.util.UtilTCPChannel;
 import biz.xsoftware.impl.nio.util.UtilWaitForConnect;
 
@@ -39,6 +42,45 @@ class SecTCPChannel extends UtilTCPChannel implements TCPChannel {
 		this.sslFactory = sslFactory;
 	}
 
+	@Override
+	public FutureOperation connect(SocketAddress addr) throws IOException, InterruptedException {
+		TCPChannel realChannel = getRealChannel();
+		if(sslFactory == null)
+			throw new RuntimeException(realChannel+"This socket is already connected");
+		isConnecting = true;
+		
+		FutureOperationImpl newFuture = new FutureOperationImpl();
+		SecProxyConnectOpCb connectCb = new SecProxyConnectOpCb(this, sslFactory, newFuture);
+		
+		FutureOperation lowerFuture = realChannel.connect(addr);
+		lowerFuture.setListener(connectCb);
+		
+		return newFuture;
+	}
+	
+	public FutureOperation write(ByteBuffer b) throws IOException, InterruptedException {
+		if(reader.getHandler() == null)
+			throw new NotYetConnectedException();
+		
+		FutureOperationImpl future = new FutureOperationImpl();
+		SecProxyWriteHandler holder = new SecProxyWriteHandler(this, future);
+		reader.getHandler().feedPlainPacket(b, holder);
+		return future;
+	}
+	
+	public FutureOperation close() {
+		reader.close();
+		TCPChannel realChannel = getRealChannel();
+		realChannel.oldClose();
+		
+		FutureOperationImpl newFuture = new FutureOperationImpl();
+
+		FutureOperation future = realChannel.close();
+		future.setListener(new SecProxyWriteHandler(this, newFuture));
+		
+		return newFuture;
+	}
+	
 	public int oldWrite(ByteBuffer b) throws IOException {
 		if(reader.getHandler() == null)
 			throw new NotYetConnectedException();

@@ -58,7 +58,7 @@ final class Helper {
 			} catch(IOException e) {
 				log.log(Level.WARNING, id+""+key.attachment()+"Processing of key failed, closing channel", e);
 				try {
-					if(key != null)
+					if(key != null) 
 						key.channel().close();
 				} catch(Throwable ee) {
 					log.log(Level.WARNING, id+""+key.attachment()+"Close of channel failed", ee);
@@ -258,7 +258,7 @@ final class Helper {
 		if(bytes < 0) {
 			if(apiLog.isLoggable(Level.FINE))
 				apiLog.fine(channel+"far end closed, cancel key, close socket");
-	        channel.oldClose(NullWriteCallback.singleton());
+			channel.closeOnSelectorThread();
 			in.farEndClosed(channel);
 		} else if(bytes > 0) {
 			//let's DEregister for read until this packet is processed and re-register when they set the chunk to processed(true)

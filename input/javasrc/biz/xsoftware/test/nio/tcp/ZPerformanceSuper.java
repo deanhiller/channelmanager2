@@ -3,6 +3,7 @@ package biz.xsoftware.test.nio.tcp;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -14,7 +15,9 @@ import biz.xsoftware.api.nio.deprecated.ChannelServiceFactory;
 import biz.xsoftware.api.nio.deprecated.ConnectionCallback;
 import biz.xsoftware.api.nio.deprecated.Settings;
 import biz.xsoftware.api.nio.handlers.DataListener;
+import biz.xsoftware.api.nio.handlers.FutureOperation;
 import biz.xsoftware.api.nio.handlers.NullWriteCallback;
+import biz.xsoftware.api.nio.handlers.OperationCallback;
 import biz.xsoftware.api.nio.libs.BufferFactory;
 import biz.xsoftware.api.nio.libs.BufferHelper;
 import biz.xsoftware.api.nio.libs.FactoryCreator;
@@ -41,6 +44,8 @@ public abstract class ZPerformanceSuper extends TestCase {
 	private MockObject mockHandler;
 	private MockObject mockConnect;
 	private EchoServer echoServer;
+
+	private MockObject mockConnectOp;
 	
 	protected abstract ChannelService getClientChanMgr();
 	protected abstract ChannelService getServerChanMgr();
@@ -85,6 +90,7 @@ public abstract class ZPerformanceSuper extends TestCase {
 		mockHandler = MockObjectFactory.createMock(DataListener.class);
 		mockHandler.setDefaultBehavior("incomingData", new CloneByteBuffer());
 		mockConnect = MockObjectFactory.createMock(ConnectionCallback.class);
+		mockConnectOp = MockObjectFactory.createMock(OperationCallback.class);
 	}
 	
 	protected void tearDown() throws Exception {
@@ -130,7 +136,7 @@ public abstract class ZPerformanceSuper extends TestCase {
 		int size = 40;
 		String[] methodNames = new String[size];
 		for(int i = 0; i < size; i++) {
-			methodNames[i] = "connected";
+			methodNames[i] = "finished";
 		}
 
 		TCPChannel[] clients = new TCPChannel[size];
@@ -144,11 +150,12 @@ public abstract class ZPerformanceSuper extends TestCase {
 		timer.start();
 		timer2.start();
 		for(int i = 0; i < size; i++) {
-			clients[i].oldConnect(svrAddr, (ConnectionCallback)mockConnect);
+			FutureOperation future = clients[i].connect(svrAddr);
+			future.setListener((OperationCallback) mockConnectOp);
 		}
 		long result2 = timer2.stop();
 		
-		mockConnect.expect(methodNames);
+		mockConnectOp.expect(methodNames);
 		
 		long result = timer.stop();
 
@@ -238,14 +245,15 @@ public abstract class ZPerformanceSuper extends TestCase {
 		int size = 40;
 		String[] methodNames = new String[size];
 		for(int i = 0; i < size; i++) {
-			methodNames[i] = "connected";
+			methodNames[i] = "finished";
 		}
 		TCPChannel[] clients = new TCPChannel[size];	
 		for(int i = 0; i < size; i++) {
 			clients[i] = chanMgr.createTCPChannel("Client["+i+"]", getClientFactoryHolder());
-			clients[i].oldConnect(svrAddr, (ConnectionCallback)mockConnect);
+			FutureOperation future = clients[i].connect(svrAddr);
+			future.setListener((OperationCallback) mockConnectOp);
 		}
-		mockConnect.expect(methodNames);
+		mockConnectOp.expect(methodNames);
 		log.info("done getting all connections");
 		
 		for(TCPChannel client : clients) {
@@ -257,23 +265,33 @@ public abstract class ZPerformanceSuper extends TestCase {
 		helper.putString(b, payload);
 		helper.doneFillingBuffer(b);
 		int numBytes = b.remaining();
-		methodNames = new String[size*numWrites];
-		for(int i = 0; i < size*numWrites; i++) {
+		methodNames = new String[size];
+		for(int i = 0; i < size; i++) {
 			methodNames[i] = "incomingData";
 		}		
+		
+		String[] finNames = new String[size];
+		for(int i = 0;i < size;i++) {
+			finNames[i] = "finished";
+		}
 		
 		PerfTimer timer = new PerfTimer();
 		PerfTimer timer2 = new PerfTimer();
 		timer.start();
 		timer2.start();
-		for(TCPChannel client : clients) {
-			for(int i = 0; i < numWrites; i++) {
-				client.oldWrite(b);
+
+		CalledMethod[] methods = null;
+		for(int i = 0; i < numWrites; i++) {
+			for(TCPChannel client : clients) {
+				FutureOperation write = client.write(b);
+				write.setListener((OperationCallback) mockConnectOp);
+				//client.oldWrite(b);
 				b.rewind();
 			}
+			mockConnectOp.expect(finNames);
+			methods = mockHandler.expect(methodNames);
 		}
 		long result2 = timer2.stop();
-		CalledMethod[] methods = mockHandler.expect(methodNames);
 		long result = timer.stop();
 		
 		//pick a method and verify right data came back for performance test
@@ -353,7 +371,8 @@ public abstract class ZPerformanceSuper extends TestCase {
 		timer2.start();
 		for(TCPChannel client : clients) {
 			for(int i = 0; i < numWrites; i++) {
-				client.oldWrite(b, NullWriteCallback.singleton());
+				FutureOperation future = client.write(b);
+				future.waitForOperation(5000);
 				b.rewind();
 			}
 		}

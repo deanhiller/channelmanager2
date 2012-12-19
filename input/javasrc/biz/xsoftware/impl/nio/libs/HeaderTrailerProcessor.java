@@ -56,11 +56,13 @@ public class HeaderTrailerProcessor implements PacketProcessor {
 	private static final int HEADER_SIZE = Integer.SIZE/8;
 	
 	private ProcessingState state = ProcessingState.PROCESSING_HEADER;
+	private Object id;
 
 //--------------------------------------------------------------------
 //	CONSTRUCTORS
 //--------------------------------------------------------------------
 	public HeaderTrailerProcessor(Object id, byte[] packetSeparator) {
+		this.id = id;
 		this.packetSeparator = packetSeparator;
 		
 		head = ByteBuffer.allocate(HEADER_SIZE);
@@ -82,7 +84,7 @@ public class HeaderTrailerProcessor implements PacketProcessor {
 
 	public ByteBuffer processOutgoing(ByteBuffer b) {
 		if(b.remaining() > maxSizeContents)
-			throw new IllegalArgumentException("Cannot write out packets larger than size="
+			throw new IllegalArgumentException(id+"Cannot write out packets larger than size="
 					+maxSizeContents+" actual size11="+b.remaining());
 		ByteBuffer readOnlyTail = ByteBuffer.wrap(packetSeparator).asReadOnlyBuffer();
 		
@@ -102,7 +104,7 @@ public class HeaderTrailerProcessor implements PacketProcessor {
 		try {
 			return notifyImpl(b, passthrough);
 		} catch(CorruptPacketException e) {
-			log.log(Level.WARNING, "Corrupt packet received", e);
+			log.log(Level.WARNING, id+"Corrupt packet received", e);
 			clearState();
 			throw e;
 		}
@@ -123,9 +125,9 @@ public class HeaderTrailerProcessor implements PacketProcessor {
 
 	public boolean notifyImpl(ByteBuffer b, Object passthrough) throws IOException {
 		if (log.isLoggable(Level.FINEST))
-			log.log(Level.FINEST, "processing stream");
+			log.log(Level.FINEST, id+"processing stream");
 		if(b == null)
-			throw new IllegalArgumentException("evt cannot be null");
+			throw new IllegalArgumentException(id+"evt cannot be null");
 
 		boolean notified = false;
 		while(b.remaining() > 0) {
@@ -158,7 +160,7 @@ public class HeaderTrailerProcessor implements PacketProcessor {
 			HELPER.doneFillingBuffer(head);
 			int numNeededBytes = head.getInt();
 			if(numNeededBytes <= 0 || numNeededBytes > maxSizeContents)
-				throw new CorruptPacketException("header='"+numNeededBytes+"' is not valid.  Must\n"
+				throw new CorruptPacketException(id+"header='"+numNeededBytes+"' is not valid.  Must\n"
 						+"be less than maxSizeContents11="
 						+maxSizeContents+" and greater than 0", true, false);			
 			body = ByteBuffer.allocate(numNeededBytes);
@@ -187,7 +189,7 @@ public class HeaderTrailerProcessor implements PacketProcessor {
 	}
 	
 	private void findNewTrailer(ByteBuffer b) {
-		throw new UnsupportedOperationException("recovery is not implemented yet but would be easy to do so");
+		throw new UnsupportedOperationException(id+"recovery is not implemented yet but would be easy to do so");
 	}
 	
 	private void clearState() {

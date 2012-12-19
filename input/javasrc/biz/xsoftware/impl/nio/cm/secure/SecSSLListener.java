@@ -20,7 +20,6 @@ class SecSSLListener implements SSLListener {
 	private SecTCPChannel channel;
 	private ConnectionListener cb;
 	private DataListener client;
-	private int tempId = 0;
 	private boolean isConnected = false;
 	
 	public SecSSLListener(SecTCPChannel impl) {

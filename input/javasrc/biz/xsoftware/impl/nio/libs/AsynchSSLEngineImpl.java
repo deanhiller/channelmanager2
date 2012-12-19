@@ -198,7 +198,7 @@ public class AsynchSSLEngineImpl implements AsynchSSLEngine {
 		//1. need unwrap or not_handshaking or need_task AND
 		//2. have data in buffer
 		//3. have enough data in buffer(ie. not underflow)
-		while(b.hasRemaining() && status != Status.BUFFER_UNDERFLOW) {
+		while(b.hasRemaining() && status != Status.BUFFER_UNDERFLOW && status != Status.CLOSED) {
 			i++;
 			SSLEngineResult result;
 			try {

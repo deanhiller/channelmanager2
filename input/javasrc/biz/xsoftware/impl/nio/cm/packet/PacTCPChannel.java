@@ -5,9 +5,11 @@ import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.util.logging.Logger;
 
+import biz.xsoftware.api.nio.channels.Channel;
 import biz.xsoftware.api.nio.channels.TCPChannel;
 import biz.xsoftware.api.nio.deprecated.ConnectionCallback;
 import biz.xsoftware.api.nio.handlers.DataListener;
+import biz.xsoftware.api.nio.handlers.FutureOperation;
 import biz.xsoftware.api.nio.handlers.OperationCallback;
 import biz.xsoftware.api.nio.libs.PacketProcessor;
 import biz.xsoftware.impl.nio.util.UtilPassThroughWriteHandler;
@@ -32,7 +34,12 @@ class PacTCPChannel extends UtilTCPChannel implements TCPChannel {
 		realChannel.registerForReads(handler);
 	}
 
-
+	public FutureOperation write(ByteBuffer b) throws IOException, InterruptedException {
+		ByteBuffer out = packetProcessor.processOutgoing(b);
+		TCPChannel realChannel = getRealChannel();
+		return realChannel.write(out);
+	}
+	
 	@Override
 	public int oldWrite(ByteBuffer b) throws IOException {
 		int retVal = b.remaining();

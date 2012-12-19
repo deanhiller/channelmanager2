@@ -59,6 +59,8 @@ public class SelectorManager2 implements SelectorListener {
     //this is needed as we want to see in the logs the reason of every selector fire clearly
 	private boolean needCloseOrRegister;
 
+	private boolean stopped;
+
 //--------------------------------------------------------------------
 //	CONSTRUCTORS
 //--------------------------------------------------------------------
@@ -83,11 +85,11 @@ public class SelectorManager2 implements SelectorListener {
 	 * @throws InterruptedException
 	 * 
 	 */
-	public void stop() throws IOException, InterruptedException {
+	public synchronized void stop() throws IOException, InterruptedException {
         try {
             if(!isRunning())
                 return;
-		
+            stopped = true;
             selector.stopPollingThread();
         } catch(Throwable e) {
             //there is nothing a client can do to a recover from this so swallow it for them
@@ -117,7 +119,9 @@ public class SelectorManager2 implements SelectorListener {
 	
 	private void unregisterSelectableChannel(RegisterableChannelImpl channel, int ops) 
 											throws IOException, InterruptedException {
-		if(!isRunning())
+		if(stopped) 
+			return; //do nothing if stopped
+		else if(!isRunning())
 			throw new IllegalStateException("ChannelMgr is not running, call ChannelManager.starimport " +
                     "biz.xsoftware.api.nio.test.nioapi.SelectKey;t first");
 		else if(Thread.currentThread().equals(selector.getThread()))
@@ -127,7 +131,9 @@ public class SelectorManager2 implements SelectorListener {
 	}
 	
 	void registerSelectableChannel(final RegisterableChannelImpl s, final int validOps, final Object listener, boolean needWait) 
-	throws IOException, InterruptedException {		
+	throws IOException, InterruptedException {	
+		if(stopped) 
+			return; //do nothing if stopped
 		if(!isRunning())
 			throw new IllegalStateException("ChannelMgr is not running, call ChannelManager.start first");
 		else if(Thread.currentThread().equals(selector.getThread()))
@@ -143,7 +149,11 @@ public class SelectorManager2 implements SelectorListener {
 			throw new IllegalArgumentException("cannot register a null channel");
 		else if(!Thread.currentThread().equals(selector.getThread()))
 			throw new IllegalArgumentException("This function can only be invoked on PollingThread");
-
+		else if(channel.isClosed())
+			return; //do nothing if the channel is closed
+		else if(!selector.isRunning())
+			return; //do nothing if the selector is not running
+		
 		WrapperAndListener struct;
 		SelectableChannel s = channel.getRealChannel();
 		

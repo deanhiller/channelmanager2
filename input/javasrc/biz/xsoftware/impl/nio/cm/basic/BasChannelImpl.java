@@ -5,6 +5,7 @@ import java.net.BindException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.net.SocketException;
+import java.nio.BufferOverflowException;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousCloseException;
 import java.nio.channels.SelectableChannel;
@@ -37,10 +38,10 @@ public abstract class BasChannelImpl
     private static final FactoryCreator CREATOR = FactoryCreator.createFactory(null);
     
     private ChannelSession session;
-	private LinkedBlockingQueue<DelayedWritesCloses> waitingWriters = new LinkedBlockingQueue<DelayedWritesCloses>(100);
+	private LinkedBlockingQueue<DelayedWritesCloses> waitingWriters = new LinkedBlockingQueue<DelayedWritesCloses>(1000);
 	private boolean isConnecting = false;
 	private boolean isClosed = false;
-    private boolean registered;	
+    private boolean registered;
     
 	public BasChannelImpl(IdObject id, BufferFactory factory, SelectorManager2 selMgr) {
 		super(id, selMgr);
@@ -69,21 +70,13 @@ public abstract class BasChannelImpl
      * @throws IOException
      * @throws InterruptedException
      */
-    private synchronized boolean tryWriteOrClose(DelayedWritesCloses action) throws IOException, InterruptedException {       
-        
-        //must see if this channel already has writers registered.  If not, we runDelayedAction to write
-        //Otherwise, we continue on and register for writes down below.   
-        if(!registered) {
-            //if we are finished, just return immediately, otherwise continue on and queue the packet
-            if(action.runDelayedAction(false))
-                return true;
-        }
-        
+    private synchronized void tryWriteOrClose(DelayedWritesCloses action) throws IOException, InterruptedException {       
         //TODO: make 30 seconds configurable in milliseoncds maybe
         boolean accepted = waitingWriters.offer(action, 30, TimeUnit.SECONDS);
         if(!accepted) {
-            log.warning(this+"Dropping data, write buffer is backing up.  Remote end will not receive data");
-            return false;
+        	throw new RuntimeException(this+"registered="+registered+" Dropping data, the upstream must be full as our queue is full of writes" +
+        			" that are stuck and can't go out(you should NOT call dataChunk.setProcessed in this case so the" +
+        			" downstream will slowdown and will not flood you as tcp flow control automatically kicks in");
         }
         
         //if not already registered, then register for writes.....
@@ -94,9 +87,7 @@ public abstract class BasChannelImpl
             if(log.isLoggable(Level.FINER))
                 log.finer(this+"registering channel for write msg cb="+action+" size="+waitingWriters.size());
             getSelectorManager().registerSelectableChannel(this, SelectionKey.OP_WRITE, null, false);
-        }                       
-
-        return false;
+        }
     }
        
     /**
@@ -238,16 +229,10 @@ public abstract class BasChannelImpl
         newOne.flip();
         WriteRunnable holder = new WriteRunnable(this, newOne, impl);
         
-		boolean wroteNow = tryWriteOrClose(holder);
+		tryWriteOrClose(holder);
         
-		if(wroteNow)
-			impl.finished(this);
-		
         if(log.isLoggable(Level.FINER)) {
-	        if(!wroteNow)
-	            log.finer(this+"did not write immediately, queued up for delivery");
-    	    else
-        	    log.finest(this+"delivered");
+        	log.finest(this+"sent write to queue");
        	}
         return impl;
 	}
@@ -270,13 +255,10 @@ public abstract class BasChannelImpl
         newOne.flip();
         WriteRunnable holder = new WriteRunnable(this, newOne, h);
         
-		boolean wroteNow = tryWriteOrClose(holder);
+		tryWriteOrClose(holder);
         
         if(log.isLoggable(Level.FINER)) {
-	        if(!wroteNow)
-	            log.finer(this+"did not write immediately, queued up for delivery");
-    	    else
-        	    log.finest(this+"delivered");
+        	log.finest(this+"sent write to queue");
        	}
 	}
            
@@ -391,6 +373,10 @@ public abstract class BasChannelImpl
     	return future;
     }
     
+    public void closeOnSelectorThread() throws IOException {
+    	setClosed(true);
+    	closeImpl();
+    }
     protected abstract void closeImpl() throws IOException;
 
     public ChannelSession getSession() {

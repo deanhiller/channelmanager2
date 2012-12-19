@@ -2,6 +2,7 @@ package biz.xsoftware.api.nio.testutil;
 
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
+import java.util.logging.Logger;
 
 import biz.xsoftware.api.nio.channels.Channel;
 import biz.xsoftware.api.nio.channels.DatagramChannel;
@@ -12,6 +13,8 @@ import biz.xsoftware.mock.CloningBehavior;
 
 public class CloneByteBuffer implements CloningBehavior {
 
+	private static final Logger log = Logger.getLogger(CloneByteBuffer.class.getName());
+	
 	private static BufferHelper helper = ChannelServiceFactory.bufferHelper(null);
 
 	public Object[] incomingDataCloner(DatagramChannel channel, InetSocketAddress addr, ByteBuffer b) {
