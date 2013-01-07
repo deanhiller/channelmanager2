@@ -8,7 +8,8 @@ import java.nio.channels.NotYetConnectedException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.playorm.nio.api.channels.Channel;
+import javax.net.ssl.SSLEngine;
+
 import org.playorm.nio.api.channels.TCPChannel;
 import org.playorm.nio.api.deprecated.ConnectionCallback;
 import org.playorm.nio.api.handlers.DataListener;
@@ -43,6 +44,16 @@ class SecTCPChannel extends UtilTCPChannel implements TCPChannel {
 		this.sslFactory = sslFactory;
 	}
 
+	public FutureOperation openSSL(SSLEngine engine) {
+		TCPChannel realChannel = getRealChannel();
+		throw new UnsupportedOperationException("not supported just yet, but let us know and we will quickly add it");
+	}
+
+	public FutureOperation closeSSL() {
+		TCPChannel realChannel = getRealChannel();
+		throw new UnsupportedOperationException("not supported just yet, but let us know and we will quickly add it");
+	}
+	
 	@Override
 	public FutureOperation connect(SocketAddress addr) throws IOException, InterruptedException {
 		TCPChannel realChannel = getRealChannel();

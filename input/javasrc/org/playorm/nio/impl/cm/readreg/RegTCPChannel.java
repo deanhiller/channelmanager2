@@ -7,8 +7,11 @@ import java.nio.ByteBuffer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.net.ssl.SSLEngine;
+
 import org.playorm.nio.api.channels.TCPChannel;
 import org.playorm.nio.api.deprecated.ConnectionCallback;
+import org.playorm.nio.api.handlers.FutureOperation;
 import org.playorm.nio.api.handlers.OperationCallback;
 
 
@@ -57,5 +60,15 @@ class RegTCPChannel extends RegHelperChannel implements TCPChannel {
 	public void setKeepAlive(boolean b) throws SocketException {
 		TCPChannel realChannel = getRealTcpChannel();
 		realChannel.setKeepAlive(b);
+	}
+	
+	public FutureOperation openSSL(SSLEngine engine) {
+		TCPChannel realChannel = getRealTcpChannel();
+		return realChannel.openSSL(engine);
+	}
+
+	public FutureOperation closeSSL() {
+		TCPChannel realChannel = getRealTcpChannel();
+		return realChannel.closeSSL();
 	}
 }

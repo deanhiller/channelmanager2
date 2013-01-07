@@ -10,6 +10,8 @@ import java.nio.channels.SelectableChannel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.net.ssl.SSLEngine;
+
 import org.playorm.nio.api.channels.TCPChannel;
 import org.playorm.nio.api.deprecated.ConnectionCallback;
 import org.playorm.nio.api.handlers.FutureOperation;
@@ -241,6 +243,17 @@ class BasTCPChannel extends BasChannelImpl implements TCPChannel {
 
 	public boolean getKeepAlive() throws SocketException {
 		return channel.getKeepAlive();
+	}
+
+	@Override
+	public FutureOperation openSSL(SSLEngine engine) {
+		return null;
+	}
+
+
+	@Override
+	public FutureOperation closeSSL() {
+		return null;
 	}
     
     

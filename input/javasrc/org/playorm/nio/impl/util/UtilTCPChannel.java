@@ -2,8 +2,11 @@ package org.playorm.nio.impl.util;
 
 import java.net.SocketException;
 
+import javax.net.ssl.SSLEngine;
+
 import org.playorm.nio.api.channels.Channel;
 import org.playorm.nio.api.channels.TCPChannel;
+import org.playorm.nio.api.handlers.FutureOperation;
 
 
 public abstract class UtilTCPChannel extends UtilChannel {
@@ -32,4 +35,13 @@ public abstract class UtilTCPChannel extends UtilChannel {
 		realChannel.setKeepAlive(b);
 	}
 	
+	public FutureOperation openSSL(SSLEngine engine) {
+		TCPChannel realChannel = getRealChannel();
+		return realChannel.openSSL(engine);
+	}
+
+	public FutureOperation closeSSL() {
+		TCPChannel realChannel = getRealChannel();
+		return realChannel.closeSSL();
+	}
 }
