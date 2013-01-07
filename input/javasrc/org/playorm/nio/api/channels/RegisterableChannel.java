@@ -1,9 +1,7 @@
 package org.playorm.nio.api.channels;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
-import java.net.SocketException;
 
 /**
  * This is the top of the tree where all our channels come from. 
@@ -38,7 +36,7 @@ public interface RegisterableChannel {
 	 * implementations of this method.
 	 * @param b
 	 */
-	void setReuseAddress(boolean b)  throws SocketException;	
+	void setReuseAddress(boolean b);	
 	
     /**
      * The name of the channel shows up in the management GUI if there is one such that an admin
@@ -55,7 +53,7 @@ public interface RegisterableChannel {
 	/**
 	 * @param addr
 	 */
-	public void bind(SocketAddress addr) throws IOException;
+	public void bind(SocketAddress addr);
 	
 	public boolean isBlocking();
 	

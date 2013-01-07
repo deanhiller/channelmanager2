@@ -65,12 +65,8 @@ public class EventServer implements ConnectionListener, DataListener {
 	}
 
 	public void connected(Channel channel) throws IOException {
-		try {
-			log.info(channel+"Connected channel remote="+channel.getRemoteAddress());
-			channel.registerForReads(this);
-		} catch (InterruptedException e) {
-			log.log(Level.WARNING, channel+"Exception", e);
-		}
+		log.info(channel+"Connected channel remote="+channel.getRemoteAddress());
+		channel.registerForReads(this);
 	}
 
 	public void failed(RegisterableChannel channel, Throwable e) {

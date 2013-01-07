@@ -5,7 +5,6 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.PortUnreachableException;
 import java.net.SocketAddress;
-import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 import java.nio.channels.SelectableChannel;
@@ -13,6 +12,7 @@ import java.util.Calendar;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.playorm.nio.api.channels.NioException;
 import org.playorm.nio.api.channels.UDPChannel;
 import org.playorm.nio.api.handlers.FutureOperation;
 import org.playorm.nio.api.handlers.OperationCallback;
@@ -43,7 +43,17 @@ public class UDPChannelImpl extends BasChannelImpl implements UDPChannel {
 	}
 
 	@Override
-	public synchronized FutureOperation connect(SocketAddress addr) throws IOException, InterruptedException {
+	public FutureOperation connect(SocketAddress addr) {
+		try {
+			return connectImpl(addr);
+		} catch (IOException e) {
+			throw new NioException(e);
+		} catch (InterruptedException e) {
+			throw new NioException(e);
+		}
+	}
+	
+	private synchronized FutureOperation connectImpl(SocketAddress addr) throws IOException, InterruptedException {
         FutureConnectImpl future = new FutureConnectImpl();
 		try {
 			if(apiLog.isLoggable(Level.FINE))
@@ -60,23 +70,31 @@ public class UDPChannelImpl extends BasChannelImpl implements UDPChannel {
         return future;
 	}
 	
-	public synchronized void oldConnect(SocketAddress addr) throws IOException {
+	public synchronized void oldConnect(SocketAddress addr) {
 		if(apiLog.isLoggable(Level.FINE))
 			apiLog.fine(this+"Basic.connect called-addr="+addr);
 		
-		channel.connect(addr);
-        isConnected = true;
+		try {
+			channel.connect(addr);
+			isConnected = true;
+		} catch(IOException e) {
+			throw new NioException(e);
+		}
 	}
     
-    public synchronized void disconnect() throws IOException {
+    public synchronized void disconnect() {
 		if(apiLog.isLoggable(Level.FINE))
 			apiLog.fine(this+"Basic.disconnect called");
 		
-        isConnected = false;        
-        channel.disconnect();
+		try {
+			isConnected = false;        
+			channel.disconnect();
+		} catch(IOException e) {
+			throw new NioException(e);
+		}
     }
 
-    public void setReuseAddress(boolean b) throws SocketException {
+    public void setReuseAddress(boolean b) {
 		throw new UnsupportedOperationException("not implemented yet");
 	}
 
@@ -147,7 +165,7 @@ public class UDPChannelImpl extends BasChannelImpl implements UDPChannel {
      * @see org.playorm.nio.impl.cm.basic.BasChannelImpl#oldWrite(java.nio.ByteBuffer, org.playorm.nio.api.handlers.OperationCallback)
      */
     @Override
-    public void oldWrite(ByteBuffer b, OperationCallback h) throws IOException, InterruptedException {
+    public void oldWrite(ByteBuffer b, OperationCallback h) {
         if(!isConnected)
             throw new IllegalStateException(this+"Channel is not currently connected");        
         super.oldWrite(b, h);
@@ -157,7 +175,7 @@ public class UDPChannelImpl extends BasChannelImpl implements UDPChannel {
      * @see org.playorm.nio.impl.cm.basic.BasChannelImpl#oldWrite(java.nio.ByteBuffer)
      */
     @Override
-    public int oldWrite(ByteBuffer b) throws IOException {
+    public int oldWrite(ByteBuffer b) {
         if(!isConnected)
             throw new IllegalStateException(this+"Channel is not currently connected");        
         return super.oldWrite(b);

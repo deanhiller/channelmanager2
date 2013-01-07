@@ -12,6 +12,7 @@ import java.util.logging.Logger;
 
 import javax.net.ssl.SSLEngine;
 
+import org.playorm.nio.api.channels.NioException;
 import org.playorm.nio.api.channels.TCPChannel;
 import org.playorm.nio.api.deprecated.ConnectionCallback;
 import org.playorm.nio.api.handlers.FutureOperation;
@@ -129,26 +130,42 @@ class BasTCPChannel extends BasChannelImpl implements TCPChannel {
 	public boolean isConnected() {
 		return channel.isConnected();
 	}
+
+	public void oldConnect(SocketAddress addr) {
+		try {
+			oldConnectImpl(addr);
+		} catch (IOException e) {
+			throw new NioException(e);
+		} catch (InterruptedException e) {
+			throw new NioException(e);
+		}
+	}
 	
 	/* (non-Javadoc)
 	 * @see api.biz.xsoftware.nio.TCPChannel#connect(java.net.SocketAddress)
 	 */
-	public void oldConnect(SocketAddress addr) throws IOException {
+	public void oldConnectImpl(SocketAddress addr) throws IOException, InterruptedException {
 		if(isBlocking()) {
 			channel.connect(addr);
 		} else {
-			try {
-				UtilWaitForConnect connect = new UtilWaitForConnect();				
-				oldConnect(addr, connect);
-				connect.waitForConnect();
-			} catch(InterruptedException e) {
-				throw new RuntimeException(e);
-			}
+			UtilWaitForConnect connect = new UtilWaitForConnect();				
+			oldConnect(addr, connect);
+			connect.waitForConnect();
 		}
 	}
-	
+
 	@Override
-	public FutureOperation connect(SocketAddress addr) throws IOException, InterruptedException {
+	public FutureOperation connect(SocketAddress addr) {
+		try {
+			return connectImpl(addr);
+		} catch (IOException e) {
+			throw new NioException(e);
+		} catch (InterruptedException e) {
+			throw new NioException(e);
+		}
+	}
+
+	private FutureOperation connectImpl(SocketAddress addr) throws IOException, InterruptedException {
 		FutureConnectImpl future = new FutureConnectImpl();
 
 		if(apiLog.isLoggable(Level.FINE))
@@ -171,7 +188,16 @@ class BasTCPChannel extends BasChannelImpl implements TCPChannel {
 		return future;
 	}
 	
-	public void oldConnect(SocketAddress addr, ConnectionCallback c) throws IOException, InterruptedException {
+	public void oldConnect(SocketAddress addr, ConnectionCallback c){
+		try {
+			oldConnectImpl(addr, c);
+		} catch (IOException e) {
+			throw new NioException(e);
+		} catch (InterruptedException e) {
+			throw new NioException(e);
+		}
+	}
+	public void oldConnectImpl(SocketAddress addr, ConnectionCallback c) throws IOException, InterruptedException {
 		if(c == null)
 			throw new IllegalArgumentException(this+"ConnectCallback cannot be null");
 
@@ -208,8 +234,12 @@ class BasTCPChannel extends BasChannelImpl implements TCPChannel {
 	/* (non-Javadoc)
 	 * @see api.biz.xsoftware.nio.NetSocketChannel#setReuseAddress(boolean)
 	 */
-	public void setReuseAddress(boolean b) throws SocketException {
-		channel.setReuseAddress(b);
+	public void setReuseAddress(boolean b) {
+		try {
+			channel.setReuseAddress(b);
+		} catch (SocketException e) {
+			throw new NioException(e);
+		}
 	}
 
 	/* (non-Javadoc)
@@ -236,24 +266,38 @@ class BasTCPChannel extends BasChannelImpl implements TCPChannel {
 		channel.finishConnect();
 	}
     
-    public void setKeepAlive(boolean b) throws SocketException {
-    	channel.setKeepAlive(b);
+    public void setKeepAlive(boolean b) {
+    	try {
+			channel.setKeepAlive(b);
+		} catch (SocketException e) {
+			throw new NioException(e);
+		}
     }
 
 
-	public boolean getKeepAlive() throws SocketException {
-		return channel.getKeepAlive();
+	public boolean getKeepAlive() {
+		try {
+			return channel.getKeepAlive();
+		} catch (SocketException e) {
+			throw new NioException(e);
+		}
 	}
 
 	@Override
 	public FutureOperation openSSL(SSLEngine engine) {
-		return null;
+		throw new UnsupportedOperationException("should never be called");
 	}
 
 
 	@Override
 	public FutureOperation closeSSL() {
-		return null;
+		throw new UnsupportedOperationException("should never be called");
+	}
+
+
+	@Override
+	public boolean isInSslMode() {
+		throw new UnsupportedOperationException("should never be called");
 	}
     
     

@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import junit.framework.TestCase;
+
 import org.playorm.nio.api.channels.TCPChannel;
 import org.playorm.nio.api.deprecated.ChannelManager;
 import org.playorm.nio.api.deprecated.ChannelService;
@@ -18,7 +20,6 @@ import org.playorm.nio.api.handlers.DataListener;
 import org.playorm.nio.api.testutil.MockDataHandler;
 import org.playorm.nio.api.testutil.MockSSLEngineFactory;
 
-import junit.framework.TestCase;
 import biz.xsoftware.mock.MockObject;
 import biz.xsoftware.mock.MockObjectFactory;
 

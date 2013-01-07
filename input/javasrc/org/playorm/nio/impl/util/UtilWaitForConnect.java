@@ -6,6 +6,7 @@ package org.playorm.nio.impl.util;
 import java.io.IOException;
 
 import org.playorm.nio.api.channels.Channel;
+import org.playorm.nio.api.channels.NioException;
 import org.playorm.nio.api.channels.RegisterableChannel;
 import org.playorm.nio.api.deprecated.ConnectionCallback;
 
@@ -26,16 +27,16 @@ public class UtilWaitForConnect implements ConnectionCallback {
 		this.notifyAll();
 	}
 	
-	public synchronized void waitForConnect() throws IOException, InterruptedException {
-		if(!isFinished)
-			this.wait();
-
+	public synchronized void waitForConnect() {
+		try {
+			if(!isFinished)
+				this.wait();
+		} catch(InterruptedException e) {
+			throw new NioException(e);
+		}
+		
 		if(e != null) {
-			if(e instanceof IOException) {
-				IOException exc = new IOException(e.getMessage(), e);
-				throw (IOException)exc;
-			} else
-				throw new RuntimeException(e.getMessage(), e);
+			throw new NioException(e);
 		}	
 	}
 }

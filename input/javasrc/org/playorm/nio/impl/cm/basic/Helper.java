@@ -13,7 +13,6 @@ import java.util.logging.Logger;
 
 import org.playorm.nio.api.handlers.ConnectionListener;
 import org.playorm.nio.api.handlers.DataListener;
-import org.playorm.nio.api.handlers.NullWriteCallback;
 import org.playorm.nio.api.testutil.nioapi.Select;
 import org.playorm.nio.impl.util.DataChunkImpl;
 import org.playorm.nio.impl.util.ProcessedListener;

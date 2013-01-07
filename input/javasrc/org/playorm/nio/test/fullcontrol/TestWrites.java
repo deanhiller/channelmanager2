@@ -8,6 +8,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import junit.framework.TestCase;
+
 import org.playorm.nio.api.channels.TCPChannel;
 import org.playorm.nio.api.deprecated.ChannelManager;
 import org.playorm.nio.api.deprecated.ChannelService;
@@ -26,7 +28,6 @@ import org.playorm.nio.api.testutil.nioapi.Select;
 import org.playorm.nio.api.testutil.nioapi.SelectorListener;
 import org.playorm.nio.api.testutil.nioapi.SelectorProviderFactory;
 
-import junit.framework.TestCase;
 import biz.xsoftware.mock.CalledMethod;
 import biz.xsoftware.mock.CloningBehavior;
 import biz.xsoftware.mock.MockObject;

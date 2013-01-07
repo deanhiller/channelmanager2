@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import junit.framework.TestCase;
+
 import org.playorm.nio.api.channels.TCPChannel;
 import org.playorm.nio.api.deprecated.ChannelManager;
 import org.playorm.nio.api.deprecated.ChannelService;
@@ -21,7 +23,6 @@ import org.playorm.nio.api.libs.PacketProcessorFactory;
 import org.playorm.nio.api.testutil.CloneByteBuffer;
 import org.playorm.nio.api.testutil.HandlerForTests;
 
-import junit.framework.TestCase;
 import biz.xsoftware.mock.CalledMethod;
 import biz.xsoftware.mock.MockObject;
 import biz.xsoftware.mock.MockObjectFactory;

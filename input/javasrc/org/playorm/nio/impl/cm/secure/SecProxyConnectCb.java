@@ -66,19 +66,14 @@ class SecProxyConnectCb implements ConnectionCallback {
 		handler.setListener(secureChannel.getConnectProxy());
 		
 		connectProxy.setConnectCallback(cb);
-		try {
-			synchronized(secureChannel) {
+		synchronized(secureChannel) {
+			if(log.isLoggable(Level.FINEST))
+				log.finest(realChannel+" about to register for reads");				
+			if(!connectProxy.isClientRegistered()) {
 				if(log.isLoggable(Level.FINEST))
-					log.finest(realChannel+" about to register for reads");				
-				if(!connectProxy.isClientRegistered()) {
-					if(log.isLoggable(Level.FINEST))
-						log.finest(realChannel+" register for reads");		
-					realChannel.registerForReads(secureChannel.getReaderProxy());
-				}
+					log.finest(realChannel+" register for reads");		
+				realChannel.registerForReads(secureChannel.getReaderProxy());
 			}
-		} catch (InterruptedException e) {
-			log.log(Level.WARNING, realChannel+"Exception trying to accept connection", e);
-			throw new RuntimeException(e);
 		}
 
 		handler.beginHandshake();

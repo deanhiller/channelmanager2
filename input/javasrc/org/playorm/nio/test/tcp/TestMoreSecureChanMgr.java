@@ -9,6 +9,8 @@ import java.util.logging.Logger;
 
 import javax.net.ssl.SSLEngine;
 
+import junit.framework.TestCase;
+
 import org.playorm.nio.api.channels.TCPChannel;
 import org.playorm.nio.api.deprecated.ChannelManager;
 import org.playorm.nio.api.deprecated.ChannelService;
@@ -26,7 +28,6 @@ import org.playorm.nio.api.testutil.HandlerForTests;
 import org.playorm.nio.api.testutil.MockNIOServer;
 import org.playorm.nio.api.testutil.MockSSLEngineFactory;
 
-import junit.framework.TestCase;
 import biz.xsoftware.mock.MockObject;
 import biz.xsoftware.mock.MockObjectFactory;
 

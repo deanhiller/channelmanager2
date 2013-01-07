@@ -1,6 +1,5 @@
 package org.playorm.nio.impl.util;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
@@ -23,17 +22,17 @@ public abstract class UtilChannel extends UtilRegisterable implements Channel {
 		return (Channel)super.getRealChannel();
 	}
 	
-	public FutureOperation write(ByteBuffer b) throws IOException, InterruptedException {
+	public FutureOperation write(ByteBuffer b) {
 		Channel realChannel = getRealChannel();
 		return realChannel.write(b);
 	}
 	
-	public int oldWrite(ByteBuffer b) throws IOException {
+	public int oldWrite(ByteBuffer b) {
 		Channel realChannel = getRealChannel();
 		return realChannel.oldWrite(b);
 	}
 	
-	public void oldWrite(ByteBuffer b, OperationCallback h) throws IOException, InterruptedException {
+	public void oldWrite(ByteBuffer b, OperationCallback h) {
 		Channel realChannel = getRealChannel();
 		if(h == null)
 			realChannel.oldWrite(b, NullWriteCallback.singleton());
@@ -41,24 +40,24 @@ public abstract class UtilChannel extends UtilRegisterable implements Channel {
 			realChannel.oldWrite(b, new UtilPassThroughWriteHandler(this, h));
 	}
 	
-	public void registerForReads(DataListener listener) throws IOException, InterruptedException {
+	public void registerForReads(DataListener listener) {
 		Channel realChannel = getRealChannel();
 		UtilReaderProxy proxy = new UtilReaderProxy(realChannel, listener);
 		realChannel.registerForReads(proxy);
 	}
 	
-	public void unregisterForReads() throws IOException, InterruptedException {
+	public void unregisterForReads() {
 		Channel realChannel = getRealChannel();
 		realChannel.unregisterForReads();
 	}
 
 	@Override
-	public FutureOperation connect(SocketAddress addr) throws IOException, InterruptedException {
+	public FutureOperation connect(SocketAddress addr) {
 		Channel realChannel = getRealChannel();
 		return realChannel.connect(addr);
 	}
 	
-	public void oldConnect(SocketAddress addr) throws IOException {    
+	public void oldConnect(SocketAddress addr) {    
 		Channel realChannel = getRealChannel();
 		realChannel.oldConnect(addr);
 	}

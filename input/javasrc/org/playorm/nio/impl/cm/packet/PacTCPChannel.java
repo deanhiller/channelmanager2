@@ -1,11 +1,9 @@
 package org.playorm.nio.impl.cm.packet;
 
-import java.io.IOException;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.util.logging.Logger;
 
-import org.playorm.nio.api.channels.Channel;
 import org.playorm.nio.api.channels.TCPChannel;
 import org.playorm.nio.api.deprecated.ConnectionCallback;
 import org.playorm.nio.api.handlers.DataListener;
@@ -28,21 +26,21 @@ class PacTCPChannel extends UtilTCPChannel implements TCPChannel {
 		this.packetProcessor = proc;
 	}
 	
-	public void registerForReads(DataListener listener) throws IOException, InterruptedException {
+	public void registerForReads(DataListener listener) {
 		PacProxyDataHandler handler = new PacProxyDataHandler(this, packetProcessor, listener);
 		packetProcessor.setPacketListener(handler);
 		TCPChannel realChannel = getRealChannel();
 		realChannel.registerForReads(handler);
 	}
 
-	public FutureOperation write(ByteBuffer b) throws IOException, InterruptedException {
+	public FutureOperation write(ByteBuffer b) {
 		ByteBuffer out = packetProcessor.processOutgoing(b);
 		TCPChannel realChannel = getRealChannel();
 		return realChannel.write(out);
 	}
 	
 	@Override
-	public int oldWrite(ByteBuffer b) throws IOException {
+	public int oldWrite(ByteBuffer b) {
 		int retVal = b.remaining();
 		ByteBuffer out = packetProcessor.processOutgoing(b);
 		TCPChannel realChannel = getRealChannel();
@@ -51,13 +49,13 @@ class PacTCPChannel extends UtilTCPChannel implements TCPChannel {
 	}
 	
 	@Override
-	public void oldWrite(ByteBuffer b, OperationCallback h) throws IOException, InterruptedException {
+	public void oldWrite(ByteBuffer b, OperationCallback h) {
 		ByteBuffer out = packetProcessor.processOutgoing(b);
 		TCPChannel realChannel = getRealChannel();
 		realChannel.oldWrite(out, new UtilPassThroughWriteHandler(this, h));
 	}
 	
-	public void oldConnect(SocketAddress addr, ConnectionCallback c) throws IOException, InterruptedException {
+	public void oldConnect(SocketAddress addr, ConnectionCallback c) {
 		if(c == null)
 			throw new IllegalArgumentException("ConnectCallback cannot be null");
 		

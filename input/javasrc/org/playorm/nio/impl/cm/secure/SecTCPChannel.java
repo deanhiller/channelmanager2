@@ -55,7 +55,7 @@ class SecTCPChannel extends UtilTCPChannel implements TCPChannel {
 	}
 	
 	@Override
-	public FutureOperation connect(SocketAddress addr) throws IOException, InterruptedException {
+	public FutureOperation connect(SocketAddress addr) {
 		TCPChannel realChannel = getRealChannel();
 		if(sslFactory == null)
 			throw new RuntimeException(realChannel+"This socket is already connected");
@@ -70,7 +70,7 @@ class SecTCPChannel extends UtilTCPChannel implements TCPChannel {
 		return newFuture;
 	}
 	
-	public FutureOperation write(ByteBuffer b) throws IOException, InterruptedException {
+	public FutureOperation write(ByteBuffer b) {
 		if(reader.getHandler() == null)
 			throw new NotYetConnectedException();
 		
@@ -93,7 +93,7 @@ class SecTCPChannel extends UtilTCPChannel implements TCPChannel {
 		return newFuture;
 	}
 	
-	public int oldWrite(ByteBuffer b) throws IOException {
+	public int oldWrite(ByteBuffer b) {
 		if(reader.getHandler() == null)
 			throw new NotYetConnectedException();
 		int remain = b.remaining();
@@ -104,7 +104,7 @@ class SecTCPChannel extends UtilTCPChannel implements TCPChannel {
 		return remain;
 	}
 	
-	public void oldWrite(ByteBuffer b, OperationCallback h) throws IOException {
+	public void oldWrite(ByteBuffer b, OperationCallback h) {
 		if(reader.getHandler() == null)
 			throw new NotYetConnectedException();
 		
@@ -116,7 +116,7 @@ class SecTCPChannel extends UtilTCPChannel implements TCPChannel {
 	 * Not thread safe compatible with connect.  You should call this method
 	 * on the same right after connect
 	 */
-	public synchronized void registerForReads(DataListener listener) throws IOException, InterruptedException {
+	public synchronized void registerForReads(DataListener listener) {
 		//TODO: this is a big problem, if they don't register for a read before the connect,
 		//we will not receive the certificate info!!!!
 		TCPChannel realChannel = getRealChannel();
@@ -131,7 +131,7 @@ class SecTCPChannel extends UtilTCPChannel implements TCPChannel {
 		}
 	}
 	
-	public synchronized void unregisterForReads() throws IOException, InterruptedException {
+	public synchronized void unregisterForReads() {
 		TCPChannel realChannel = getRealChannel();
 		//this first call ensure that if we are connecting, the
 		//real unregisterForReads happens once connected...
@@ -146,7 +146,7 @@ class SecTCPChannel extends UtilTCPChannel implements TCPChannel {
 		
 	}
 	
-	public synchronized void oldConnect(SocketAddress addr, ConnectionCallback c) throws IOException, InterruptedException {
+	public synchronized void oldConnect(SocketAddress addr, ConnectionCallback c) {
 		TCPChannel realChannel = getRealChannel();
 		if(c == null)
 			throw new IllegalArgumentException(realChannel+"ConnectCallback cannot be null");
@@ -172,18 +172,14 @@ class SecTCPChannel extends UtilTCPChannel implements TCPChannel {
 		}
 	}
 
-	public void oldConnect(SocketAddress addr) throws IOException {
+	public void oldConnect(SocketAddress addr) {
 		TCPChannel realChannel = getRealChannel();
 		if(isBlocking()) {
 			realChannel.oldConnect(addr);
 		} else {
-			try {
-				UtilWaitForConnect connect = new UtilWaitForConnect();				
-				oldConnect(addr, connect);
-				connect.waitForConnect();
-			} catch(InterruptedException e) {
-				throw new RuntimeException(this+"Exception", e);
-			}
+			UtilWaitForConnect connect = new UtilWaitForConnect();				
+			oldConnect(addr, connect);
+			connect.waitForConnect();
 		}
 	}
 	

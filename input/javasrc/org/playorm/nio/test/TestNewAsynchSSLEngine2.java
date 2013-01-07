@@ -6,6 +6,8 @@ import java.util.logging.Logger;
 
 import javax.net.ssl.SSLEngine;
 
+import junit.framework.TestCase;
+
 import org.playorm.nio.api.deprecated.ChannelServiceFactory;
 import org.playorm.nio.api.libs.AsynchSSLEngine;
 import org.playorm.nio.api.libs.BufferHelper;
@@ -16,7 +18,6 @@ import org.playorm.nio.api.testutil.CloneByteBuffer;
 import org.playorm.nio.api.testutil.HandlerForTests;
 import org.playorm.nio.api.testutil.MockSSLEngineFactory;
 
-import junit.framework.TestCase;
 import biz.xsoftware.mock.CalledMethod;
 import biz.xsoftware.mock.MockObject;
 import biz.xsoftware.mock.MockObjectFactory;

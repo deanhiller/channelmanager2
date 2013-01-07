@@ -8,6 +8,8 @@ import java.nio.ByteBuffer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import junit.framework.TestCase;
+
 import org.playorm.nio.api.channels.Channel;
 import org.playorm.nio.api.channels.RegisterableChannel;
 import org.playorm.nio.api.channels.TCPChannel;
@@ -18,8 +20,6 @@ import org.playorm.nio.api.handlers.ConnectionListener;
 import org.playorm.nio.api.handlers.DataChunk;
 import org.playorm.nio.api.handlers.DataListener;
 import org.playorm.nio.api.libs.BufferHelper;
-
-import junit.framework.TestCase;
 
 /**
  */
@@ -107,16 +107,9 @@ public class TestExample extends TestCase
          */
         public void connected(Channel channel) throws IOException
         {
-            try
-            {
-                //cache the server channel
-                TestExample.this.svrTCPChannel = (TCPChannel) channel;
-                channel.registerForReads(new MyDataListener("server"));
-            }
-            catch(InterruptedException e)
-            {
-                log.log(Level.WARNING, "", e);
-            }
+        	//cache the server channel
+        	TestExample.this.svrTCPChannel = (TCPChannel) channel;
+        	channel.registerForReads(new MyDataListener("server"));
         }
 
         /**

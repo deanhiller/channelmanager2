@@ -1,6 +1,5 @@
 package org.playorm.nio.impl.cm.routing;
 
-import java.io.IOException;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 
@@ -26,24 +25,24 @@ class ThdTCPChannel extends UtilTCPChannel implements TCPChannel {
 		this.bufFactory = bufFactory;
 	}
 	
-	public void registerForReads(DataListener listener) throws IOException, InterruptedException {
+	public void registerForReads(DataListener listener) {
 		ThdProxyDataHandler handler = new ThdProxyDataHandler(this, listener, svc, bufFactory);
 		TCPChannel realChannel = getRealChannel();
 		realChannel.registerForReads(handler);
 	}
 
 	@Override
-	public int oldWrite(ByteBuffer b) throws IOException {
+	public int oldWrite(ByteBuffer b) {
 		TCPChannel realChannel = getRealChannel();
 		return realChannel.oldWrite(b);
 	}
 	
-	public void oldWrite(ByteBuffer b, OperationCallback h) throws IOException, InterruptedException {
+	public void oldWrite(ByteBuffer b, OperationCallback h) {
 		TCPChannel realChannel = getRealChannel();
 		realChannel.oldWrite(b, new ThdProxyWriteHandler(this, h, svc));
 	}
 	
-	public void oldConnect(SocketAddress addr, ConnectionCallback c) throws IOException, InterruptedException {
+	public void oldConnect(SocketAddress addr, ConnectionCallback c) {
 		if(c == null)
 			throw new IllegalArgumentException("ConnectCallback cannot be null");
 		

@@ -102,7 +102,8 @@ public class MockNIOServer extends MockDataHandler implements ConnectionListener
 			sockets.add((TCPChannel) channel);
 			channel.registerForReads(MockNIOServer.this);
 			methodCalled(CONNECTED, channel);
-		} catch (InterruptedException e) {
+		} catch (RuntimeException e) {
+			log.log(Level.WARNING, "Exception", e);
 			//puts exception on test thread.
 			methodCalled(CONNECTED, e);
 		}		

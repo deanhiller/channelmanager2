@@ -5,9 +5,12 @@ import java.nio.ByteBuffer;
 import java.util.logging.Logger;
 
 import javax.net.ssl.SSLEngine;
-import javax.net.ssl.SSLException;
+
+import junit.framework.Assert;
+import junit.framework.TestCase;
 
 import org.playorm.nio.api.deprecated.ChannelServiceFactory;
+import org.playorm.nio.api.libs.AsyncSSLEngineException;
 import org.playorm.nio.api.libs.AsynchSSLEngine;
 import org.playorm.nio.api.libs.BufferHelper;
 import org.playorm.nio.api.libs.FactoryCreator;
@@ -16,8 +19,6 @@ import org.playorm.nio.api.libs.SSLListener;
 import org.playorm.nio.api.testutil.HandlerForTests;
 import org.playorm.nio.api.testutil.MockSSLEngineFactory;
 
-import junit.framework.Assert;
-import junit.framework.TestCase;
 import biz.xsoftware.mock.MockObject;
 
 /**
@@ -263,7 +264,7 @@ public class TestNewAsynchSSLEngine extends TestCase {
 		try {
 			clientEngine.feedEncryptedPacket(data, null);
 			fail("Should have thrown exception");
-		} catch(SSLException e) {}
+		} catch(AsyncSSLEngineException e) {}
 		
 		b = clientList.getPacketEncrypted();
 		Assert.assertTrue(clientList.isClosed());
@@ -271,7 +272,7 @@ public class TestNewAsynchSSLEngine extends TestCase {
 		try {
 			serverEngine.feedEncryptedPacket(b, null);
 			fail("not sure why this throws exceptoin...I expected it to be able to take a close handshake message");
-		} catch(SSLException e) {}
+		} catch(AsyncSSLEngineException e) {}
 		
 		serverList.getPacketEncrypted();
 		Assert.assertTrue(serverList.isClosed());

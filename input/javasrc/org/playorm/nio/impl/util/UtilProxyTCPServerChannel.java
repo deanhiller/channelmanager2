@@ -1,7 +1,5 @@
 package org.playorm.nio.impl.util;
 
-import java.io.IOException;
-
 import org.playorm.nio.api.channels.RegisterableChannel;
 import org.playorm.nio.api.channels.TCPServerChannel;
 import org.playorm.nio.api.handlers.ConnectionListener;
@@ -17,8 +15,7 @@ public class UtilProxyTCPServerChannel extends UtilRegisterable implements TCPSe
 		return (TCPServerChannel)super.getRealChannel();
 	}
 	
-	public void registerServerSocketChannel(ConnectionListener cb)
-			throws IOException, InterruptedException {
+	public void registerServerSocketChannel(ConnectionListener cb) {
 		getRealChannel().registerServerSocketChannel(new UtilProxyAcceptCb(this, cb));
 	}
 	public void oldClose() {

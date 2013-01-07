@@ -1,7 +1,5 @@
 package org.playorm.nio.impl.util;
 
-import java.io.IOException;
-
 import org.playorm.nio.api.channels.UDPChannel;
 
 
@@ -17,7 +15,7 @@ public class UtilUDPChannel extends UtilChannel implements UDPChannel {
     /**
      * @see org.playorm.nio.api.channels.UDPChannel#disconnect()
      */
-    public void disconnect() throws IOException
+    public void disconnect()
     {
         realChannel.disconnect();
     }

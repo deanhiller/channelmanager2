@@ -12,6 +12,7 @@ import java.nio.channels.SocketChannel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.playorm.nio.api.channels.NioException;
 import org.playorm.nio.api.channels.TCPChannel;
 import org.playorm.nio.api.channels.TCPServerChannel;
 import org.playorm.nio.api.handlers.ConnectionListener;
@@ -79,18 +80,31 @@ class BasTCPServerChannel extends RegisterableChannelImpl implements TCPServerCh
 		throw new UnsupportedOperationException("TCPServerChannel's can't read, they can only accept incoming connections");
 	}
 	
-	public void registerServerSocketChannel(ConnectionListener cb) 
-	throws IOException, InterruptedException {
+	public void registerServerSocketChannel(ConnectionListener cb)  {
 		if(!isBound())
 			throw new IllegalArgumentException("Only bound sockets can be registered or selector doesn't work");
 
-		getSelectorManager().registerServerSocketChannel(this, cb);
+		try {
+			getSelectorManager().registerServerSocketChannel(this, cb);
+		} catch (IOException e) {
+			throw new NioException(e);
+		} catch (InterruptedException e) {
+			throw new NioException(e);
+		}
+	}
+	
+	public void bind(SocketAddress srvrAddr) {
+		try {
+			bindImpl(srvrAddr);
+		} catch (IOException e) {
+			throw new NioException(e);
+		}
 	}
 	
 	/* (non-Javadoc)
 	 * @see api.biz.xsoftware.nio.TCPServerChannel#bind(java.net.SocketAddress)
 	 */
-	public void bind(SocketAddress srvrAddr) throws IOException {
+	private void bindImpl(SocketAddress srvrAddr) throws IOException {
 		try {
 			channel.socket().bind(srvrAddr);
 		} catch(BindException e) {
@@ -148,8 +162,12 @@ class BasTCPServerChannel extends RegisterableChannelImpl implements TCPServerCh
 	/* (non-Javadoc)
 	 * @see api.biz.xsoftware.nio.RegisterableChannel#setReuseAddress(boolean)
 	 */
-	public void setReuseAddress(boolean b) throws SocketException {
-		channel.socket().setReuseAddress(b);
+	public void setReuseAddress(boolean b) {
+		try {
+			channel.socket().setReuseAddress(b);
+		} catch (SocketException e) {
+			throw new NioException(e);
+		}
 	}
 	
 	/* (non-Javadoc)

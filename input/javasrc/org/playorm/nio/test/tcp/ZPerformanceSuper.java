@@ -3,10 +3,11 @@ package org.playorm.nio.test.tcp;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import junit.framework.TestCase;
 
 import org.playorm.nio.api.channels.TCPChannel;
 import org.playorm.nio.api.deprecated.ChannelService;
@@ -15,7 +16,6 @@ import org.playorm.nio.api.deprecated.ConnectionCallback;
 import org.playorm.nio.api.deprecated.Settings;
 import org.playorm.nio.api.handlers.DataListener;
 import org.playorm.nio.api.handlers.FutureOperation;
-import org.playorm.nio.api.handlers.NullWriteCallback;
 import org.playorm.nio.api.handlers.OperationCallback;
 import org.playorm.nio.api.libs.BufferFactory;
 import org.playorm.nio.api.libs.BufferHelper;
@@ -25,7 +25,6 @@ import org.playorm.nio.api.testutil.HandlerForTests;
 import org.playorm.nio.test.EchoServer;
 import org.playorm.nio.test.PerfTimer;
 
-import junit.framework.TestCase;
 import biz.xsoftware.mock.CalledMethod;
 import biz.xsoftware.mock.MockObject;
 import biz.xsoftware.mock.MockObjectFactory;
