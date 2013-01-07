@@ -16,7 +16,7 @@ import javax.net.ssl.SSLSession;
 import org.playorm.nio.api.channels.NioException;
 import org.playorm.nio.api.deprecated.ChannelServiceFactory;
 import org.playorm.nio.api.libs.AsyncSSLEngineException;
-import org.playorm.nio.api.libs.AsynchSSLEngine;
+import org.playorm.nio.api.libs.AsyncSSLEngine;
 import org.playorm.nio.api.libs.BufferHelper;
 import org.playorm.nio.api.libs.PacketAction;
 import org.playorm.nio.api.libs.SSLListener;
@@ -30,9 +30,9 @@ import org.playorm.nio.api.libs.SSLListener;
  * @author dean.hiller
  *
  */
-public class AsynchSSLEngineImpl implements AsynchSSLEngine {
+public class AsynchSSLEngineImpl implements AsyncSSLEngine {
 
-	private static final Logger log = Logger.getLogger(AsynchSSLEngine.class.getName());
+	private static final Logger log = Logger.getLogger(AsyncSSLEngine.class.getName());
 	private static final SSLListener NULL_LIST = new NullListener();
 	private static final BufferHelper HELPER = ChannelServiceFactory.bufferHelper(null);
 	//private TCPChannel realChannel;

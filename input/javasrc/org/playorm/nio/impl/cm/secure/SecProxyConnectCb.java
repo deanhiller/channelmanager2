@@ -12,7 +12,7 @@ import org.playorm.nio.api.channels.RegisterableChannel;
 import org.playorm.nio.api.channels.TCPChannel;
 import org.playorm.nio.api.deprecated.ConnectionCallback;
 import org.playorm.nio.api.handlers.ConnectionListener;
-import org.playorm.nio.api.libs.AsynchSSLEngine;
+import org.playorm.nio.api.libs.AsyncSSLEngine;
 import org.playorm.nio.api.libs.FactoryCreator;
 import org.playorm.nio.api.libs.SSLEngineFactory;
 
@@ -58,7 +58,7 @@ class SecProxyConnectCb implements ConnectionCallback {
 		
 		SecSSLListener connectProxy = secureChannel.getConnectProxy();
 
-		AsynchSSLEngine handler = CREATOR.createSSLEngine(realChannel, sslEngine, null);
+		AsyncSSLEngine handler = CREATOR.createSSLEngine(realChannel, sslEngine, null);
 //		AsynchSSLEngine handler = new AsynchSSLEngineImpl(realChannel, sslEngine);
 //		AsynchSSLEngine handler = new AsynchSSLEngineSynchronized(realChannel, sslEngine);
 //		AsynchSSLEngine handler = new AsynchSSLEngineQueued()

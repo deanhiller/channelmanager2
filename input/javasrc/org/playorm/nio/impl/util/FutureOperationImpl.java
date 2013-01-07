@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.playorm.nio.api.channels.Channel;
 import org.playorm.nio.api.channels.RegisterableChannel;
 import org.playorm.nio.api.handlers.FutureOperation;
+import org.playorm.nio.api.handlers.NioInterruptException;
 import org.playorm.nio.api.handlers.OperationCallback;
 import org.playorm.nio.api.handlers.TimeoutException;
 
@@ -33,24 +34,28 @@ public class FutureOperationImpl implements FutureOperation, OperationCallback {
 	}
 
 	@Override
-	public synchronized void waitForOperation(long timeoutInMillis) throws InterruptedException {
+	public synchronized void waitForOperation(long timeoutInMillis) {
 		if(channel != null) {
 			if(e != null)
 				throw new RuntimeException(e);
 			return;
 		}
 		
-		if(timeoutInMillis > 0) {
-			this.wait(timeoutInMillis);
-		} else
-			this.wait();
+		try {
+			if(timeoutInMillis > 0) {
+				this.wait(timeoutInMillis);
+			} else
+				this.wait();
+		} catch(InterruptedException e) {
+			throw new NioInterruptException(e);
+		}
 		
 		if(channel == null)
 			throw new TimeoutException("Waited for operation for time="+timeoutInMillis+" but did not complete");
 	}
 
 	@Override
-	public synchronized void waitForOperation() throws InterruptedException {
+	public synchronized void waitForOperation() {
 		waitForOperation(0);
 	}
 

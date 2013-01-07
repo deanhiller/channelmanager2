@@ -18,7 +18,7 @@ import org.playorm.nio.api.deprecated.ChannelServiceFactory;
 import org.playorm.nio.api.deprecated.ConnectionCallback;
 import org.playorm.nio.api.deprecated.Settings;
 import org.playorm.nio.api.handlers.DataListener;
-import org.playorm.nio.api.libs.AsynchSSLEngine;
+import org.playorm.nio.api.libs.AsyncSSLEngine;
 import org.playorm.nio.api.libs.BufferFactory;
 import org.playorm.nio.api.libs.FactoryCreator;
 import org.playorm.nio.api.libs.SSLEngineFactory;
@@ -46,7 +46,7 @@ public class TestMoreSecureChanMgr extends TestCase {
 	private MockObject mockSSLListener = MockObjectFactory.createMock(SSLListener.class);
 	private TCPChannel client1;
 	private MockNIOServer mockServer;
-	private AsynchSSLEngine sslEngine;
+	private AsyncSSLEngine sslEngine;
 
 	private ChannelServiceFactory basicFactory;
 

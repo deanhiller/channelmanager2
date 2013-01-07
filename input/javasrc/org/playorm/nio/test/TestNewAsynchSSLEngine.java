@@ -11,7 +11,7 @@ import junit.framework.TestCase;
 
 import org.playorm.nio.api.deprecated.ChannelServiceFactory;
 import org.playorm.nio.api.libs.AsyncSSLEngineException;
-import org.playorm.nio.api.libs.AsynchSSLEngine;
+import org.playorm.nio.api.libs.AsyncSSLEngine;
 import org.playorm.nio.api.libs.BufferHelper;
 import org.playorm.nio.api.libs.FactoryCreator;
 import org.playorm.nio.api.libs.SSLEngineFactory;
@@ -36,8 +36,8 @@ public class TestNewAsynchSSLEngine extends TestCase {
 	private BufferHelper helper = ChannelServiceFactory.bufferHelper(null);
 	private MockSslListener serverList = new MockSslListener();
 	private MockSslListener clientList = new MockSslListener();
-	private AsynchSSLEngine serverEngine;
-	private AsynchSSLEngine clientEngine;
+	private AsyncSSLEngine serverEngine;
+	private AsyncSSLEngine clientEngine;
 	
 	@Override
 	protected void setUp() throws Exception {
@@ -196,7 +196,7 @@ public class TestNewAsynchSSLEngine extends TestCase {
 		Assert.assertTrue(serverList.isClosed());
 	}
 	
-	static void closeWithExpects(AsynchSSLEngine engine, MockObject sslListener) throws IOException {
+	static void closeWithExpects(AsyncSSLEngine engine, MockObject sslListener) throws IOException {
 		engine.close();
 		
 		String[] methodNames = new String[2];
@@ -205,7 +205,7 @@ public class TestNewAsynchSSLEngine extends TestCase {
 		sslListener.expect(methodNames);
 	}
 	
-	static void feedPacket(AsynchSSLEngine engine, ByteBuffer b) throws Exception {
+	static void feedPacket(AsyncSSLEngine engine, ByteBuffer b) throws Exception {
 		int bytesLeft = 0;
 		if(b.remaining() < 15)
 			bytesLeft = 2;
@@ -333,7 +333,7 @@ public class TestNewAsynchSSLEngine extends TestCase {
 //		feedData(clientEngine, clientList, serverEngine, serverList);		
 	}
 	
-	private void feedData(AsynchSSLEngine from, MockSslListener fromList, AsynchSSLEngine to, MockSslListener toList) throws Exception {
+	private void feedData(AsyncSSLEngine from, MockSslListener fromList, AsyncSSLEngine to, MockSslListener toList) throws Exception {
 		String expected = "abc";
 		ByteBuffer data = ByteBuffer.allocate(10);
 		helper.putString(data, expected);

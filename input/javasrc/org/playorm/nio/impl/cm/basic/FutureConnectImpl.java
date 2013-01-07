@@ -6,6 +6,7 @@ import org.playorm.nio.api.channels.Channel;
 import org.playorm.nio.api.channels.RegisterableChannel;
 import org.playorm.nio.api.deprecated.ConnectionCallback;
 import org.playorm.nio.api.handlers.FutureOperation;
+import org.playorm.nio.api.handlers.NioInterruptException;
 import org.playorm.nio.api.handlers.OperationCallback;
 
 
@@ -33,21 +34,25 @@ public class FutureConnectImpl implements FutureOperation, ConnectionCallback {
 	}
 
 	@Override
-	public synchronized void waitForOperation(long timeoutInMillis) throws InterruptedException {
+	public synchronized void waitForOperation(long timeoutInMillis) {
 		if(channel != null) {
 			if(e != null)
 				throw new RuntimeException(e);
 			return;
 		}
 		
-		if(timeoutInMillis > 0) {
-			this.wait(timeoutInMillis);
-		} else
-			this.wait();
+		try {
+			if(timeoutInMillis > 0) {
+				this.wait(timeoutInMillis);
+			} else
+				this.wait();
+		} catch(InterruptedException e) {
+			throw new NioInterruptException(e);
+		}
 	}
 
 	@Override
-	public synchronized void waitForOperation() throws InterruptedException {
+	public synchronized void waitForOperation() {
 		waitForOperation(0);
 	}
 

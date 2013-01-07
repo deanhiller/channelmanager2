@@ -18,7 +18,7 @@ import java.nio.ByteBuffer;
  * @author dean.hiller
  *
  */
-public interface AsynchSSLEngine {
+public interface AsyncSSLEngine {
 	
 	void setListener(SSLListener connectProxy);
 	
