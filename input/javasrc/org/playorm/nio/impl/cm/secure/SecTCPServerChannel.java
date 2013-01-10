@@ -1,7 +1,5 @@
 package org.playorm.nio.impl.cm.secure;
 
-import java.io.IOException;
-
 import org.playorm.nio.api.channels.TCPServerChannel;
 import org.playorm.nio.api.handlers.ConnectionListener;
 import org.playorm.nio.api.libs.SSLEngineFactory;
@@ -19,14 +17,20 @@ class SecTCPServerChannel extends UtilRegisterable implements TCPServerChannel {
 		this.sslFactory = sslFactory;
 	}
 		
+	
+	@Override
+	protected TCPServerChannel getRealChannel() {
+		return (TCPServerChannel) super.getRealChannel();
+	}
+
+
 	public void oldClose() {
 		realChannel.oldClose();
 	}
 	
-	public void registerServerSocketChannel(ConnectionListener listener) throws IOException, InterruptedException {
+	public void registerServerSocketChannel(ConnectionListener listener) {
 		SecProxyConnectCb proxyList = new SecProxyConnectCb(this, sslFactory, listener);
 		realChannel.registerServerSocketChannel(proxyList);
 	}
 	
-
 }

@@ -6,8 +6,10 @@ import java.util.logging.Logger;
 
 import javax.net.ssl.SSLEngine;
 
+import junit.framework.TestCase;
+
 import org.playorm.nio.api.deprecated.ChannelServiceFactory;
-import org.playorm.nio.api.libs.AsynchSSLEngine;
+import org.playorm.nio.api.libs.AsyncSSLEngine;
 import org.playorm.nio.api.libs.BufferHelper;
 import org.playorm.nio.api.libs.FactoryCreator;
 import org.playorm.nio.api.libs.SSLEngineFactory;
@@ -16,7 +18,6 @@ import org.playorm.nio.api.testutil.CloneByteBuffer;
 import org.playorm.nio.api.testutil.HandlerForTests;
 import org.playorm.nio.api.testutil.MockSSLEngineFactory;
 
-import junit.framework.TestCase;
 import biz.xsoftware.mock.CalledMethod;
 import biz.xsoftware.mock.MockObject;
 import biz.xsoftware.mock.MockObjectFactory;
@@ -36,8 +37,8 @@ public class TestNewAsynchSSLEngine2 extends TestCase {
 	private BufferHelper helper = ChannelServiceFactory.bufferHelper(null);
 	private MockObject serverList = MockObjectFactory.createMock(SSLListener.class);
 	private MockObject clientList = MockObjectFactory.createMock(SSLListener.class);
-	private AsynchSSLEngine serverEngine;
-	private AsynchSSLEngine clientEngine;
+	private AsyncSSLEngine serverEngine;
+	private AsyncSSLEngine clientEngine;
 	
 	@Override
 	protected void setUp() throws Exception {
@@ -69,7 +70,7 @@ public class TestNewAsynchSSLEngine2 extends TestCase {
 		serverList.expect(MockObject.NONE);
 	}
 		
-	private void closeWithExpects(AsynchSSLEngine engine, MockObject sslListener) throws IOException {
+	private void closeWithExpects(AsyncSSLEngine engine, MockObject sslListener) throws IOException {
 		TestNewAsynchSSLEngine.closeWithExpects(engine, sslListener);
 //		engine.close();
 //		
@@ -454,7 +455,7 @@ public class TestNewAsynchSSLEngine2 extends TestCase {
 		clientList.expect("encryptedLinkEstablished");		
 	}
 
-	private void feedPacket(AsynchSSLEngine engine, ByteBuffer b) throws Exception {
+	private void feedPacket(AsyncSSLEngine engine, ByteBuffer b) throws Exception {
 		TestNewAsynchSSLEngine.feedPacket(engine, b);
 	}
 

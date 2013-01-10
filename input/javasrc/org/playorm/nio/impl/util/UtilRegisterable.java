@@ -1,9 +1,7 @@
 package org.playorm.nio.impl.util;
 
-import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
-import java.net.SocketException;
 
 import org.playorm.nio.api.channels.RegisterableChannel;
 
@@ -36,11 +34,11 @@ public class UtilRegisterable implements RegisterableChannel {
 		return realChannel.isBlocking();
 	}
 	
-	public void setReuseAddress(boolean b) throws SocketException {
+	public void setReuseAddress(boolean b) {
 		realChannel.setReuseAddress(b);
 	}	
 
-	public void bind(SocketAddress addr) throws IOException {
+	public void bind(SocketAddress addr) {
 		realChannel.bind(addr);
 	}
 

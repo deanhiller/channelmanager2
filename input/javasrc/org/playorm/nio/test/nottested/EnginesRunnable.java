@@ -1,9 +1,9 @@
 package org.playorm.nio.test.nottested;
 
-import org.playorm.nio.api.libs.AsynchSSLEngine;
+import org.playorm.nio.api.libs.AsyncSSLEngine;
 
 public interface EnginesRunnable extends Runnable {
 
-	public AsynchSSLEngine getEngine();
+	public AsyncSSLEngine getEngine();
 	
 }

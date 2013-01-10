@@ -6,6 +6,8 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.util.logging.Logger;
 
+import junit.framework.TestCase;
+
 import org.playorm.nio.api.ChannelManager;
 import org.playorm.nio.api.ChannelManagerFactory;
 import org.playorm.nio.api.channels.Channel;
@@ -22,7 +24,6 @@ import org.playorm.nio.api.testutil.HandlerForTests;
 import org.playorm.nio.api.testutil.MockDataHandler;
 import org.playorm.nio.api.testutil.MockNIOServer;
 
-import junit.framework.TestCase;
 import biz.xsoftware.mock.CalledMethod;
 import biz.xsoftware.mock.MockObject;
 import biz.xsoftware.mock.MockObjectFactory;

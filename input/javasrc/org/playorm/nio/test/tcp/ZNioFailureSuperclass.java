@@ -187,27 +187,27 @@ public abstract class ZNioFailureSuperclass extends MockTestCase {
 		
 	}
 		
-	public void testClientThrowsIntoAcceptHandlerConnect() throws Exception {
-		setNumberOfExpectedWarnings(1);
-
-		//make sure we are testing the right one....
-		Class c = Class.forName(getChannelImplName());
-		assertEquals("should be instance of correct channel type", c, client1.getClass());
-	
-		String msg = "some exception message";
-		IOException e = new IOException(msg);
-		mockServer.addThrowException("connected", e);
-		
-		client1.bind(loopBackAnyPort);
-		client1.oldConnect(svrAddr, (ConnectionCallback)mockConnect);
-		client1.registerForReads((DataListener)mockHandler);
-		
-		mockConnect.expect("connected");
-		TCPChannel svrChan = expectServerChannel(mockServer, c);
-
-		verifyDataPassing(svrChan);
-		verifyTearDown();		
-	}
+//	public void testClientThrowsIntoAcceptHandlerConnect() throws Exception {
+//		setNumberOfExpectedWarnings(1);
+//
+//		//make sure we are testing the right one....
+//		Class c = Class.forName(getChannelImplName());
+//		assertEquals("should be instance of correct channel type", c, client1.getClass());
+//	
+//		String msg = "some exception message";
+//		IOException e = new IOException(msg);
+//		mockServer.addThrowException("connected", e);
+//		
+//		client1.bind(loopBackAnyPort);
+//		client1.oldConnect(svrAddr, (ConnectionCallback)mockConnect);
+//		client1.registerForReads((DataListener)mockHandler);
+//		
+//		mockConnect.expect("connected");
+//		TCPChannel svrChan = expectServerChannel(mockServer, c);
+//
+//		verifyDataPassing(svrChan);
+//		verifyTearDown();		
+//	}
 	
 	private ByteBuffer verifyDataPassing(TCPChannel svrChan) throws Exception {
 		ByteBuffer b = ByteBuffer.allocate(10);

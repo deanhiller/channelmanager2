@@ -18,7 +18,7 @@ public interface ChannelManager {
      *                   PacketProcessorFactory down to the ssl and packet layers.  
      * @return a TCPServerChannel
      */
-    public TCPServerChannel createTCPServerChannel(String id) throws IOException;   
+    public TCPServerChannel createTCPServerChannel(String id);   
 
     /**
      * Returns a non-blocking TCPChannel.
@@ -28,7 +28,7 @@ public interface ChannelManager {
      *          feature must be in the ChannelManager stack also to be turned on.
      * @return a non-blocking TCPChannel.
      */
-    public TCPChannel createTCPChannel(String id) throws IOException;
+    public TCPChannel createTCPChannel(String id);
 
     /**
      * Creates a UDPChannel that can connect to a peer and receive/send data from/to
@@ -40,11 +40,12 @@ public interface ChannelManager {
      * @return a UDPChannel
      * @throws IOException
      */
-    public UDPChannel createUDPChannel(String id) throws IOException;   
+    public UDPChannel createUDPChannel(String id);   
 	
 	/*
 	 * Creates a UDPServerChannel that can send/receive data from multiple peers.
 	 */
-	public DatagramChannel createDatagramChannel(String id, int bufferSize) throws IOException;
+	public DatagramChannel createDatagramChannel(String id, int bufferSize);
     
+	public void stop();
 }

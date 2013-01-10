@@ -7,7 +7,7 @@ import java.util.logging.Logger;
 import org.playorm.nio.api.channels.Channel;
 import org.playorm.nio.api.handlers.DataChunk;
 import org.playorm.nio.api.handlers.DataListener;
-import org.playorm.nio.api.libs.AsynchSSLEngine;
+import org.playorm.nio.api.libs.AsyncSSLEngine;
 import org.playorm.nio.api.libs.PacketAction;
 import org.playorm.nio.impl.util.DataChunkWithBuffer;
 
@@ -15,7 +15,7 @@ import org.playorm.nio.impl.util.DataChunkWithBuffer;
 class SecReaderProxy implements DataListener {
 	
 	private static final Logger log = Logger.getLogger(SecReaderProxy.class.getName());
-	private AsynchSSLEngine handler;
+	private AsyncSSLEngine handler;
 	private SecSSLListener sslListener;
 	private ByteBuffer data = ByteBuffer.allocate(2000);
 	private boolean isClosed;
@@ -50,11 +50,11 @@ class SecReaderProxy implements DataListener {
 		sslListener.farEndClosed();
 	}
 
-	public void setHandler(AsynchSSLEngine handler) {
+	public void setHandler(AsyncSSLEngine handler) {
 		this.handler = handler;
 	}
 
-	public AsynchSSLEngine getHandler() {
+	public AsyncSSLEngine getHandler() {
 		return handler;
 	}
 

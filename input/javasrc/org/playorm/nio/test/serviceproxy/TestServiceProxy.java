@@ -1,11 +1,12 @@
 package org.playorm.nio.test.serviceproxy;
 
 
-import org.playorm.api.serviceproxy.CustomServiceProxy;
-import org.playorm.api.serviceproxy.ServiceProxy;
-import org.playorm.api.serviceproxy.ServiceProxyFactory;
-
 import junit.framework.TestCase;
+
+import org.playorm.util.api.serviceproxy.CustomServiceProxy;
+import org.playorm.util.api.serviceproxy.ServiceProxy;
+import org.playorm.util.api.serviceproxy.ServiceProxyFactory;
+
 import biz.xsoftware.mock.MockObject;
 import biz.xsoftware.mock.MockObjectFactory;
 

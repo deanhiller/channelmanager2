@@ -1,6 +1,5 @@
 package org.playorm.nio.impl.cm.readreg;
 
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -17,16 +16,12 @@ public class RegUDPChannel extends RegHelperChannel implements UDPChannel {
 		this.realChannel = realChannel;
 	}
 
-	public synchronized void disconnect() throws IOException {
+	public synchronized void disconnect() {
 		if(apiLog.isLoggable(Level.FINE))
 			apiLog.fine(this+"RegRead.registerForReads called");
 		
 		if(isRegistered) {
-			try {
-				realChannel.unregisterForReads();
-			} catch (InterruptedException e) {
-				throw new RuntimeException(e);
-			}
+			realChannel.unregisterForReads();
 			isRegistered = false;
 		}
 		realChannel.disconnect();

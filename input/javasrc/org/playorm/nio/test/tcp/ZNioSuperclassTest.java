@@ -3,12 +3,14 @@ package org.playorm.nio.test.tcp;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import junit.framework.TestCase;
+
+import org.playorm.nio.api.channels.NioException;
 import org.playorm.nio.api.channels.TCPChannel;
 import org.playorm.nio.api.deprecated.ChannelService;
 import org.playorm.nio.api.deprecated.ChannelServiceFactory;
@@ -23,7 +25,6 @@ import org.playorm.nio.api.testutil.HandlerForTests;
 import org.playorm.nio.api.testutil.MockDataHandler;
 import org.playorm.nio.api.testutil.MockNIOServer;
 
-import junit.framework.TestCase;
 import biz.xsoftware.mock.CalledMethod;
 import biz.xsoftware.mock.MockObject;
 import biz.xsoftware.mock.MockObjectFactory;
@@ -290,10 +291,10 @@ public abstract class ZNioSuperclassTest extends TestCase {
 	 */
 	public void testAlreadyBound150Jdk() throws Exception {
 		client1.bind(loopBackAnyPort);
-		try { 
+		try {
 			client1.bind(loopBackAnyPort);
 			fail("Should have thrown SocketException");
-		} catch(SocketException e) {}
+		} catch(NioException e) {}
 	}
 	
 	/**

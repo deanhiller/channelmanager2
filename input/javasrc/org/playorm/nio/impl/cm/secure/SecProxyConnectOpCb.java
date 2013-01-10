@@ -12,7 +12,7 @@ import org.playorm.nio.api.channels.RegisterableChannel;
 import org.playorm.nio.api.channels.TCPChannel;
 import org.playorm.nio.api.deprecated.ConnectionCallback;
 import org.playorm.nio.api.handlers.OperationCallback;
-import org.playorm.nio.api.libs.AsynchSSLEngine;
+import org.playorm.nio.api.libs.AsyncSSLEngine;
 import org.playorm.nio.api.libs.FactoryCreator;
 import org.playorm.nio.api.libs.SSLEngineFactory;
 
@@ -54,7 +54,7 @@ class SecProxyConnectOpCb implements OperationCallback {
 		
 		SecSSLListener connectProxy = secureChannel.getConnectProxy();
 
-		AsynchSSLEngine handler = CREATOR.createSSLEngine(realChannel, sslEngine, null);
+		AsyncSSLEngine handler = CREATOR.createSSLEngine(realChannel, sslEngine, null);
 //		AsynchSSLEngine handler = new AsynchSSLEngineImpl(realChannel, sslEngine);
 //		AsynchSSLEngine handler = new AsynchSSLEngineSynchronized(realChannel, sslEngine);
 //		AsynchSSLEngine handler = new AsynchSSLEngineQueued()
@@ -62,19 +62,14 @@ class SecProxyConnectOpCb implements OperationCallback {
 		handler.setListener(secureChannel.getConnectProxy());
 		
 		connectProxy.setConnectCallback(new ProxyCallback(cb));
-		try {
-			synchronized(secureChannel) {
+		synchronized(secureChannel) {
+			if(log.isLoggable(Level.FINEST))
+				log.finest(realChannel+" about to register for reads");				
+			if(!connectProxy.isClientRegistered()) {
 				if(log.isLoggable(Level.FINEST))
-					log.finest(realChannel+" about to register for reads");				
-				if(!connectProxy.isClientRegistered()) {
-					if(log.isLoggable(Level.FINEST))
-						log.finest(realChannel+" register for reads");		
-					realChannel.registerForReads(secureChannel.getReaderProxy());
-				}
+					log.finest(realChannel+" register for reads");		
+				realChannel.registerForReads(secureChannel.getReaderProxy());
 			}
-		} catch (InterruptedException e) {
-			log.log(Level.WARNING, realChannel+"Exception trying to accept connection", e);
-			throw new RuntimeException(e);
 		}
 
 		handler.beginHandshake();

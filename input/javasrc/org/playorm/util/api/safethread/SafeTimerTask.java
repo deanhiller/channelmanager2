@@ -1,4 +1,4 @@
-package org.playorm.api.safethread;
+package org.playorm.util.api.safethread;
 
 import java.util.TimerTask;
 import java.util.concurrent.Executor;

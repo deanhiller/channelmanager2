@@ -13,8 +13,10 @@ import javax.net.ssl.SSLEngineResult.Status;
 import javax.net.ssl.SSLException;
 import javax.net.ssl.SSLSession;
 
+import org.playorm.nio.api.channels.NioException;
 import org.playorm.nio.api.deprecated.ChannelServiceFactory;
-import org.playorm.nio.api.libs.AsynchSSLEngine;
+import org.playorm.nio.api.libs.AsyncSSLEngineException;
+import org.playorm.nio.api.libs.AsyncSSLEngine;
 import org.playorm.nio.api.libs.BufferHelper;
 import org.playorm.nio.api.libs.PacketAction;
 import org.playorm.nio.api.libs.SSLListener;
@@ -28,9 +30,9 @@ import org.playorm.nio.api.libs.SSLListener;
  * @author dean.hiller
  *
  */
-public class AsynchSSLEngineImpl implements AsynchSSLEngine {
+public class AsynchSSLEngineImpl implements AsyncSSLEngine {
 
-	private static final Logger log = Logger.getLogger(AsynchSSLEngine.class.getName());
+	private static final Logger log = Logger.getLogger(AsyncSSLEngine.class.getName());
 	private static final SSLListener NULL_LIST = new NullListener();
 	private static final BufferHelper HELPER = ChannelServiceFactory.bufferHelper(null);
 	//private TCPChannel realChannel;
@@ -90,7 +92,7 @@ public class AsynchSSLEngineImpl implements AsynchSSLEngine {
 		public void closed(boolean fromEncryptedPacket) {}
 	}
 	
-	public void beginHandshake() throws IOException {
+	public void beginHandshake() {
 		if(isClosing || isClosed) {
 			throw new IllegalStateException(id+"SSLEngine is in the process of closing or is closed");
 		} else if(runningRunnable)
@@ -99,12 +101,16 @@ public class AsynchSSLEngineImpl implements AsynchSSLEngine {
 
 		if(log.isLoggable(Level.FINE))
 			log.fine(id+"start handshake");
-		sslEngine.beginHandshake();
+		try {
+			sslEngine.beginHandshake();
+		} catch (SSLException e) {
+			throw new AsyncSSLEngineException(e);
+		}
 		HandshakeStatus status = sslEngine.getHandshakeStatus();
 		continueHandShake(status);
 	}
 	
-	public void feedPlainPacket(ByteBuffer b, Object passThrough) throws IOException {	
+	public void feedPlainPacket(ByteBuffer b, Object passThrough) {	
 		if(!isConnected)
 			throw new NotYetConnectedException();
 		else if(isClosing || isClosed) {
@@ -118,7 +124,12 @@ public class AsynchSSLEngineImpl implements AsynchSSLEngine {
 		
 		HELPER.eraseBuffer(engineToSocketData);
 
-		SSLEngineResult result = sslEngine.wrap(b, engineToSocketData);
+		SSLEngineResult result;
+		try {
+			result = sslEngine.wrap(b, engineToSocketData);
+		} catch (SSLException e) {
+			throw new AsyncSSLEngineException(e);
+		}
 		
 		Status status = result.getStatus();
 		HandshakeStatus hsStatus = result.getHandshakeStatus();
@@ -132,7 +143,7 @@ public class AsynchSSLEngineImpl implements AsynchSSLEngine {
 		if(log.isLoggable(Level.FINE))
 			log.fine(id+"SSLListener.packetEncrypted pos="+engineToSocketData.position()+
 					" lim="+engineToSocketData.limit()+" hsStatus="+hsStatus+" status="+status);
-		sslListener.packetEncrypted(engineToSocketData, passThrough);
+		fireEncryptedPacketToListener(passThrough);
 	}
 	
 	/**
@@ -140,7 +151,7 @@ public class AsynchSSLEngineImpl implements AsynchSSLEngine {
 	 * and modified in other methods that are called on other threads.(ie. the put is called)
 	 * 
 	 */
-	public PacketAction feedEncryptedPacket(ByteBuffer b, Object passthrough) throws IOException {
+	public PacketAction feedEncryptedPacket(ByteBuffer b, Object passthrough) {
 		if(isClosed) {
 			throw new IllegalStateException(id+"SSLEngine is closed");
 		} else if(runningRunnable)
@@ -160,25 +171,24 @@ public class AsynchSSLEngineImpl implements AsynchSSLEngine {
 			if(b.hasRemaining())
 				throw new RuntimeException(this+"BUG, need to read all data from ByteBuffer.  incoming="+b+" socketToEngineBuf="+socketToEngineData2);
 			return result;
-		} catch (IOException e) {
+		} catch (AsyncSSLEngineException e) {
 			//try to close SSLEngine
-			try {
-				close();
-			} catch(Exception ee) {
-				log.log(Level.WARNING, "Failure trying to shutdown Link properly.  Encryption Engine is closed", ee);
-			}
-			if(e instanceof SSLException) {
-				SSLException exc = new SSLException(id+" see chained exception.", e);
-				throw exc;
-			}
-            
-			IOException exc = new IOException(id+" see chained exception");
-			exc.initCause(e);
-			throw exc;
+			throw closeTry(e);
+		} catch(NioException e) {
+			throw closeTry(e);
 		}
 	}
+
+	private RuntimeException closeTry(RuntimeException e) {
+		try {
+			close();
+		} catch(Exception ee) {
+			log.log(Level.WARNING, "Failure trying to shutdown Link properly.  Encryption Engine is closed", ee);
+		}
+		throw e;
+	}
 	
-	private PacketAction feedEncryptedPacketImpl(Object passthrough) throws IOException {	
+	private PacketAction feedEncryptedPacketImpl(Object passthrough) {	
 		PacketAction action = PacketAction.NOT_ENOUGH_BYTES_YET;
 		ByteBuffer b = socketToEngineData2;
 		if(log.isLoggable(Level.FINEST))
@@ -205,7 +215,7 @@ public class AsynchSSLEngineImpl implements AsynchSSLEngine {
 			try {
 				result = sslEngine.unwrap(b, out);				
 			} catch(SSLException e) {
-				SSLException ee = new SSLException("status="+status+" hsStatus="+hsStatus+" b="+b, e);
+				AsyncSSLEngineException ee = new AsyncSSLEngineException("status="+status+" hsStatus="+hsStatus+" b="+b, e);
 				throw ee;
 			}
 			status = result.getStatus();
@@ -221,7 +231,7 @@ public class AsynchSSLEngineImpl implements AsynchSSLEngine {
 					log.fine(id+"packetUnencrypted pos="+out.position()+" lim="+
 							out.limit()+" hs="+hsStatus+" status="+status);
 				action = PacketAction.DECRYPTED_AND_FEDTOLISTENER;
-				sslListener.packetUnencrypted(out, passthrough);
+				fireUnencryptedPackToListener(passthrough, out);
 				if(out.hasRemaining())
 					log.warning(id+"Discarding unread data");
 				out.clear();
@@ -248,13 +258,30 @@ public class AsynchSSLEngineImpl implements AsynchSSLEngine {
 		//yet I think(I am writing this from memory)...
 		if(status == Status.CLOSED && hsStatus == HandshakeStatus.NOT_HANDSHAKING) {
 			isClosed = true;
-			sslEngine.closeInbound();
+			closeInbound();
 			sslEngine.closeOutbound();
 			sslListener.closed(clientInitiated);			
 		} else //TODO: add else if(!hsStatus == HandshakeStatus.NOT_HANDSHAKING)
 			continueHandShake(hsStatus);
 		
 		return action;
+	}
+
+	private void closeInbound() {
+		try {
+			sslEngine.closeInbound();
+		} catch (SSLException e) {
+			throw new AsyncSSLEngineException(e);
+		}
+	}
+
+	private void fireUnencryptedPackToListener(Object passthrough,
+			ByteBuffer out) {
+		try {
+			sslListener.packetUnencrypted(out, passthrough);
+		} catch (IOException e) {
+			throw new NioException(e);
+		}
 	}
 
 	private void resetBuffer(Status status) {
@@ -277,7 +304,7 @@ public class AsynchSSLEngineImpl implements AsynchSSLEngine {
 	
 
 	
-	private void continueHandShake(HandshakeStatus status) throws IOException {
+	private void continueHandShake(HandshakeStatus status) {
 		
 		switch (status) {
 		case FINISHED:
@@ -307,7 +334,7 @@ public class AsynchSSLEngineImpl implements AsynchSSLEngine {
 		}
 	}
 	
-	private void createRunnable() throws IOException {
+	private void createRunnable() {
 		Runnable r = sslEngine.getDelegatedTask();
 		
 		if(r == null) //task has already been retrieved
@@ -382,7 +409,15 @@ public class AsynchSSLEngineImpl implements AsynchSSLEngine {
 		}
 	}
 	
-	private void sendHandshakeMessage() throws IOException {
+	private void sendHandshakeMessage() {
+		try {
+			sendHandshakeMessageImpl();
+		} catch (SSLException e) {
+			throw new AsyncSSLEngineException(e);
+		}
+	}
+	
+	private void sendHandshakeMessageImpl() throws SSLException {
 		if(log.isLoggable(Level.FINEST))
 			log.finest(id+"sending handshake message");
 		HELPER.eraseBuffer(empty);
@@ -410,10 +445,10 @@ public class AsynchSSLEngineImpl implements AsynchSSLEngine {
 			if(log.isLoggable(Level.FINE))
 				log.fine(id+"SSLListener.packetEncrypted pos="+engineToSocketData.position()+
 						" lim="+engineToSocketData.limit()+" status="+status+" hs="+hsStatus);			
-			sslListener.packetEncrypted(engineToSocketData, null);
+			fireEncryptedPacketToListener(null);
 			if(status == Status.CLOSED) {
 				isClosed = true;
-				sslEngine.closeInbound();
+				closeInbound();
 				sslEngine.closeOutbound();
 				sslListener.closed(clientInitiated);
 			}
@@ -431,13 +466,25 @@ public class AsynchSSLEngineImpl implements AsynchSSLEngine {
 		}
 	}
 
-	private void fireConnected() throws IOException {
+	private void fireEncryptedPacketToListener(Object passthrough) {
+		try {
+			sslListener.packetEncrypted(engineToSocketData, passthrough);
+		} catch (IOException e) {
+			throw new NioException(e);
+		}
+	}
+
+	private void fireConnected() {
 		if(!isConnected) {
 			//else this is a rehandshake and we don't care!!!!
 			isConnected = true;
 			if(log.isLoggable(Level.FINE))
 				log.fine(id+"SSLListener.encryptedLinkEstablished");			
-			sslListener.encryptedLinkEstablished();
+			try {
+				sslListener.encryptedLinkEstablished();
+			} catch (IOException e) {
+				throw new NioException(e);
+			}
 		}		
 	}
 
@@ -469,10 +516,8 @@ public class AsynchSSLEngineImpl implements AsynchSSLEngine {
 		isClosed = true; //set after as initiateClose check for this too!
 		
 		try {
-			sslEngine.closeInbound(); //this will throw an exception if the close handshake message
-			                          //has not been received, which it hasn't when we are doing
-		                              //an immediatee close
-		} catch(SSLException e) {
+			closeInbound();
+		} catch(AsyncSSLEngineException e) {
 			log.log(Level.FINEST, id+"Normal Expected Exception. Close packet already sent, not waiting for response", e);
 		}
 	}
@@ -507,7 +552,7 @@ public class AsynchSSLEngineImpl implements AsynchSSLEngine {
 		HELPER.doneFillingBuffer(engineToSocketData);
 		if(log.isLoggable(Level.FINE))
 			log.fine(id+"packetEncrypted pos="+engineToSocketData.position()+" lim="+engineToSocketData.limit());
-		sslListener.packetEncrypted(engineToSocketData, null);
+		fireEncryptedPacketToListener(null);
 	}
 
 	public boolean isClosed() {

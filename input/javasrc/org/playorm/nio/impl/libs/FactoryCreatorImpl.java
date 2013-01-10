@@ -5,7 +5,7 @@ import java.util.Map;
 import javax.net.ssl.SSLEngine;
 
 import org.playorm.nio.api.channels.RegisterableChannel;
-import org.playorm.nio.api.libs.AsynchSSLEngine;
+import org.playorm.nio.api.libs.AsyncSSLEngine;
 import org.playorm.nio.api.libs.BufferFactory;
 import org.playorm.nio.api.libs.ChannelSession;
 import org.playorm.nio.api.libs.FactoryCreator;
@@ -91,7 +91,7 @@ public class FactoryCreatorImpl extends FactoryCreator {
     }
     
 	@Override
-	public AsynchSSLEngine createSSLEngine(Object id, SSLEngine engine, Map<String, Object> map) {
+	public AsyncSSLEngine createSSLEngine(Object id, SSLEngine engine, Map<String, Object> map) {
 		return new AsynchSSLEngineImpl(id+"", engine);
 	}
 

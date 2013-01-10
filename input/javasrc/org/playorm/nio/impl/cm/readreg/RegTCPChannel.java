@@ -1,14 +1,15 @@
 package org.playorm.nio.impl.cm.readreg;
 
-import java.io.IOException;
 import java.net.SocketAddress;
-import java.net.SocketException;
 import java.nio.ByteBuffer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.net.ssl.SSLEngine;
+
 import org.playorm.nio.api.channels.TCPChannel;
 import org.playorm.nio.api.deprecated.ConnectionCallback;
+import org.playorm.nio.api.handlers.FutureOperation;
 import org.playorm.nio.api.handlers.OperationCallback;
 
 
@@ -26,7 +27,7 @@ class RegTCPChannel extends RegHelperChannel implements TCPChannel {
 		return (TCPChannel)super.getRealChannel();
 	}
 	
-	public synchronized void oldConnect(SocketAddress addr, ConnectionCallback c) throws IOException, InterruptedException {
+	public synchronized void oldConnect(SocketAddress addr, ConnectionCallback c) {
 		if(apiLog.isLoggable(Level.FINE))
 			apiLog.fine(this+"RegRead.connect called-addr="+addr);
 		
@@ -41,21 +42,37 @@ class RegTCPChannel extends RegHelperChannel implements TCPChannel {
 	}	
 	
 	@Override
-	public int oldWrite(ByteBuffer b) throws IOException {
+	public int oldWrite(ByteBuffer b) {
 		return getRealChannel().oldWrite(b);
 	}
 	
-	public void oldWrite(ByteBuffer b, OperationCallback h) throws IOException, InterruptedException {
+	public void oldWrite(ByteBuffer b, OperationCallback h) {
 		getRealChannel().oldWrite(b, h);
 	}
 
-	public boolean getKeepAlive() throws SocketException {
+	public boolean getKeepAlive() {
 		TCPChannel realChannel = getRealTcpChannel();
 		return realChannel.getKeepAlive();
 	}
 
-	public void setKeepAlive(boolean b) throws SocketException {
+	public void setKeepAlive(boolean b) {
 		TCPChannel realChannel = getRealTcpChannel();
 		realChannel.setKeepAlive(b);
+	}
+	
+	public FutureOperation openSSL(SSLEngine engine) {
+		TCPChannel realChannel = getRealTcpChannel();
+		return realChannel.openSSL(engine);
+	}
+
+	public FutureOperation closeSSL() {
+		TCPChannel realChannel = getRealTcpChannel();
+		return realChannel.closeSSL();
+	}
+
+	@Override
+	public boolean isInSslMode() {
+		TCPChannel realChannel = getRealTcpChannel();
+		return realChannel.isInSslMode();
 	}
 }

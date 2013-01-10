@@ -16,10 +16,10 @@ BEGIN CHANNELMANAGER DESIGN
    <depends>mocklibImpl</depends>
 </package>
 
-<package name="serviceproxy"    package="org.playorm.api.serviceproxy" subpackages="include"/>
+<package name="serviceproxy"    package="org.playorm.util.api.serviceproxy" subpackages="include"/>
 
 
-<package name="safeApi"    package="org.playorm.api.safethread" subpackages="include"/>
+<package name="safeApi"    package="org.playorm.util.api.safethread" subpackages="include"/>
 
 <!-- Everything else depends on api -->
 <package name="nioutil"   package="org.playorm.nio.impl.util" depends="api"/>
@@ -83,5 +83,5 @@ END CHANNELMANAGER DESIGN
 <package name="javax"    package="javax" subpackages="include" needdeclarations="false"/>
 <package name="mocklib"  package="biz.xsoftware.mock" subpackages="include" needdeclarations="false"/>
 <package name="junitlib" package="junit" subpackages="include" needdeclarations="false"/>
-<package name="logging" package="org.playorm.logging"/>
+<package name="logging" package="org.playorm.util.logging"/>
 </design>

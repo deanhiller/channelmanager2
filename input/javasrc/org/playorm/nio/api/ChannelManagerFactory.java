@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import org.playorm.nio.api.channels.DatagramChannel;
+import org.playorm.nio.api.channels.NioException;
 import org.playorm.nio.api.channels.TCPChannel;
 import org.playorm.nio.api.channels.TCPServerChannel;
 import org.playorm.nio.api.channels.UDPChannel;
@@ -34,25 +35,50 @@ public class ChannelManagerFactory {
 		}
 
 		@Override
-		public TCPServerChannel createTCPServerChannel(String id)
-				throws IOException {
-			return svc.createTCPServerChannel(id, null);
+		public TCPServerChannel createTCPServerChannel(String id) {
+			try {
+				return svc.createTCPServerChannel(id, null);
+			} catch (IOException e) {
+				throw new NioException(e);
+			}
 		}
 
 		@Override
-		public TCPChannel createTCPChannel(String id) throws IOException {
-			return svc.createTCPChannel(id, null);
+		public TCPChannel createTCPChannel(String id) {
+			try {
+				return svc.createTCPChannel(id, null);
+			} catch (IOException e) {
+				throw new NioException(e);
+			}
 		}
 
 		@Override
-		public UDPChannel createUDPChannel(String id) throws IOException {
-			return svc.createUDPChannel(id, null);
+		public UDPChannel createUDPChannel(String id) {
+			try {
+				return svc.createUDPChannel(id, null);
+			} catch (IOException e) {
+				throw new NioException(e);
+			}
 		}
 
 		@Override
-		public DatagramChannel createDatagramChannel(String id, int bufferSize)
-				throws IOException {
-			return svc.createDatagramChannel(id, bufferSize);
+		public DatagramChannel createDatagramChannel(String id, int bufferSize) {
+			try {
+				return svc.createDatagramChannel(id, bufferSize);
+			} catch (IOException e) {
+				throw new NioException(e);
+			}
+		}
+
+		@Override
+		public void stop() {
+			try {
+				svc.stop();
+			} catch (IOException e) {
+				throw new NioException(e);
+			} catch (InterruptedException e) {
+				throw new NioException(e);
+			}
 		}
 	}
 }

@@ -1,7 +1,5 @@
 package org.playorm.nio.impl.cm.packet;
 
-import java.io.IOException;
-
 import org.playorm.nio.api.channels.TCPServerChannel;
 import org.playorm.nio.api.handlers.ConnectionListener;
 import org.playorm.nio.api.libs.PacketProcessorFactory;
@@ -27,7 +25,7 @@ class PacTCPServerChannel extends UtilRegisterable implements TCPServerChannel {
 		realChannel.oldClose();
 	}
 	
-	public void registerServerSocketChannel(ConnectionListener cb) throws IOException, InterruptedException {
+	public void registerServerSocketChannel(ConnectionListener cb) {
 		PacProxyAcceptCb proxy = new PacProxyAcceptCb(this, factory, cb);
 		realChannel.registerServerSocketChannel(proxy);
 	}

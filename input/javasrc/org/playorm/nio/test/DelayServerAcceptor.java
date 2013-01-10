@@ -49,12 +49,8 @@ public class DelayServerAcceptor implements ConnectionListener {
 		sockets.add((TCPChannel) channel);
 		sockets.add(currentChannel);
 
-		try {
-			currentChannel.registerForReads(new Delayer((TCPChannel) channel));
-			channel.registerForReads(new Delayer(currentChannel));
-		} catch (InterruptedException e) {
-			throw new RuntimeException(e);
-		}			
+		currentChannel.registerForReads(new Delayer((TCPChannel) channel));
+		channel.registerForReads(new Delayer(currentChannel));
 	}
 
 	public void failed(RegisterableChannel channel, Throwable e) {

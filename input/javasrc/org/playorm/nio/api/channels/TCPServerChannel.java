@@ -18,8 +18,7 @@ public interface TCPServerChannel extends RegisterableChannel {
      * @throws IOException
      * @throws InterruptedException
      */
-	public void registerServerSocketChannel(final ConnectionListener listener)
-	throws IOException, InterruptedException;
+	public void registerServerSocketChannel(final ConnectionListener listener);
 	
     /**
      * This is a synchronous close (just like all of the other close() methods on other channels).

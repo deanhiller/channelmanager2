@@ -16,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.playorm.nio.api.channels.Channel;
+import org.playorm.nio.api.channels.NioException;
 import org.playorm.nio.api.handlers.DataListener;
 import org.playorm.nio.api.handlers.FutureOperation;
 import org.playorm.nio.api.handlers.OperationCallback;
@@ -124,13 +125,17 @@ public abstract class BasChannelImpl
         }
     }
 
-    public void bind(SocketAddress addr) throws IOException {
+    public void bind(SocketAddress addr) {
         if(!(addr instanceof InetSocketAddress))
             throw new IllegalArgumentException(this+"Can only bind to InetSocketAddress addressses");
         if(apiLog.isLoggable(Level.FINE))
         	apiLog.fine(this+"Basic.bind called addr="+addr);
         
-        bindImpl(addr);
+        try {
+			bindImpl(addr);
+		} catch (IOException e) {
+			throw new NioException(e);
+		}
     }
     
     private void bindImpl(SocketAddress addr) throws IOException {
@@ -157,7 +162,7 @@ public abstract class BasChannelImpl
      */
     protected abstract void bindImpl2(SocketAddress addr) throws IOException;
     
-	public void registerForReads(DataListener listener) throws IOException, InterruptedException {
+	public void registerForReads(DataListener listener) {
 		if(listener == null)
 			throw new IllegalArgumentException(this+"listener cannot be null");
 		else if(!isConnecting && !isConnected()) {
@@ -167,16 +172,35 @@ public abstract class BasChannelImpl
 		if(apiLog.isLoggable(Level.FINE))
 			apiLog.fine(this+"Basic.registerForReads called");
 		
-        getSelectorManager().registerChannelForRead(this, listener);
+        try {
+			getSelectorManager().registerChannelForRead(this, listener);
+		} catch (IOException e) {
+			throw new NioException(e);
+		} catch (InterruptedException e) {
+			throw new NioException(e);
+		}
 	}
 	
-	public void unregisterForReads() throws IOException, InterruptedException {
+	public void unregisterForReads() {
 		if(apiLog.isLoggable(Level.FINE))
 			apiLog.fine(this+"Basic.unregisterForReads called");		
-		getSelectorManager().unregisterChannelForRead(this);
+		try {
+			getSelectorManager().unregisterChannelForRead(this);
+		} catch (IOException e) {
+			throw new NioException(e);
+		} catch (InterruptedException e) {
+			throw new NioException(e);
+		}
 	}	
-	
-	public int oldWrite(ByteBuffer b) throws IOException {
+
+	public int oldWrite(ByteBuffer b) {
+		try {
+			return oldWriteImpl(b);
+		} catch (IOException e) {
+			throw new NioException(e);
+		}
+	}
+	private int oldWriteImpl(ByteBuffer b) throws IOException {
 		if(!getSelectorManager().isRunning())
 			throw new IllegalStateException(this+"ChannelManager must be running and is stopped");
 		else if(isClosed) {
@@ -209,9 +233,19 @@ public abstract class BasChannelImpl
 			throw new RuntimeException(e);
 		}
 	}
-    
+
 	@Override
-	public FutureOperation write(ByteBuffer b) throws IOException, InterruptedException {
+	public FutureOperation write(ByteBuffer b) {
+		try {
+			return writeNewImpl(b);
+		} catch (IOException e) {
+			throw new NioException(e);
+		} catch (InterruptedException e) {
+			throw new NioException(e);
+		}
+	}
+
+	private FutureOperation writeNewImpl(ByteBuffer b) throws IOException, InterruptedException {
 		if(!getSelectorManager().isRunning())
 			throw new IllegalStateException(this+"ChannelManager must be running and is stopped");		
 		else if(isClosed) {
@@ -238,8 +272,17 @@ public abstract class BasChannelImpl
        	}
         return impl;
 	}
-	
-	public void oldWrite(ByteBuffer b, OperationCallback h) throws IOException, InterruptedException {
+
+	public void oldWrite(ByteBuffer b, OperationCallback h) {
+		try {
+			oldWriteImpl(b, h);
+		} catch (IOException e) {
+			throw new NioException(e);
+		} catch (InterruptedException e) {
+			throw new NioException(e);
+		}
+	}
+	public void oldWriteImpl(ByteBuffer b, OperationCallback h) throws IOException, InterruptedException {
 		if(!getSelectorManager().isRunning())
 			throw new IllegalStateException(this+"ChannelManager must be running and is stopped");		
 		else if(isClosed) {

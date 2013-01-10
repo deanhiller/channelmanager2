@@ -6,6 +6,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.playorm.nio.api.channels.Channel;
+import org.playorm.nio.api.channels.NioException;
 import org.playorm.nio.api.handlers.DataListener;
 import org.playorm.nio.impl.util.UtilChannel;
 
@@ -20,7 +21,7 @@ public class RegHelperChannel extends UtilChannel implements Channel {
 	}
 
 	@Override
-	public synchronized void registerForReads(DataListener listener) throws IOException, InterruptedException {
+	public synchronized void registerForReads(DataListener listener) {
 		if(apiLog.isLoggable(Level.FINE))
 			apiLog.fine(this+"RegRead.registerForReads called");
 		cachedListener = listener;
@@ -33,7 +34,7 @@ public class RegHelperChannel extends UtilChannel implements Channel {
 	}
 	
 	@Override
-	public synchronized void unregisterForReads() throws IOException, InterruptedException {
+	public synchronized void unregisterForReads() {
 		if(apiLog.isLoggable(Level.FINE))
 			apiLog.fine(this+"RegRead.unregisterForReads called");
 		cachedListener = null;
@@ -45,18 +46,22 @@ public class RegHelperChannel extends UtilChannel implements Channel {
 	}
 
 	@Override
-	public synchronized void oldConnect(SocketAddress addr) throws IOException {
+	public void oldConnect(SocketAddress addr) {
+		try {
+			oldConnectImpl(addr);
+		} catch (IOException e) {
+			throw new NioException(e);
+		}
+	}
+	
+	private synchronized void oldConnectImpl(SocketAddress addr) throws IOException {
 		if(apiLog.isLoggable(Level.FINE))
 			apiLog.fine(this+"RegRead.connect called-addr="+addr);
 		
 		super.oldConnect(addr);
 		if(cachedListener != null) {
-			try {
-				getRealChannel().registerForReads(cachedListener);
-				isRegistered = true;
-			} catch (InterruptedException e) {
-				throw new RuntimeException(e);
-			}
+			getRealChannel().registerForReads(cachedListener);
+			isRegistered = true;
 		}
 	}
 		

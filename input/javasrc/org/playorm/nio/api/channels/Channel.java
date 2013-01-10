@@ -16,8 +16,8 @@ import org.playorm.nio.api.libs.ChannelSession;
  */
 public interface Channel extends RegisterableChannel {
 
-	public FutureOperation connect(SocketAddress addr) throws IOException, InterruptedException;
-	public FutureOperation write(ByteBuffer b) throws IOException, InterruptedException;
+	public FutureOperation connect(SocketAddress addr);
+	public FutureOperation write(ByteBuffer b);
 	public FutureOperation close();
 	
     /**
@@ -25,7 +25,7 @@ public interface Channel extends RegisterableChannel {
      * requests from clients may come out of order unless you install your own executorService.
      * 
      */
-    public void registerForReads(DataListener listener) throws IOException, InterruptedException;
+    public void registerForReads(DataListener listener);
 
     /**
      * Unregister the previously registered DataListener so incoming data is not fired to the client.
@@ -33,7 +33,7 @@ public interface Channel extends RegisterableChannel {
      * @throws IOException
      * @throws InterruptedException
      */
-    public void unregisterForReads() throws IOException, InterruptedException;
+    public void unregisterForReads();
     
     /**
      * Gets the remote address the channel is communicating with.
@@ -66,7 +66,7 @@ public interface Channel extends RegisterableChannel {
      * @param b
      */
 	@Deprecated
-    public int oldWrite(ByteBuffer b) throws IOException;
+    public int oldWrite(ByteBuffer b);
     
     /**
      * Use these two lines of code instead
@@ -80,7 +80,7 @@ public interface Channel extends RegisterableChannel {
      * @throws InterruptedException 
      */
 	@Deprecated
-    public void oldWrite(ByteBuffer b, OperationCallback h) throws IOException, InterruptedException;
+    public void oldWrite(ByteBuffer b, OperationCallback h);
     
     /**
      * This is synchronous/blocking for TCP and therefore not too scalable.  Use at
@@ -90,7 +90,7 @@ public interface Channel extends RegisterableChannel {
      * @param addr
      */
     @Deprecated
-    public void oldConnect(SocketAddress addr) throws IOException; 
+    public void oldConnect(SocketAddress addr); 
     
     /**
      * Asynchronous close where the WriteCloseHandler will be notified once

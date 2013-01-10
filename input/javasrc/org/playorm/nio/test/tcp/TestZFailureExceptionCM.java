@@ -70,4 +70,7 @@ public class TestZFailureExceptionCM extends ZNioFailureSuperclass {
 		return "org.playorm.nio.impl.cm.exception.ExcTCPServerChannel";
 	}	
 	
+//	public void testClientThrowsIntoAcceptHandlerConnect() throws Exception {
+//		super.testClientThrowsIntoAcceptHandlerConnect();
+//	}
 }

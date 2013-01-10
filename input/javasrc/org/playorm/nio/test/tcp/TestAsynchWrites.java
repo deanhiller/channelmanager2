@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import junit.framework.TestCase;
+
 import org.playorm.nio.api.deprecated.ChannelManager;
 import org.playorm.nio.api.deprecated.ChannelService;
 import org.playorm.nio.api.deprecated.ChannelServiceFactory;
@@ -14,8 +16,6 @@ import org.playorm.nio.api.libs.FactoryCreator;
 import org.playorm.nio.api.libs.PacketProcessorFactory;
 import org.playorm.nio.api.testutil.HandlerForTests;
 import org.playorm.nio.api.testutil.MockNIOServer;
-
-import junit.framework.TestCase;
 
 public class TestAsynchWrites extends TestCase {
 

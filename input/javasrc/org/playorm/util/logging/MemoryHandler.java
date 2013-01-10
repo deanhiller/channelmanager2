@@ -5,7 +5,7 @@
  * SUN PROPRIETARY/CONFIDENTIAL. Use is subject to license terms.
  */
 
-package org.playorm.logging;
+package org.playorm.util.logging;
 
 import java.util.logging.Filter;
 import java.util.logging.Formatter;

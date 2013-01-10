@@ -1,7 +1,5 @@
 package org.playorm.nio.impl.cm.readreg;
 
-import java.io.IOException;
-
 import org.playorm.nio.api.channels.TCPServerChannel;
 import org.playorm.nio.api.handlers.ConnectionListener;
 import org.playorm.nio.impl.util.UtilRegisterable;
@@ -24,7 +22,7 @@ class RegTCPServerChannel extends UtilRegisterable implements TCPServerChannel {
 		realChannel.oldClose();
 	}
 	
-	public void registerServerSocketChannel(ConnectionListener cb) throws IOException, InterruptedException {
+	public void registerServerSocketChannel(ConnectionListener cb) {
 		RegProxyAcceptCb proxy = new RegProxyAcceptCb(this, cb);
 		realChannel.registerServerSocketChannel(proxy);
 	}

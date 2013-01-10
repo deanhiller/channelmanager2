@@ -64,13 +64,9 @@ public class EchoServer implements DataListener, ConnectionListener {
 	}
 
 	public void connected(Channel channel) throws IOException {
-		try {
-			log.fine(channel+"mockserver accepted connection");
-			sockets.add((TCPChannel) channel);
-			channel.registerForReads(this);
-		} catch (InterruptedException e) {
-			log.log(Level.WARNING, "exception", e);
-		}		
+		log.fine(channel+"mockserver accepted connection");
+		sockets.add((TCPChannel) channel);
+		channel.registerForReads(this);
 	}
 
 	public void failed(RegisterableChannel channel, Throwable e) {
@@ -83,13 +79,9 @@ public class EchoServer implements DataListener, ConnectionListener {
 
 	private int id = 0;
 	public void incomingData(Channel channel, DataChunk chunk) throws IOException {		
-		try {
-			ByteBuffer b = chunk.getData();
-			channel.oldWrite(b, NullWriteCallback.singleton());
-			chunk.setProcessed("EchoServer");
-		} catch (InterruptedException e) {
-			log.log(Level.WARNING, "Exception occurred", e);
-		}
+		ByteBuffer b = chunk.getData();
+		channel.oldWrite(b, NullWriteCallback.singleton());
+		chunk.setProcessed("EchoServer");
 	}
 
 	public void farEndClosed(Channel channel) {

@@ -1,7 +1,5 @@
 package org.playorm.nio.impl.cm.routing;
 
-import java.io.IOException;
-
 import org.playorm.nio.api.channels.TCPServerChannel;
 import org.playorm.nio.api.handlers.ConnectionListener;
 import org.playorm.nio.api.libs.BufferFactory;
@@ -29,7 +27,7 @@ class ThdTCPServerChannel extends UtilRegisterable implements TCPServerChannel {
 		realChannel.oldClose();
 	}
 	
-	public void registerServerSocketChannel(ConnectionListener cb) throws IOException, InterruptedException {
+	public void registerServerSocketChannel(ConnectionListener cb) {
 		ThdProxyAcceptCb proxy = new ThdProxyAcceptCb(this, cb, svc, bufFactory);
 		realChannel.registerServerSocketChannel(proxy);
 	}

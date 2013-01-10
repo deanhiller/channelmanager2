@@ -47,11 +47,8 @@ class SecSSLListener implements SSLListener {
 			SecProxyWriteHandler handler = (SecProxyWriteHandler)passThrough;
 			h = handler;
 		}
-		try {
-			channel.getRealChannel().oldWrite(toSocket, h);
-		} catch (InterruptedException e) {
-			throw new RuntimeException(channel+e.getMessage(), e);
-		}
+
+		channel.getRealChannel().oldWrite(toSocket, h);
 	}
 	
 	public void packetUnencrypted(ByteBuffer out, Object passThrough) throws IOException {

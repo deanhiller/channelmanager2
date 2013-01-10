@@ -1,6 +1,5 @@
 package org.playorm.nio.impl.cm.threaded;
 
-import java.io.IOException;
 import java.util.concurrent.Executor;
 
 import org.playorm.nio.api.channels.TCPServerChannel;
@@ -30,7 +29,7 @@ class ThdTCPServerChannel extends UtilRegisterable implements TCPServerChannel {
 		realChannel.oldClose();
 	}
 	
-	public void registerServerSocketChannel(ConnectionListener cb) throws IOException, InterruptedException {
+	public void registerServerSocketChannel(ConnectionListener cb) {
 		ThdProxyAcceptCb proxy = new ThdProxyAcceptCb(this, cb, svc, bufFactory);
 		realChannel.registerServerSocketChannel(proxy);
 	}

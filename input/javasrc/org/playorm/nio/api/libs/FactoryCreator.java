@@ -60,7 +60,7 @@ public abstract class FactoryCreator {
     
     public abstract StartableRouterExecutor createRoutingExecutor(String id, int numThreads);
     
-	public abstract AsynchSSLEngine createSSLEngine(Object id, SSLEngine engine, Map<String, Object> newParam);
+	public abstract AsyncSSLEngine createSSLEngine(Object id, SSLEngine engine, Map<String, Object> newParam);
 	
 	public abstract ChannelSession createSession(RegisterableChannel channel);
 }

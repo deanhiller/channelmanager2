@@ -2,9 +2,11 @@ package org.playorm.nio.api.channels;
 
 import java.io.IOException;
 import java.net.SocketAddress;
-import java.net.SocketException;
+
+import javax.net.ssl.SSLEngine;
 
 import org.playorm.nio.api.deprecated.ConnectionCallback;
+import org.playorm.nio.api.handlers.FutureOperation;
 
 
 
@@ -25,9 +27,19 @@ public interface TCPChannel extends Channel {
      * @throws IOException
      * @throws InterruptedException
      */
-	public void oldConnect(SocketAddress remoteAddr, ConnectionCallback cb) throws IOException, InterruptedException;
+	public void oldConnect(SocketAddress remoteAddr, ConnectionCallback cb);
 	
-	public boolean getKeepAlive() throws SocketException;
-	public void setKeepAlive(boolean b) throws SocketException;
+	public boolean getKeepAlive();
+	public void setKeepAlive(boolean b);
 	
+	/**
+	 * Can switch between a socket having SSL and not having SSL by opening/closing on the socket
+	 * @param engine
+	 * @return
+	 */
+	public FutureOperation openSSL(SSLEngine engine);
+	
+	public FutureOperation closeSSL();
+	
+	public boolean isInSslMode();
 }

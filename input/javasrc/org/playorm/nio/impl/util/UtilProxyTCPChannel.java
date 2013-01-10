@@ -1,6 +1,5 @@
 package org.playorm.nio.impl.util;
 
-import java.io.IOException;
 import java.net.SocketAddress;
 
 import org.playorm.nio.api.channels.Channel;
@@ -19,13 +18,11 @@ public class UtilProxyTCPChannel extends UtilTCPChannel implements TCPChannel {
 		return (TCPChannel)super.getRealChannel();
 	}
 	
-	public void registerForReads(DataListener listener) throws IOException,
-			InterruptedException {
+	public void registerForReads(DataListener listener) {
 		getRealChannel().registerForReads(new UtilReaderProxy(this, listener));
 	}
 
-	public void oldConnect(SocketAddress addr, ConnectionCallback c)
-			throws IOException, InterruptedException {
+	public void oldConnect(SocketAddress addr, ConnectionCallback c) {
 		getRealChannel().oldConnect(addr, new UtilProxyConnectCb(this, c));
 	}
 }

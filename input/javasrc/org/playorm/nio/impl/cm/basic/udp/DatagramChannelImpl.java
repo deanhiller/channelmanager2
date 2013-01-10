@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.playorm.nio.api.channels.DatagramChannel;
+import org.playorm.nio.api.channels.NioException;
 import org.playorm.nio.api.handlers.DatagramListener;
 import org.playorm.nio.api.libs.ChannelSession;
 import org.playorm.nio.api.libs.FactoryCreator;
@@ -33,7 +34,7 @@ public class DatagramChannelImpl implements DatagramChannel
     private boolean shutDownThread = false;
     private String name;
 
-    public DatagramChannelImpl(String id, int bufferSize) throws SocketException {
+    public DatagramChannelImpl(String id, int bufferSize) {
         this.id = "["+id+"] ";
         session = CREATOR.createSession(this);
         buffer = ByteBuffer.allocate(bufferSize);
@@ -42,14 +43,14 @@ public class DatagramChannelImpl implements DatagramChannel
     /**
      * @see org.playorm.nio.api.channels.Channel#registerForReads(org.playorm.nio.api.handlers.DataListener)
      */
-    public void registerForReads(DatagramListener listener) throws IOException, InterruptedException {
+    public void registerForReads(DatagramListener listener) {
         this.listener  = listener;
     }
 
     /**
      * @see org.playorm.nio.api.channels.Channel#unregisterForReads()
      */
-    public void unregisterForReads() throws IOException, InterruptedException {
+    public void unregisterForReads() {
         listener = NULL_LISTENER;
     }
 
@@ -64,19 +65,27 @@ public class DatagramChannelImpl implements DatagramChannel
     /**
      * @see org.playorm.nio.api.channels.RegisterableChannel#setReuseAddress(boolean)
      */
-    public void setReuseAddress(boolean b) throws SocketException {
+    public void setReuseAddress(boolean b) {
         if(socket == null)
             throw new IllegalStateException(id+"Must bind socket before any operations can be called");
-        socket.setReuseAddress(b);
+        try {
+			socket.setReuseAddress(b);
+		} catch (SocketException e) {
+			throw new NioException(e);
+		}
     }
 
     /**
      * @see org.playorm.nio.api.channels.RegisterableChannel#bind(java.net.SocketAddress)
      */
-    public void bind(SocketAddress addr) throws IOException {
-        socket = new DatagramSocket(addr);
-        readerThread = new ReaderThread();
-        readerThread.start();
+    public void bind(SocketAddress addr) {
+    	try {
+    		socket = new DatagramSocket(addr);
+    		readerThread = new ReaderThread();
+    		readerThread.start();
+    	} catch(IOException e) {
+    		throw new NioException(e);
+    	}
     }
 
     public void setId(Object id) {
@@ -146,11 +155,18 @@ public class DatagramChannelImpl implements DatagramChannel
         return new InetSocketAddress(socket.getLocalAddress(), socket.getLocalPort());
     }
 
+    public void oldWrite(SocketAddress addr, ByteBuffer b) {
+    	try {
+			oldWriteImpl(addr,b);
+		} catch (IOException e) {
+			throw new NioException(e);
+		}
+    }
     /**
      * @throws IOException 
      * @see org.playorm.nio.api.channels.DatagramChannel#oldWrite(java.net.SocketAddress, java.nio.ByteBuffer)
      */
-    public void oldWrite(SocketAddress addr, ByteBuffer b) throws IOException {
+    private void oldWriteImpl(SocketAddress addr, ByteBuffer b) throws IOException {
         if(socket == null)
             throw new IllegalStateException(id+"Must bind socket before any operations can be called");
         DatagramPacket packet = new DatagramPacket(b.array(), b.position(), b.limit()-b.position(), addr);

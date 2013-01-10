@@ -52,19 +52,15 @@ public class EventClient implements ConnectionCallback, DataListener {
 	}
 
 	public void connected(Channel channel) throws IOException {
-		try {
-			log.info(channel+"Connected now="+channel.getRemoteAddress());
-			channel.registerForReads(this);
+		log.info(channel+"Connected now="+channel.getRemoteAddress());
+		channel.registerForReads(this);
 			
-			//now write out the request and wait for events coming back.....
-			String hello = "helloThere";
-			ByteBuffer b = ByteBuffer.allocate(100);
-			HELPER.putString(b, hello);
-			HELPER.doneFillingBuffer(b);
-			channel.oldWrite(b);			
-		} catch (InterruptedException e) {
-			log.log(Level.WARNING, channel+"Exception", e);
-		}
+		//now write out the request and wait for events coming back.....
+		String hello = "helloThere";
+		ByteBuffer b = ByteBuffer.allocate(100);
+		HELPER.putString(b, hello);
+		HELPER.doneFillingBuffer(b);
+		channel.oldWrite(b);			
 	}
 
 	public void failed(RegisterableChannel channel, Throwable e) {

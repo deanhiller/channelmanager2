@@ -18,7 +18,7 @@ import java.nio.ByteBuffer;
  * @author dean.hiller
  *
  */
-public interface AsynchSSLEngine {
+public interface AsyncSSLEngine {
 	
 	void setListener(SSLListener connectProxy);
 	
@@ -27,7 +27,7 @@ public interface AsynchSSLEngine {
 	 * called to start first handshake OR to cause a new handshake in the middle to change up the symmetrical keys
 	 * once in a while(rehandshaking every so often keeps your channel more secure)
 	 */
-	void beginHandshake() throws IOException;
+	void beginHandshake();
 	
 	/**
      * I believe calling this method will only result in SSLListener.packetEncrypted being called
@@ -40,7 +40,7 @@ public interface AsynchSSLEngine {
 	 * @param passThrough Object that is passed through to SSLListener.packetEncrypted 
 	 * @throws IOException
 	 */
-	void feedPlainPacket(ByteBuffer b, Object passThrough) throws IOException;
+	void feedPlainPacket(ByteBuffer b, Object passThrough);
 
 	/**
 	 * Feeding an encrypted packet results in one of four possible methods on SSLListener being called
@@ -59,7 +59,7 @@ public interface AsynchSSLEngine {
 	 * 	We tell you if we decrypted it with the return value
 	 * @return PacketAction with the result of what happened in the engine.	
 	 */
-	public PacketAction feedEncryptedPacket(ByteBuffer b, Object passthrough) throws IOException;
+	public PacketAction feedEncryptedPacket(ByteBuffer b, Object passthrough);
 	
 	/**
 	 * Calling close results in SSLListener.feedEncryptedPacket being called and then waiting
