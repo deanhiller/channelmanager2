@@ -12,6 +12,8 @@ import org.playorm.nio.api.deprecated.ChannelService;
 import org.playorm.nio.api.deprecated.ChannelServiceFactory;
 import org.playorm.nio.api.libs.BufferFactory;
 import org.playorm.nio.api.libs.FactoryCreator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -23,6 +25,8 @@ import org.playorm.nio.api.libs.FactoryCreator;
  */
 public class DelayServer {
 	
+	private static final Logger log = LoggerFactory.getLogger(DelayServer.class);
+
 //	private static final Logger log = Logger.getLogger(MockNIOServer.class.getName());
 	private ChannelService serverSideChanMgr;
 	private ChannelService clientSideChanMgr;	
@@ -50,7 +54,7 @@ public class DelayServer {
 	
 	public InetSocketAddress start(InetSocketAddress realSvr) throws IOException, InterruptedException {
 		int port = 0;
-	
+	    log.info("Starting server");
 		clientSideChanMgr.start();
 		serverSideChanMgr.start();
 		InetAddress loopBack = InetAddress.getByName("127.0.0.1");
