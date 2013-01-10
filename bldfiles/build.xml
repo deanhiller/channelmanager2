@@ -2,7 +2,7 @@
 <!--
 	Run "ant -projecthelp" to view all the possible targets and descriptions.
 -->
-<project name="std_buildfile" default="testCheckin" basedir="..">
+<project name="std_buildfile" default="testCheckin" basedir=".." xmlns:ivy="antlib:org.apache.ivy.ant">
 
 	<!-- Now allow any of the properties to be overridden -->
 	<property file="${user.home}/ant.properties" />
@@ -17,6 +17,32 @@
 	<property name="full.config.path" location="${projectPath}" />
 
 	<property name="jar.name" value="${name}.jar" />
+
+
+	<property name="ivy.install.version" value="2.3.0-rc1" />
+	<property name="ivy.jar.dir" value="${tool.dir}/ivy" />
+	<property name="ivy.jar.file" value="${ivy.jar.dir}/ivy-${ivy.install.version}.jar" />
+
+	<target name="install-ivy" description="--&gt; install ivy">
+		<path id="ivy.lib.path">
+			<fileset dir="${ivy.jar.dir}" includes="*.jar" />
+		</path>
+		<taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path" />
+	</target>
+
+	<target name="resolve" depends="install-ivy">
+		<ivy:configure file="bldfiles/ivysettings.xml" />
+		<ivy:resolve file="bldfiles/ivy.xml" />
+	</target>
+
+	<target name="retrieve" depends="resolve, create-src">
+		<ivy:retrieve pattern="${libinclude}/[conf]/[artifact]-[type]-[revision].[ext]" />
+		<ivy:deliver deliverpattern="${generated}/ivy/ivy-[module]-[revision].xml" />
+	</target>
+
+	<target name="makepom" depends="retrieve">
+		<ivy:makepom ivyfile="bldfiles/ivy.xml" pomfile="${libinclude}/channelmanager.pom" templatefile="bldfiles/pom-template" />
+	</target>
 
 	<description>
     This is a generic build file template.  All the customizable properties are
@@ -50,38 +76,38 @@
 			<include name="**/*.jar" />
 		</fileset>
 	</path>
-	
+
 	<property name="pmd.dir" value="${tool.dir}/pmd" />
 	<path id="pmd.lib">
-	    <pathelement location="${build}"/>
-	    <fileset dir="${pmd.dir}">
-	        <include name="**/lib/*.jar"/>
-	    </fileset>
-	    <pathelement path="${junit.location}/ant-junit.jar" />
-	    <pathelement path="${junit.location}/junit.jar" />
+		<pathelement location="${build}"/>
+		<fileset dir="${pmd.dir}">
+			<include name="**/lib/*.jar"/>
+		</fileset>
+		<pathelement path="${junit.location}/ant-junit.jar" />
+		<pathelement path="${junit.location}/junit.jar" />
 	</path>
 
 	<property name="checkstyle.dir" value="${tool.dir}/checkstyle" />
-    <path id="checkstyle.lib">
-    	<fileset dir="${checkstyle.dir}">
+	<path id="checkstyle.lib">
+		<fileset dir="${checkstyle.dir}">
 			<include name="**/*.jar" />
 		</fileset>
 	</path>
-		
+
 	<property name="osgi.location" location="${tool.dir}/ant-osgi" />
 	<path id="osgi.ant.lib">
 		<fileset dir="${osgi.location}">
 			<include name="**/*.jar" />
 		</fileset>
 	</path>
-	
+
 	<property name="groovy.location" location="${tool.dir}/groovy" />
-		<path id="groovy.lib">
-			<fileset dir="${groovy.location}">
-				<include name="**/*.jar" />
-			</fileset>
-		</path>
-	
+	<path id="groovy.lib">
+		<fileset dir="${groovy.location}">
+			<include name="**/*.jar" />
+		</fileset>
+	</path>
+
 	<!-- 
 ***********************************************************************
               PATH DEFINITIONS
@@ -90,6 +116,11 @@
 	<path id="lib.include">
 		<fileset dir="${lib}">
 			<include name="**/*.jar" />
+		</fileset>
+		<fileset dir="${jardist}">
+			<include name="**/*.jar" />
+			<!-- Excluding the jar otherwise the tests are not getting passed-->
+			<exclude name="*.jar" />
 		</fileset>
 	</path>
 
@@ -149,9 +180,9 @@
 		<!--taskdef resource="emma_ant.properties" classpathref="emma.lib" /-->
 
 		<taskdef name="groovy" classname="org.codehaus.groovy.ant.Groovy" classpathref="groovy.lib"/>
-		
+
 		<!-- for some reason, I can't use resource="checkstyletask.properties" as it fails here-->
-				<taskdef name="checkstyle" classname="com.puppycrawl.tools.checkstyle.CheckStyleTask" classpathref="checkstyle.lib"/>
+		<taskdef name="checkstyle" classname="com.puppycrawl.tools.checkstyle.CheckStyleTask" classpathref="checkstyle.lib"/>
 		<taskdef name="pmd" classname="net.sourceforge.pmd.ant.PMDTask" classpathref="pmd.lib"/>
 
 		<taskdef name="bundleinfo" classname="org.knopflerfish.ant.taskdefs.bundle.BundleInfoTask" classpathref="osgi.ant.lib" />
@@ -412,16 +443,30 @@
 			<fileset dir="${build}" excludes="**/test/**"  />
 			<fileset dir="${javacode}" excludes="**/test/**"  />
 		</jar>
+		<echo file="${jardist}/source/Readmesrc.txt">
+			Source files are in main jar file.
+	    </echo>
+		<echo file="${jardist}/javadoc/Readmejavadoc.txt">
+			Placeholder for java doc.
+		</echo>
+		<jar jarfile="${jardist}/${name}-sources.jar">
+			<fileset dir="${jardist}/source"/>
+		</jar>
+		<jar jarfile="${jardist}/${name}-javadoc.jar">
+			<fileset dir="${jardist}/javadoc"/>
+		</jar>
+		<delete dir="${jardist}/javadoc" />
+		<delete dir="${jardist}/source" />
 
 	</target>
 
 	<target name="verifydesign" depends="compile">
-		<verifydesign design="bldfiles/configDesign.xml" >		
-		     <path>
-		        <fileset dir="${build}">
-		            <include name="**/*.class"/>
-		        </fileset>
-		     </path>
+		<verifydesign design="bldfiles/configDesign.xml" >
+			<path>
+				<fileset dir="${build}">
+					<include name="**/*.class"/>
+				</fileset>
+			</path>
 		</verifydesign>
 	</target>
 
@@ -547,7 +592,7 @@ class file exists.  The classpath is=${search.classpath}
 		</cobertura-instrument>
 
 	</target>
-	
+
 	<!-- 
 ***********************************************************************
               TEST ALL TARGET
@@ -607,12 +652,12 @@ class file exists.  The classpath is=${search.classpath}
 				<include name="**/*.java" />
 			</fileset>
 		</cobertura-report>
-		
+
 		<cobertura-check totallinerate="${totallinerate}" branchrate="0" totalbranchrate="0" datafile="${codecov.instrument.file}">
 			<regex pattern=".*" branchrate="0" linerate="0"/>
 			<regex pattern=".*" branchrate="0" linerate="0"/>
-		</cobertura-check>		
-		
+		</cobertura-check>
+
 		<!--
 				<property name="report.tmp" location="${codecov.report}" />
 				<echo message="report=${report.tmp}" />
@@ -650,26 +695,26 @@ class file exists.  The classpath is=${search.classpath}
 			<formatter type="xml" toFile="${reports}/checkstyle_report.xml"/>
 		</checkstyle>
 	</target>
-	
+
 	<!--
 ***********************************************************************
               PMD TARGET
 ***********************************************************************
 -->
-	
+
 	<target name="pmd" depends="taskdefs">
 		<mkdir dir="${reports}"/>
-		<echo message="MAX PMD ERRORS ALLOWED=${pmd.maxerrors}"/>		
-        <pathconvert dirsep="/" pathsep=" " property="temp.somepath1" refid="pmd.lib" setonempty="true" />
-        <echo message="pmd.lib=${temp.somepath1}" />
+		<echo message="MAX PMD ERRORS ALLOWED=${pmd.maxerrors}"/>
+		<pathconvert dirsep="/" pathsep=" " property="temp.somepath1" refid="pmd.lib" setonempty="true" />
+		<echo message="pmd.lib=${temp.somepath1}" />
 		<pmd failuresPropertyName="pmd.numfailures" classpathref="pmd.lib" rulesetfiles="${full.config.path}/bldfiles/configPmd.xml">
 			<formatter type="text" toConsole="true"/>
 			<formatter type="html" toFile="${reports}/pmd_report.html"/>
 			<fileset dir="${javacode}" includes="**/*.java" />
 		</pmd>
 		<groovy>
-		<!-- The cdata section allows us to use greater than and less than signs in xml -->
-		<![CDATA[
+			<!-- The cdata section allows us to use greater than and less than signs in xml -->
+			<![CDATA[
 			def errors = properties["pmd.numfailures"]
 			def allowedErrors = properties["pmd.maxerrors"]
 			if(errors!=null)
@@ -692,7 +737,7 @@ class file exists.  The classpath is=${search.classpath}
 	<target name="all" depends="verifydesign, war,testall,checkstyle,pmd" description="">
 	</target>
 
-	<target name="testCheckin" depends="clean, all" description="This target should be run before checking in.  It runs verifydesign, testall, checkstyle to make sure your code is good" />
+	<target name="testCheckin" depends="clean, makepom, all" description="This target should be run before checking in.  It runs verifydesign, testall, checkstyle to make sure your code is good" />
 
 	<target name="universe" depends="all, javadoc" description="Runs all targets including javadoc as well as 'all' target" />
 
@@ -708,11 +753,11 @@ class file exists.  The classpath is=${search.classpath}
 	<target name="autobuild" depends="tag">
 		<ant antfile="bldfiles/autobuild.xml" target="autobuild"/>
 	</target>
-	
+
 	<target name="autobuild2" depends="tag">
 		<ant antfile="bldfiles/autobuild.xml" target="autobuild2"/>
 	</target>
-		
+
 	<!--
 ***********************************************************************
 	         JAVAH TARGET - Creates JNI C header files if needed
